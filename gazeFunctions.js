@@ -1,7 +1,7 @@
 function mouseClick() {
   //updating position of loading icon
   $('.loading:eq(0)').css("left", window.innerWidth * 0.25 + "px");
-  $('.loading:eq(1)').css("left", window.innerWidth - $('.loading:eq(0)').position.left - 105 + "px");
+  $('.loading:eq(1)').css("left", window.innerWidth - parseInt($('.loading:eq(0)').css("left")) - 105 + "px");
   $('.loading').css("display", "block");
 
   if( !myplugin1 ){

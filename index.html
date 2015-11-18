@@ -90,24 +90,24 @@ WebVRConfig = {
 <!--
   Creates mouseclick function
   -->
-<script src="/mouseclick/jquery-2.1.4.min.js"></script> 
-<script src="/mouseclick/jCProgress-1.0.3.js"></script> 
-<link href="/mouseclick/style.css" rel="stylesheet" type="txt/css" />
+<script src="mouseclick/jquery-2.1.4.min.js"></script> 
+<script src="mouseclick/jCProgress-1.0.3.js"></script> 
+<link href="mouseclick/style.css" rel="stylesheet" type="txt/css" />
 
-<script src="/gazeFunctions.js"></script>
+<script src="gazeFunctions.js"></script>
 
 <!--
   Imports Door 
   -->
 
-<script src="/bower_components/threejs/examples/js/loaders/ColladaLoader.js"></script>
-<script src="/bower_components/threejs/examples/js/loaders/OBJLoader.js"></script>
+<script src="bower_components/threejs/examples/js/loaders/ColladaLoader.js"></script>
+<script src="bower_components/threejs/examples/js/loaders/OBJLoader.js"></script>
 
 <!--
   Imports Font 
   -->
 
-<script src="/fonts/helvetiker_regular.typeface.js"></script>
+<script src="fonts/helvetiker_regular.typeface.js"></script>
 
 <script>
 
@@ -237,12 +237,14 @@ var ring = new THREE.Mesh(
 scene.add(ring);
 
 // set position of loading icon
+$("body").prepend("<div class=\"loading\"></div>"); // left dom element for loading icon
+$("body").prepend("<div class=\"loading\"></div>"); // right dom element for loading icon
 $('.loading').css("width","105px");
 $('.loading').css("height","105px");
 $('.loading').css("margin","0");
 $('.loading').css("padding","0");
 $('.loading:eq(0)').css("left", window.innerWidth * 0.25 + "px");
-$('.loading:eq(1)').css("left", window.innerWidth - $('.loading:eq(0)').position.left - 105 + "px");
+$('.loading:eq(1)').css("left", window.innerWidth - parseInt($('.loading:eq(0)').css("left")) - 105 + "px");
 
 
 
