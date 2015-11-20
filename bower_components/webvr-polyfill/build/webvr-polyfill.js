@@ -606,7 +606,7 @@ MouseKeyboardPositionSensorVRDevice.prototype.onMouseMove_ = function(e) {
   ring.position.x = - Math.sin(this.phi + 0.5 * Math.PI) * Math.cos(this.theta - 0.5 * Math.PI) * 5;
   ring.position.y = - Math.cos(this.phi + 0.5 * Math.PI) * 5;
   ring.position.z = Math.sin(this.phi + 0.5 * Math.PI) * Math.sin(this.theta - 0.5 * Math.PI) * 5;
-  ring.quaternion.copy( camera.quaternion );                          // makes the ring face the screen (in conjunction with the camera)
+  ring.quaternion.copy( camera.quaternion );    // makes the ring face the screen (in conjunction with the camera)
 
 };
 

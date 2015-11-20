@@ -1008,26 +1008,35 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
   this.resizeIfNeeded_(camera);
 
   // rotate cube
-  cube.rotation.y += 0.01;
+  // alert("cubeArray");
+  // console.log(cubeArray);
+  // if (cubeArray !== null) {
+  for ( var i = 0; i < cubeArray.length; i++ ) {
+      cubeArray[i].rotation.y += 0.01;
+  }
+  // }
 
   var cameraTarget = new THREE.Vector3(ring.position.x, ring.position.y, ring.position.z);
 
   raycaster.set(  camera.position, cameraTarget.normalize() );       // ray is from camera position to camera target
   raycaster.near = 1;                                                 // ray will collide with the gaze pointer ring, but will ignore it                                  
   var intersects = raycaster.intersectObjects( scene.children );
-  console.log("intersects: ", intersects.length);
+  // console.log("intersects: ", intersects.length);
   var isGazingCube = false, isGazingVideoScreen = false;
   for ( var i = 0; i < intersects.length; i++ ) {
-      if ( intersects[ i ].object == cube ) {                         // if collide with the cube
+    for ( var j = 0; j < cubeArray.length; j++ ) {
+      if ( intersects[ i ].object == cubeArray[ j ] ) {                         // if collide with the cube
           isGazingCube = true;
       }
-      // if ( intersects[ i ].object == movieScreen ) {                  // if collide with movie screen
-      //     isGazingVideoScreen = true;
-      // }
+    }
+    if ( intersects[ i ].object == videoMesh ) {                  // if collide with movie screen
+        isGazingVideoScreen = true;
+    }
   }
-  if( isGazingCube ) {
+  if ( isGazingCube ) {
       ring.visible = false;
-      mouseClick();
+      // function exists in functions.js
+      gazeFunction();
   }
   else {
       ring.visible = true;
@@ -1035,6 +1044,12 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
       if( myplugin1 ) myplugin1 = myplugin1.destroy();
       if( myplugin2 ) myplugin2 = myplugin2.destroy();
   }
+  if ( isGazingVideoScreen ) {
+    // Render the 2D Video Texture
+    renderVideo();
+    video.play();
+  }
+  else video.pause;
 
 
   if (this.isVRMode()) {

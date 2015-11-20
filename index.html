@@ -33,6 +33,9 @@ body {
 </head>
 
 <body>
+  <video id="video" loop="" style="display:none">
+      <source src="video/Friends.mp4" type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;">
+  </video>
 
 </body>
 
@@ -94,7 +97,11 @@ WebVRConfig = {
 <script src="mouseclick/jCProgress-1.0.3.js"></script> 
 <link href="mouseclick/style.css" rel="stylesheet" type="txt/css" />
 
-<script src="gazeFunctions.js"></script>
+<!--
+  Imports All New Functions 
+  -->
+
+<script src="functions.js"></script>
 
 <!--
   Imports Door 
@@ -108,6 +115,8 @@ WebVRConfig = {
   -->
 
 <script src="fonts/helvetiker_regular.typeface.js"></script>
+
+
 
 <script>
 
@@ -148,82 +157,28 @@ var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHei
 
 // Apply VR headset positional data to camera.
 var controls = new THREE.VRControls(camera);
-console.log("Controls: ", camera);
-// var controls = new THREE.OrbitControls(camera, renderer.domElement);
-// controls.rotateUp(Math.PI / 4);
-// controls.target.set(
-//   camera.position.x + 0.1,
-//   camera.position.y,
-//   camera.position.z
-// );
-
 
 // Apply VR stereo rendering to renderer.
 var effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
+// Initialize a list of skybox_images (link to images & coordinates of boxes)
+var skybox_images = {
+  "BR":["img/brookings.jpg",[6,0,0],[4,0,1]],
+  "EN":["img/engineering.jpg",[6,0,-5],[6,0,5]]
+};
 
-// Add a repeating grid as a skybox.
-var boxWidth = 5;
-var texture = THREE.ImageUtils.loadTexture(
-  'img/brookingsedit.jpg'
-);
-// texture.wrapS = THREE.RepeatWrapping;
-// texture.wrapT = THREE.RepeatWrapping;
-// texture.repeat.set(boxWidth, boxWidth);
 
-// var geometry = new THREE.BoxGeometry(boxWidth, boxWidth, boxWidth);
-var geometry = new THREE.SphereGeometry( 500, 60, 40 )
-var material = new THREE.MeshBasicMaterial({
-  map: texture,
-  // color: 0x01BE00,
-  side: THREE.BackSide
-});
 
-var skybox = new THREE.Mesh(geometry, material);
-scene.add(skybox);
+// Initialize a skybox.
+initSkybox(skybox_images.BR);
 
 
 // Create a VR manager helper to enter and exit VR mode.
 var manager = new WebVRManager(renderer, effect, {hideButton: false});
 
-// Create 3D objects.
-var geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-// var material = new THREE.MeshNormalMaterial();
-var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'img/brookingsedit.jpg' ) } )
-var cube = new THREE.Mesh(geometry, material);
-
-// Position cube mesh
-cube.position.x = 6;
-cube.position.y = 0;
-cube.position.z = 0;
 
 
-// Add cube mesh to your three.js scene
-scene.add(cube);
-
-
-// text above cube
-var textGeometry = new THREE.TextGeometry( "Olin", 
-{
-  size: 0.5,
-  height: 0.1,
-  weight: "normal",
-  style: "normal",
-  curveSegments: 3,
-  font: "helvetiker",
-  material: 0,
-  extrudeMaterial: 1
-});
-
-var textMaterial = new THREE.MeshFaceMaterial( [
-  new THREE.MeshBasicMaterial( { color: 0xffff00, overdraw: 0.5 } ),
-  new THREE.MeshBasicMaterial( { color: 0x000000, overdraw: 0.5 } )
-] );
-text3D = new THREE.Mesh( textGeometry, textMaterial );
-text3D.position.set( cube.position.x, cube.position.y + 0.8, cube.position.z - 0.5);
-text3D.rotation.y =  - Math.PI / 2;
-scene.add( text3D );
 
 // gaze pointer
 
@@ -246,12 +201,12 @@ $('.loading').css("padding","0");
 $('.loading:eq(0)').css("left", window.innerWidth * 0.25 + "px");
 $('.loading:eq(1)').css("left", window.innerWidth - parseInt($('.loading:eq(0)').css("left")) - 105 + "px");
 
-
+// add video texture
+var videoMesh, video, videoTexture, videoScreen, videoScreenContext;
+addVideo();
 
 // Request animation frame loop function
 function animate(timestamp) {
-  // Apply rotation to cube mesh
-  cube.rotation.y += 0.01;
 
   // Update VR headset position and apply to camera.
   controls.update();
