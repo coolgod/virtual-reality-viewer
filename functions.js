@@ -69,55 +69,20 @@ function initText( cube ) {
 
 
 function gazeFunction() {
-  //updating position of loading icon
-  $('.loading:eq(0)').css("left", window.innerWidth * 0.25 + "px");
-  $('.loading:eq(1)').css("left", window.innerWidth - parseInt($('.loading:eq(0)').css("left")) - 105 + "px");
-  $('.loading').css("display", "block");
+  var t = clock.getElapsedTime();
+  var factor = 1;
 
-  if( !myplugin1 ){
-       myplugin1 = $('.loading:eq(0)').cprogress(                         // the left loading icon
-       {
-         percent: 0,                                                      // starting position
-         img1: 'img/v1.png',                                         // background
-         img2: 'img/v2.png',                                         // foreground
-         speed: 30,                                                      // speed (timeout)
-         PIStep : 0.1,                                                    // every step foreground area is bigger about this val
-         limit: 100,                                                      // end value
-         loop : false,                                                    //if true, no matter if limit is set, progressbar will be running
-         showPercent : true,                                              //show hide percent
-         onInit: function(){},
-         onProgress: function(p){},     //p = current percent
-         onComplete: function(p){
-              // console.log('left onComplete', p);
-              // alert(skybox.material.map.sourceFile);
-              if ( skybox.material.map.sourceFile == skybox_images.BR[0] ) {
+  // On loading complete, change scene
+  if(t > 4.8){
+    if ( skybox.material.map.sourceFile == skybox_images.BR[0] ) {
                 initSkybox(skybox_images.EN);
-              }
-         }
-      });
+    }
   }
-  if( !myplugin2 )
-  {
-       myplugin2 = $('.loading:eq(1)').cprogress(                         // the right loading icon
-       {
-         percent: 0,
-         img1: 'img/v1.png',
-         img2: 'img/v2.png',
-         speed: 30,
-         PIStep : 0.1,
-         limit: 100,
-         loop : false,
-         showPercent : true,
-         onInit: function(){},
-         onProgress: function(p){},
-         onComplete: function(p){
-              // console.log('right onComplete', p);
-              if ( skybox.material.map.sourceFile == skybox_images.BR[0] ) {
-                initSkybox(skybox_images.EN);
-              }
-         }
-      });
-  }
+
+  // Loading animation
+  if(t > 3.65) factor = 1 + t / 10;  // zoom out the ring
+  else factor = 1 - t / 80;          // zoom in the ring
+  ring.scale.set(ring.scale.x*factor, ring.scale.y*factor, ring.scale.y*factor);
 }
 
 

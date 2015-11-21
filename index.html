@@ -18,17 +18,6 @@ body {
   padding: 0;
   overflow: hidden;
 }
-.loading {
-    position: absolute;
-    top: 45%;
-    color: #000000;
-    padding: 5px;
-    font-family: Monospace;
-    font-size: 13px;
-    font-weight: bold;
-    text-align: center;
-}
-
 </style>
 </head>
 
@@ -89,13 +78,6 @@ WebVRConfig = {
   Helps enter and exit VR mode, provides best practices while in VR.
   -->
 <script src="build/webvr-manager.js"></script>
-
-<!--
-  Creates mouseclick function
-  -->
-<script src="mouseclick/jquery-2.1.4.min.js"></script> 
-<script src="mouseclick/jCProgress-1.0.3.js"></script> 
-<link href="mouseclick/style.css" rel="stylesheet" type="txt/css" />
 
 <!--
   Imports All New Functions 
@@ -168,38 +150,23 @@ var skybox_images = {
   "EN":["img/engineering.jpg",[6,0,-5],[6,0,5]]
 };
 
-
-
 // Initialize a skybox.
 initSkybox(skybox_images.BR);
-
 
 // Create a VR manager helper to enter and exit VR mode.
 var manager = new WebVRManager(renderer, effect, {hideButton: false});
 
-
-
+// Create a clock object for animation control
+var clock = new THREE.Clock(false);
 
 // gaze pointer
 
 var raycaster = new THREE.Raycaster();
 
-var myplugin1, myplugin2; // for mouse click loading icon
-
 var ring = new THREE.Mesh(
-  new THREE.TorusGeometry( 0.2, 0.02, 0, 70 ),            // set 'radius segment' to 0 to make it a flat 2D ring
+  new THREE.TorusGeometry( 0.17, 0.017, 0, 70 ),            // set 'radius segment' to 0 to make it a flat 2D ring
   new THREE.MeshBasicMaterial( { color: 0xffffff } ));    // set color to white
 scene.add(ring);
-
-// set position of loading icon
-$("body").prepend("<div class=\"loading\"></div>"); // left dom element for loading icon
-$("body").prepend("<div class=\"loading\"></div>"); // right dom element for loading icon
-$('.loading').css("width","105px");
-$('.loading').css("height","105px");
-$('.loading').css("margin","0");
-$('.loading').css("padding","0");
-$('.loading:eq(0)').css("left", window.innerWidth * 0.25 + "px");
-$('.loading:eq(1)').css("left", window.innerWidth - parseInt($('.loading:eq(0)').css("left")) - 105 + "px");
 
 // add video texture
 var videoMesh, video, videoTexture, videoScreen, videoScreenContext;

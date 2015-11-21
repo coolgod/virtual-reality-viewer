@@ -1003,7 +1003,6 @@ WebVRManager.prototype.isVRMode = function() {
 };
 
 
-
 WebVRManager.prototype.render = function(scene, camera, timestamp) {
   this.resizeIfNeeded_(camera);
 
@@ -1034,15 +1033,13 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
     }
   }
   if ( isGazingCube ) {
-      ring.visible = false;
       // function exists in functions.js
+      if(!clock.running) clock.start();
       gazeFunction();
   }
   else {
-      ring.visible = true;
-      $('.loading').css("display", "none");
-      if( myplugin1 ) myplugin1 = myplugin1.destroy();
-      if( myplugin2 ) myplugin2 = myplugin2.destroy();
+      clock.stop();
+      ring.scale.set(1, 1, 1);
   }
   if ( isGazingVideoScreen ) {
     // Render the 2D Video Texture
@@ -1051,6 +1048,7 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
   }
   else video.pause;
 
+  //console.log(clock.startTime);
 
   if (this.isVRMode()) {
     // console.log("VRMode Render");
