@@ -1006,14 +1006,10 @@ WebVRManager.prototype.isVRMode = function() {
 WebVRManager.prototype.render = function(scene, camera, timestamp) {
   this.resizeIfNeeded_(camera);
 
-  // rotate cube
-  // alert("cubeArray");
-  // console.log(cubeArray);
-  // if (cubeArray !== null) {
+  /* rotate the cube */
   for ( var i = 0; i < cubeArray.length; i++ ) {
       cubeArray[i].rotation.y += 0.01;
   }
-  // }
 
   var cameraTarget = new THREE.Vector3(ring.position.x, ring.position.y, ring.position.z);
 
@@ -1021,21 +1017,22 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
   raycaster.near = 1;                                                 // ray will collide with the gaze pointer ring, but will ignore it                                  
   var intersects = raycaster.intersectObjects( scene.children );
   // console.log("intersects: ", intersects.length);
-  var isGazingCube = false, isGazingVideoScreen = false;
+  var isGazingCube = false, gazingIndex = null, isGazingVideoScreen = false;
   for ( var i = 0; i < intersects.length; i++ ) {
     for ( var j = 0; j < cubeArray.length; j++ ) {
       if ( intersects[ i ].object == cubeArray[ j ] ) {                         // if collide with the cube
           isGazingCube = true;
+          gazingIndex = j;
       }
     }
-    if ( intersects[ i ].object == videoMesh ) {                  // if collide with movie screen
+    if ( intersects[ i ].object == videoMesh ) {                                // if collide with movie screen
         isGazingVideoScreen = true;
     }
   }
-  if ( isGazingCube ) {
+  if ( hasMoved && isGazingCube ) {
       // function exists in functions.js
       if(!clock.running) clock.start();
-      gazeFunction();
+      gazeFunction( gazingIndex );
   }
   else {
       clock.stop();
