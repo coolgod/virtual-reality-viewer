@@ -1,4 +1,7 @@
+cubeArray= [];
+
 function initSkybox( skybox_index ) {
+  clearAllBoxes();
   var this_skybox = skybox_images[skybox_index];
   var boxWidth = 5;
   var texture = THREE.ImageUtils.loadTexture(this_skybox.bg_img);
@@ -15,37 +18,33 @@ function initSkybox( skybox_index ) {
   /*
     need to change or remove the cubes already in the scene
   */
-  cubeArray = [];
+  
   box_count = this_skybox.box_specific.length;
   for (i = 0; i < box_count; i++) {
-    cubeArray.push(initCube( this_skybox.box_specific[i].box_dimension, this_skybox.box_specific[i].box_img_path));
-
+    initCube( this_skybox.box_specific[i].box_dimension, this_skybox.box_specific[i].box_img_path, this_skybox.box_specific[i].bg_index);
   }
-  // console.log("cube Array begins");
-  // for (i=0; i<cubeArray.length;i++){
-  //   console.log(JSON.stringify(cubeArray[i]));
-  // }
 }
 
-function initCube( cube_coord, cube_img_file_path) {
+function initCube( cube_coord, cube_img_file_path, next_index) {
 
 
   var geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
   var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'img/engineering.jpg' ) } )
   var cube = new THREE.Mesh(geometry, material);
+  cube.next_index = next_index;
 
   cube.position.x = cube_coord[0];
   cube.position.y = cube_coord[1];
   cube.position.z = cube_coord[2];
 
   scene.add(cube);
+  console.log("cube");
   console.log(cube);
 
   cubeArray.push(cube);
 
   // Initialize 3D Text
   initText(cube);
-  return cube;
 }
 
 function initText( cube ) {
@@ -79,7 +78,12 @@ function gazeFunction() {
   var factor = 1;
 
   // On loading complete, change scene
-  //TODO
+  /*
+  TODO
+
+  Everything is set. All we need to do is to identify the box object when we are looking at it, get its next_index, then load by calling
+  initSkyBox(<box>.next_index);
+  */
   if(t > 4.8){
     if ( skybox.material.map.sourceFile == skybox_images[0].bg_img ) {
                 initSkybox(1);
@@ -136,4 +140,11 @@ function renderVideo() {
     if ( videoTexture ) 
       videoTexture.needsUpdate = true;
   }
+}
+
+function clearAllBoxes(){
+  for( var i = scene.children.length - 1; i >= 0; i--) {
+    obj = scene.children[i];
+     scene.remove(obj); 
+   }
 }
