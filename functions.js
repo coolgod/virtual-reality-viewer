@@ -1,5 +1,8 @@
+cubeArray= [];
+
 function initSkybox( skybox_index ) {
   hasMoved = false;
+  clearOldCubesAndText();
 
   var this_skybox = skybox_images[skybox_index];
   var boxWidth = 5;
@@ -13,13 +16,7 @@ function initSkybox( skybox_index ) {
 
   skybox = new THREE.Mesh(geometry, material);
   scene.add(skybox);
-
-  /* remove the cubes already in the scene */
-  for (var i = 0; i < cubeArray.length; i++){
-    // scene.remove( cubeArray[i].children[0] );
-    scene.remove (cubeTextArray[i] );
-    scene.remove( cubeArray[i] );
-  }
+  
   /* loading new cubes */
   cubeTextArray = [];
   cubeArray = [];
@@ -40,11 +37,10 @@ function initSkybox( skybox_index ) {
 }
 
 function initCube( box_specific ) {
-
-
   var geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
   var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( box_specific.box_img_path ) } )
   var cube = new THREE.Mesh(geometry, material);
+  cube.next_index = box_specific.next_index;
 
   cube.position.x = box_specific.box_coord[0];
   cube.position.y = box_specific.box_coord[1];
@@ -170,5 +166,14 @@ function renderVideo() {
     videoScreenContext.drawImage( video, 0, 0 );
     if ( videoTexture ) 
       videoTexture.needsUpdate = true;
+  }
+}
+
+function clearOldCubesAndText(){
+  /* remove the cubes already in the scene */
+  for (var i = 0; i < cubeArray.length; i++){
+    // scene.remove( cubeArray[i].children[0] );
+    scene.remove (cubeTextArray[i] );
+    scene.remove( cubeArray[i] );
   }
 }
