@@ -91,30 +91,7 @@ function gazeFunction( gazingIndex ) {
     if(t > 4.8){          // if zoom-out-zoom-in animation finish
       clock.stop();       // stop the clock;
       /* change scene here */
-      if ( skybox.material.map.sourceFile == skybox_images[0].bg_img ) {
-        if( gazingIndex == 1 ) {
-          initSkybox(1);
-        }else{
-          initSkybox(2);
-        }     
-        return;
-      }
-      if ( skybox.material.map.sourceFile == skybox_images[1].bg_img ) {
-        if( gazingIndex == 0 ) {
-          initSkybox(0);
-        }else{
-          initSkybox(2);
-        }  
-        return;   
-      }
-      if ( skybox.material.map.sourceFile == skybox_images[2].bg_img ) {
-        if( gazingIndex == 0 ) {
-          initSkybox(1);
-        }else{
-          initSkybox(0);
-        }  
-        return;   
-      }
+      initSkybox(cubeArray[gazingIndex].next_index);
     }else{
       factor = 1 + t / 10;  // secondly, zoom in the ring
     }
