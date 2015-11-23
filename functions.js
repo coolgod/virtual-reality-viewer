@@ -1,7 +1,7 @@
 function initSkybox( skybox_index ) {
-
+  var this_skybox = skybox_images[skybox_index];
   var boxWidth = 5;
-  var texture = THREE.ImageUtils.loadTexture(skybox_index[0]);
+  var texture = THREE.ImageUtils.loadTexture(this_skybox.bg_img);
 
   var geometry = new THREE.SphereGeometry( 500, 60, 40 )
   var material = new THREE.MeshBasicMaterial({
@@ -16,13 +16,18 @@ function initSkybox( skybox_index ) {
     need to change or remove the cubes already in the scene
   */
   cubeArray = [];
+  box_count = this_skybox.box_specific.length;
+  for (i = 0; i < box_count; i++) {
+    cubeArray.push(initCube( this_skybox.box_specific[i].box_dimension, this_skybox.box_specific[i].box_img_path));
 
-  for (i = 1; i < skybox_index.length; i++) {
-    initCube( skybox_index[i], i - 1 );
   }
+  // console.log("cube Array begins");
+  // for (i=0; i<cubeArray.length;i++){
+  //   console.log(JSON.stringify(cubeArray[i]));
+  // }
 }
 
-function initCube( cube_coord, index ) {
+function initCube( cube_coord, cube_img_file_path) {
 
 
   var geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
@@ -40,6 +45,7 @@ function initCube( cube_coord, index ) {
 
   // Initialize 3D Text
   initText(cube);
+  return cube;
 }
 
 function initText( cube ) {
@@ -73,9 +79,10 @@ function gazeFunction() {
   var factor = 1;
 
   // On loading complete, change scene
+  //TODO
   if(t > 4.8){
-    if ( skybox.material.map.sourceFile == skybox_images.BR[0] ) {
-                initSkybox(skybox_images.EN);
+    if ( skybox.material.map.sourceFile == skybox_images[0].bg_img ) {
+                initSkybox(1);
     }
   }
 

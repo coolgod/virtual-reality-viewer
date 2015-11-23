@@ -145,13 +145,91 @@ var effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
 // Initialize a list of skybox_images (link to images & coordinates of boxes)
-var skybox_images = {
-  "BR":["img/brookings.jpg",[6,0,0],[4,0,1]],
-  "EN":["img/engineering.jpg",[6,0,-5],[6,0,5]]
-};
+/*
+            This all_picture_path variable contains all pathing towards the 
+            Struture is 
+
+            background_image:<path>, box_imgage:[{backgroun_index:<num>,box_img_path:"<path>"},{backgroun_index:<num>,box_img_path:"<path>"}]
+                                            first box image and its corresponding background        2nd box image and its corresponding
+
+            Current background ----------------------------------------- bg paths from this current bg
+            0.brookings ------------------------------------------------ samfox &engineering---------------------   7,1
+            1.engineering ---------------------------------------------- outside olin & brookings----------------   2,0
+            2.outside olin --------------------------------------------- olin circ & fun room & engineering------   3,4
+            3.olin circ ------------------------------------------------ outside olin   -------------------------   2
+            4.fun room ------------------------------------------------- outside olin & sts----------------------   2,5
+            5.sts ------------------------------------------------------ fun room & bd --------------------------   4,6
+            6.bd ------------------------------------------------------- sts & samfox----------------------------   5,7
+            7.samfox --------------------------------------------------- bd & brookings--------------------------   6,0
+            */
+            skybox_images = [
+                {
+                    bg_name:"Brookings",
+                    bg_img:"img/brookings.jpg",
+                    box_specific:[
+                    {bg_index:7,box_img_path:"img/engineering.jpg", box_dimension:[6,0,0]},
+                    {bg_index:1,box_img_path:"img/engineering.jpg", box_dimension:[4,0,1]}
+                    ]
+                },
+                {
+                    bg_name:"Engineering",
+                    bg_img:"img/engineering.jpg",
+                    box_specific:[
+                    {bg_index:2,box_img_path:"img/engineering.jpg", box_dimension:[6,0,-5]},
+                    {bg_index:0,box_img_path:"img/engineering.jpg", box_dimension:[6,0,5]}
+                    ]
+                },
+                {
+                    bg_name:"Olin Outside",
+                    bg_img:"img/outside_olin.jpg",
+                    box_specific:[
+                    {bg_index:3,box_img_path:"img/engineering.jpg", box_dimension:[6,0,0]},
+                    {bg_index:4,box_img_path:"img/engineering.jpg", box_dimension:[4,0,1]}
+                    ]
+                },
+                {
+                    bg_name:"Olin Circ",
+                    bg_img:"img/inside_olin.jpg",
+                    box_specific:[
+                    {bg_index:2,box_img_path:"img/engineering.jpg", box_dimension:[6,0,0]}
+                    ]
+                },
+                {
+                    bg_name:"DUC: Fun room",
+                    bg_img:"img/fun_room.jpg",
+                    box_specific:[
+                    {bg_index:2,box_img_path:"img/engineering.jpg", box_dimension:[6,0,0]},
+                    {bg_index:5,box_img_path:"img/engineering.jpg", box_dimension:[4,0,1]}
+                    ]
+                },
+                {
+                    bg_name:"STS",
+                    bg_img:"img/STS.jpg",
+                    box_specific:[
+                    {bg_index:4,box_img_path:"img/engineering.jpg", box_dimension:[6,0,0]},
+                    {bg_index:6,box_img_path:"img/engineering.jpg", box_dimension:[4,0,1]}
+                    ]
+                },
+                {
+                    bg_name:"Bear's Den",
+                    bg_img:"img/bd.jpg",
+                    box_specific:[
+                    {bg_index:5,box_img_path:"img/engineering.jpg", box_dimension:[6,0,0]},
+                    {bg_index:7,box_img_path:"img/engineering.jpg", box_dimension:[4,0,1]}
+                    ]
+                },
+                {
+                    bg_name:"Sam Fox Art",
+                    bg_img:"img/samfox.jpg",
+                    box_specific:[
+                    {bg_index:6,box_img_path:"img/engineering.jpg", box_dimension:[6,0,0]},
+                    {bg_index:0,box_img_path:"img/engineering.jpg", box_dimension:[4,0,1]}
+                    ]
+                }
+            ];
 
 // Initialize a skybox.
-initSkybox(skybox_images.BR);
+initSkybox(0);
 
 // Create a VR manager helper to enter and exit VR mode.
 var manager = new WebVRManager(renderer, effect, {hideButton: false});
