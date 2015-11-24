@@ -22,8 +22,7 @@ function initSkybox( skybox_index ) {
   //
 
   var material = new THREE.MeshBasicMaterial({
-    map: texture,
-    side: THREE.Fronside
+    map: texture
   });
   
   skybox = new THREE.Mesh(geometry, material);
