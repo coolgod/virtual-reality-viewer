@@ -580,6 +580,8 @@ MouseKeyboardPositionSensorVRDevice.prototype.onMouseDown_ = function(e) {
 */
 
 MouseKeyboardPositionSensorVRDevice.prototype.onMouseMove_ = function(e) {
+  hasMoved = true;
+  
   if (!this.isDragging && !this.isPointerLocked_()) {
     return;
   }
