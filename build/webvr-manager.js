@@ -1011,10 +1011,13 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
       cubeArray[i].rotation.y += 0.01;
   }
 
+  ring.position.set(camera.target.x, camera.target.y, camera.target.z);
+  ring.quaternion.copy( camera.quaternion );    // makes the ring face the screen (in conjunction with the camera)
+
   var cameraTarget = new THREE.Vector3(ring.position.x, ring.position.y, ring.position.z);
 
   raycaster.set(  camera.position, cameraTarget.normalize() );       // ray is from camera position to camera target
-  raycaster.near = 1;                                                 // ray will collide with the gaze pointer ring, but will ignore it                                  
+  raycaster.near = 1;                                                // ray will collide with the gaze pointer ring, but will ignore it                                  
   var intersects = raycaster.intersectObjects( scene.children );
   // console.log("intersects: ", intersects.length);
   var isGazingCube = false, gazingIndex = null, isGazingVideoScreen = false;
@@ -1043,7 +1046,7 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
     renderVideo();
     video.play();
   }
-  else video.pause;
+  else video.pause();
 
   //console.log(clock.startTime);
 
@@ -1062,13 +1065,7 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
       this.renderer.render(scene, camera);
     }
   }
-
-
-
 };
-
-
-
 
 WebVRManager.prototype.setMode_ = function(mode) {
   console.log('Mode change: %s => %s', this.mode, mode);

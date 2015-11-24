@@ -140,14 +140,30 @@ var cubeTextArray = [];
 
 // Create a three.js camera.
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+camera.target = new THREE.Vector3( 0, 0, 0 );
 
 // Apply VR headset positional data to camera.
 var controls = new THREE.VRControls(camera);
-var hasMoved = false; // for judging whether user has moved
+var hasMoved = false; // whether user has moved the mouse
 
 // Apply VR stereo rendering to renderer.
 var effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
+
+// Create a clock object for animation control
+var clock = new THREE.Clock(false);
+
+// gaze pointer
+var raycaster = new THREE.Raycaster();
+var ring = null;
+// var ring = new THREE.Mesh(
+//     new THREE.TorusGeometry( 0.17, 0.017, 4, 70 ),            // set 'radius segment' to 0 to make it a flat 2D ring
+//     new THREE.MeshBasicMaterial( { color: 0xffffff } ));      // set color to white
+// scene.add(ring);
+
+// add video texture
+var videoMesh = null, video, videoTexture, videoScreen, videoScreenContext;
+addVideo();
 
 // Initialize a list of skybox_images (link to images & coordinates of boxes)
 /*
@@ -239,24 +255,8 @@ initSkybox(0);
 // Create a VR manager helper to enter and exit VR mode.
 var manager = new WebVRManager(renderer, effect, {hideButton: false});
 
-// Create a clock object for animation control
-var clock = new THREE.Clock(false);
-
-// gaze pointer
-var raycaster = new THREE.Raycaster();
-
-var ring = new THREE.Mesh(
-  new THREE.TorusGeometry( 0.17, 0.017, 0, 70 ),            // set 'radius segment' to 0 to make it a flat 2D ring
-  new THREE.MeshBasicMaterial( { color: 0xffffff } ));    // set color to white
-scene.add(ring);
-
-// add video texture
-var videoMesh, video, videoTexture, videoScreen, videoScreenContext;
-addVideo();
-
 // Request animation frame loop function
 function animate(timestamp) {
-
   // Update VR headset position and apply to camera.
   controls.update();
 

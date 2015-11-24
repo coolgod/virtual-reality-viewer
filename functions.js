@@ -1,20 +1,33 @@
-cubeArray= [];
+var skybox = null;
 
 function initSkybox( skybox_index ) {
-  hasMoved = false;
-  clearOldCubesAndText();
 
+  hasMoved = false;
+  clearRing();
+  clearOldSkybox();
+  clearOldCubesAndText();
+  clearVideoScreen();
+  
   var this_skybox = skybox_images[skybox_index];
   var boxWidth = 5;
   var texture = THREE.ImageUtils.loadTexture(this_skybox.bg_img);
 
-  var geometry = new THREE.SphereGeometry( 500, 60, 40 )
+  var geometry = new THREE.SphereGeometry( 500, 60, 40 );
+
+  //
+  // damn that's soooooooo weird:
+  // a potential problem here
+  // any 3d object insert before the declaration of skybox material(with BackSide parameter) will disappear in vreffect mode
+  // so I have to declare "ring" and "cubeArray" after the next line of code is executed
+  //
+
   var material = new THREE.MeshBasicMaterial({
     map: texture,
-    side: THREE.BackSide
+    side: THREE.Fronside
   });
-
+  
   skybox = new THREE.Mesh(geometry, material);
+  skybox.scale.x = -1.0;
   scene.add(skybox);
   
   /* loading new cubes */
@@ -24,16 +37,21 @@ function initSkybox( skybox_index ) {
   for (i = 0; i < box_count; i++) {
     cubeArray.push( initCube( this_skybox.box_specifics[i] ) );
   }
-  
-  /*
-  console.log("cube array begins");
-  for (i = 0; i < cubeArray.length; i++){
-    console.log( JSON.stringify(cubeArray[i]) );
-  }
-  */
 
+  /* loading gaze pointer */
+  if(ring == null){
+    ring = new THREE.Mesh(
+    new THREE.TorusGeometry( 0.17, 0.017, 0, 70 ),            // set 'radius segment' to 0 to make it a flat 2D ring
+    new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide} ));      // set color to white
+    scene.add(ring);
+  }
+  
   // update the clock
   clock = new THREE.Clock(false);
+
+  if ( skybox_index == 0 && videoMesh == null) {
+    addVideo();
+  }
 }
 
 function initCube( box_specific ) {
@@ -81,7 +99,6 @@ function initText( cube, txt ) {
   return text3D;
 }
 
-
 function gazeFunction( gazingIndex ) {
   var t = clock.getElapsedTime();
   var factor = 1;
@@ -102,13 +119,13 @@ function gazeFunction( gazingIndex ) {
   ring.scale.set(ring.scale.x*factor, ring.scale.y*factor, ring.scale.y*factor);
 }
 
-
 function addVideo() {
   /*
       Video Texture
   */
   video = document.getElementById( 'video' );
   videoScreen = document.createElement( 'canvas' );
+  videoScreen.id = "videoScreen";
   videoScreen.width = 480;
   videoScreen.height = 204;
 
@@ -116,7 +133,6 @@ function addVideo() {
   // background color if no video present
   videoScreenContext.fillStyle = '#000000';
   videoScreenContext.fillRect( 0, 0, videoScreen.width, videoScreen.height );
-
 
   videoTexture = new THREE.Texture( videoScreen );
   videoTexture.min_filter = THREE.LinearFilter;
@@ -135,8 +151,6 @@ function addVideo() {
   videoMesh.rotation.y = 50;
   videoMesh.rotation.z = 0;
   scene.add(videoMesh);
-
-
 }
 
 function renderVideo() {
@@ -153,5 +167,34 @@ function clearOldCubesAndText(){
     // scene.remove( cubeArray[i].children[0] );
     scene.remove (cubeTextArray[i] );
     scene.remove( cubeArray[i] );
+  }
+}
+
+function clearOldSkybox(){
+  if(skybox != null){
+    skybox.geometry.dispose();
+    skybox.material.dispose();
+    scene.remove(skybox);
+  }
+}
+
+function clearVideoScreen(){
+  if(videoMesh != null){
+    console.log("clear video");
+    videoMesh.geometry.dispose();
+    videoMesh.material.map.dispose();
+    videoMesh.material.dispose();
+    scene.remove( videoMesh );
+    videoScreenContext.clearRect( 0, 0, videoScreen.width, videoScreen.height )
+    videoMesh = null;
+  }
+}
+
+function clearRing () {
+  if(ring != null){
+    ring.geometry.dispose();
+    ring.material.dispose();
+    scene.remove(ring);
+    ring = null;
   }
 }
