@@ -85,9 +85,12 @@ function gazeFunction() {
   initSkyBox(<box>.next_index);
   */
   if(t > 4.8){
-    if ( skybox.material.map.sourceFile == skybox_images[0].bg_img ) {
-                initSkybox(1);
-    }
+    // if ( skybox.material.map.sourceFile == skybox_images[0].bg_img ) {
+    //             initSkybox(1);
+    // }
+    intersects = raycaster.intersectObjects( scene.children, true );
+    console.log(intersects[0]);
+    initSkybox(intersects[0].object.next_index);
   }
 
   // Loading animation
