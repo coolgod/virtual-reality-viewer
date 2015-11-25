@@ -54,9 +54,9 @@ function initSkybox( skybox_index ) {
 }
 
 function initCube( box_specific ) {
-  var geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-  var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( box_specific.box_img_path ) } )
-  var cube = new THREE.Mesh(geometry, material);
+  var cubeGeometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
+  var cubeMaterial = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( box_specific.box_img_path ) } )
+  var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
   cube.next_index = box_specific.next_index;
 
   cube.position.x = box_specific.box_coord[0];
@@ -79,7 +79,7 @@ function initText( cube, txt ) {
   var textGeometry = new THREE.TextGeometry( txt, 
   {
     size: 0.3,
-    height: 0.04,
+    height: 0.2,
     weight: "normal",
     style: "normal",
     curveSegments: 3,
@@ -89,12 +89,12 @@ function initText( cube, txt ) {
   });
 
   var textMaterial = new THREE.MeshFaceMaterial( [
-    new THREE.MeshBasicMaterial( { color: 0xffff00, overdraw: 0.5 } ),
-    new THREE.MeshBasicMaterial( { color: 0x000000, overdraw: 0.5 } )
+    new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 15, shading: THREE.SmoothShading, opacity: 0.7, transparent: true } )
   ] );
   text3D = new THREE.Mesh( textGeometry, textMaterial );
   text3D.position.set( cube.position.x, cube.position.y + 0.8, cube.position.z - 0.5);
-  text3D.rotation.y =  - Math.PI / 2;
+  //text3D.rotation.y =  - Math.PI / 2;
+  text3D.lookAt(camera.position);
   return text3D;
 }
 
