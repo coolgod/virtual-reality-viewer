@@ -37,6 +37,8 @@ function initSkybox( skybox_index ) {
     cubeArray.push( initCube( this_skybox.box_specifics[i] ) );
   }
 
+  skybox.receiveShadow = true;
+
   /* loading gaze pointer */
   if(ring == null){
     ring = new THREE.Mesh(
@@ -54,6 +56,21 @@ function initSkybox( skybox_index ) {
 }
 
 function initCube( box_specific ) {
+
+
+  var sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+  var sphereMaterial = new THREE.MeshPhongMaterial({map: THREE.ImageUtils.loadTexture( box_specific.box_img_path ), shading: THREE.SmoothShading, opacity: 0.7, transparent: true});
+  var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+  sphere.next_index = box_specific.next_index;
+  
+  sphere.position.x = box_specific.box_coord[0];
+  sphere.position.y = box_specific.box_coord[1];
+  sphere.position.z = box_specific.box_coord[2];
+
+  sphere.lookAt(camera.position);
+  scene.add(sphere);
+
+  /*
   var cubeGeometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
   var cubeMaterial = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( box_specific.box_img_path ) } )
   var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
@@ -64,17 +81,20 @@ function initCube( box_specific ) {
   cube.position.z = box_specific.box_coord[2];
 
   scene.add(cube);
+  */
+  
+  
   
   // Initialize 3D Text
-  var text3D = initText(cube, box_specific.box_text);
+  var text3D = initText(sphere, box_specific.box_text);
   scene.add( text3D );
   cubeTextArray.push( text3D ); // temp solution, each time a cube is added, the text is pushed to a corresponding array
   //cube.add( text3D ); // text is bined as a child object of cube --> doesn't work out because child rotate with parent
 
-  return cube;
+  return sphere;
 }
 
-function initText( cube, txt ) {
+function initText( sphere, txt ) {
   // text above cube
   var textGeometry = new THREE.TextGeometry( txt, 
   {
@@ -92,7 +112,7 @@ function initText( cube, txt ) {
     new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 15, shading: THREE.SmoothShading, opacity: 0.7, transparent: true } )
   ] );
   text3D = new THREE.Mesh( textGeometry, textMaterial );
-  text3D.position.set( cube.position.x, cube.position.y + 0.8, cube.position.z - 0.5);
+  text3D.position.set( sphere.position.x, sphere.position.y + 0.8, sphere.position.z - 0.9);
   //text3D.rotation.y =  - Math.PI / 2;
   text3D.lookAt(camera.position);
   return text3D;
