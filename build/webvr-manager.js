@@ -1036,10 +1036,12 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
       // function exists in functions.js
       if(!clock.running) clock.start();
       gazeFunction( gazingIndex );
+      showText( gazingIndex );
   }
   else {
       clock.stop();
       ring.scale.set(1, 1, 1);
+      hideText();
   }
   if ( isGazingVideoScreen ) {
     // Render the 2D Video Texture

@@ -1,4 +1,5 @@
 var skybox = null;
+var audio = null;
 
 function initSkybox( skybox_index ) {
 
@@ -7,6 +8,7 @@ function initSkybox( skybox_index ) {
   clearOldSkybox();
   clearOldCubesAndText();
   clearVideoScreen();
+  clearAudio();
   
   var this_skybox = skybox_images[skybox_index];
   var boxWidth = 5;
@@ -53,12 +55,20 @@ function initSkybox( skybox_index ) {
   if ( skybox_index == 0 && videoMesh == null) {
     addVideo();
   }
+
+  initAnimation();
+  /* loading audio */
+  // audio = new THREE.Audio( listener );
+  // audio.load( skybox_images[skybox_index].bg_audio );
+  // audio.autoplay = true;
+  // audio.setRefDistance( 20 );
+  // scene.add(audio);
 }
 
 function initCube( box_specific ) {
 
 
-  var sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+  var sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
   var sphereMaterial = new THREE.MeshPhongMaterial({map: THREE.ImageUtils.loadTexture( box_specific.box_img_path ), shading: THREE.SmoothShading, opacity: 0.7, transparent: true});
   var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
   sphere.next_index = box_specific.next_index;
@@ -83,13 +93,15 @@ function initCube( box_specific ) {
   scene.add(cube);
   */
   
-  
-  
   // Initialize 3D Text
   var text3D = initText(sphere, box_specific.box_text);
   scene.add( text3D );
   cubeTextArray.push( text3D ); // temp solution, each time a cube is added, the text is pushed to a corresponding array
   //cube.add( text3D ); // text is bined as a child object of cube --> doesn't work out because child rotate with parent
+
+  
+
+
 
   return sphere;
 }
@@ -103,7 +115,7 @@ function initText( sphere, txt ) {
     weight: "normal",
     style: "normal",
     curveSegments: 3,
-    font: "helvetiker",
+    font: "Lato",
     material: 0,
     extrudeMaterial: 1
   });
@@ -112,19 +124,52 @@ function initText( sphere, txt ) {
     new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 15, shading: THREE.SmoothShading, opacity: 0.7, transparent: true } )
   ] );
   text3D = new THREE.Mesh( textGeometry, textMaterial );
-  text3D.position.set( sphere.position.x, sphere.position.y + 0.8, sphere.position.z - 0.9);
+  text3D.position.set( sphere.position.x, sphere.position.y + 1.2, sphere.position.z + 0.9);
   //text3D.rotation.y =  - Math.PI / 2;
   text3D.lookAt(camera.position);
+  text3D.visible = false;
   return text3D;
+}
+
+function initAnimation() {
+  // Add Collada Loader
+  var loader = new THREE.ColladaLoader();
+  var dae;
+  loader.options.convertUpAxis = true;
+  loader.load('animation/Door.dae', function (result) {
+    // cube.material.map = result.scene;
+    dae = result.scene;
+    console.log(result.animations);
+    dae.scale.x = dae.scale.y = dae.scale.z = 0.05;
+    dae.position.set( -15, -5, -5 );
+    dae.updateMatrix();
+    newMaterial = new THREE.MeshBasicMaterial();
+    dae.material = newMaterial;
+    scene.add(dae);
+  });
+}
+
+function showText( gazingIndex ) {
+  cubeTextArray[gazingIndex].visible = true;
+}
+
+function hideText( gazingIndex ) {
+  for ( var i = 0; i < cubeTextArray.length; i++ ) {
+    if (cubeTextArray[i].visible) {
+      cubeTextArray[i].visible = false;
+    }
+  }
 }
 
 function gazeFunction( gazingIndex ) {
   var t = clock.getElapsedTime();
   var factor = 1;
 
-
+  console.log(text3D);
+  text3D.visible = true;
   // Loading animation
   if(t > 3.65){
+
     if(t > 4.8){          // if zoom-out-zoom-in animation finish
       clock.stop();       // stop the clock;
       /* change scene here */
@@ -215,5 +260,14 @@ function clearRing () {
     ring.material.dispose();
     scene.remove(ring);
     ring = null;
+  }
+}
+
+function clearAudio () {
+  if(audio != null){
+    // audio.dispose();
+    audio.stop();
+    scene.remove(audio);
+    audio = null;
   }
 }

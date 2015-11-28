@@ -97,33 +97,12 @@ WebVRConfig = {
   -->
 
 <script src="fonts/helvetiker_regular.typeface.js"></script>
-
+<script src="fonts/Lato_Regular.js"></script>
 
 
 <script>
 
-// var dae;
-// Add Collada Loader
-// var loader = new THREE.ColladaLoader();
-// loader.options.convertUpAxis = true;
-// loader.load('../Door.dae', function (result) {
-//   // console.log("Hi ", result.scene);
-//   // cube.material.map = result.scene;
-//   dae = result.scene;
-//   dae.scale.x = dae.scale.y = dae.scale.z = 0;
-//   dae.updateMatrix();
-//   scene.add(dae);
-// });
 
-// var loader = new THREE.OBJLoader();
-// loader.load( 'Door.obj', function ( object ) {
-//   object.traverse( function ( child ) {
-//     if ( child instanceof THREE.Mesh ) {
-//       child.material.map = texture;
-//     }
-//     scene.add( object );
-//   });
-// });
 //Setup three.js WebGL renderer
 var renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -159,7 +138,7 @@ scene.add( particleLight );
 
 scene.add( new THREE.AmbientLight( 0x111111 ) );
 
-var directionalLight = new THREE.DirectionalLight( Math.random() *  0xff0000, 0.125 );
+var directionalLight = new THREE.DirectionalLight( Math.random() *  0xff0000, 0.4 );
 
 directionalLight.position.x = Math.random() - 0.5;
 directionalLight.position.y = Math.random() - 0.5;
@@ -171,6 +150,7 @@ scene.add( directionalLight );
 
 var pointLight = new THREE.PointLight( 0xffffff, 1 );
 particleLight.add( pointLight );
+
 
 // gaze pointer
 var raycaster = new THREE.Raycaster();
@@ -184,12 +164,17 @@ var ring = null;
 var videoMesh = null, video, videoTexture, videoScreen, videoScreenContext;
 addVideo();
 
+// add audio listener
+listener = new THREE.AudioListener();
+camera.add( listener );
+
+
 // Initialize a list of skybox_images (link to images & coordinates of boxes)
 /*
             This all_picture_path variable contains all pathing towards the 
             Struture is 
 
-            background_image:<path>, box_imgage:[{backgroun_index:<num>,box_img_path:"<path>"},{backgroun_index:<num>,box_img_path:"<path>"}]
+            background_image:<path>, box_image:[{background_index:<num>,box_img_path:"<path>"},{background_index:<num>,box_img_path:"<path>"}, background_audio:<path>]
                                             first box image and its corresponding background        2nd box image and its corresponding
 
             Current background ----------------------------------------- bg paths from this current bg
@@ -207,32 +192,36 @@ addVideo();
                     bg_name:"Brookings",
                     bg_img:"img/brookings.jpg",
                     box_specifics:[
-                    {box_img_path:"img/samfox.jpg", box_coord:[6,0,-5], box_text: "Sam Fox", next_index: 7},
-                    {box_img_path:"img/engineering.jpg", box_coord:[6,0,5], box_text: "Engineering", next_index: 1}
-                    ]
+                    {box_img_path:"img/samfox.jpg", box_coord:[-12,0,0], box_text: "Sam Fox", next_index: 7},
+                    {box_img_path:"img/engineering.jpg", box_coord:[6,0,0], box_text: "Engineering", next_index: 1}
+                    ],
+                    bg_audio:"audio/brookings.mp3"
                 },
                 {
                     bg_name:"Engineering",
                     bg_img:"img/engineering.jpg",
                     box_specifics:[
-                    {box_img_path:"img/brookings.jpg", box_coord:[6,0,-5], box_text: "Brookings", next_index: 0},
-                    {box_img_path:"img/outside_olin.jpg", box_coord:[6,0,5], box_text: "Olin Library", next_index: 2}
+                    {box_img_path:"img/brookings.jpg", box_coord:[-9,-2,0], box_text: "Brookings", next_index: 0},
+                    {box_img_path:"img/outside_olin.jpg", box_coord:[9,-2,0], box_text: "Olin Library", next_index: 2}
                     ],
+                    bg_audio:"audio/engineering.mp3"
                 },
                 {
                     bg_name:"Olin Outside",
                     bg_img:"img/outside_olin.jpg",
                     box_specifics:[
-                    {box_img_path:"img/inside_olin.jpg", box_coord:[6,0,-5], box_text: "Olin Circ", next_index: 3},
-                    {box_img_path:"img/fun_room.jpg", box_coord:[6,0,5], box_text: "Fun Room", next_index: 4}
-                    ]
+                    {box_img_path:"img/inside_olin.jpg", box_coord:[-8,-4,0], box_text: "Olin Circ", next_index: 3},
+                    {box_img_path:"img/fun_room.jpg", box_coord:[6,-4,12], box_text: "Fun Room", next_index: 4}
+                    ],
+                    bg_audio:"audio/outside_olin.mp3"
                 },
                 {
                     bg_name:"Olin Circ",
                     bg_img:"img/inside_olin.jpg",
                     box_specifics:[
-                    {box_img_path:"img/outside_olin.jpg", box_coord:[6,0,-5], box_text: "Olin Library", next_index: 2}
-                    ]
+                    {box_img_path:"img/outside_olin.jpg", box_coord:[2,0,-10], box_text: "Olin Library", next_index: 2}
+                    ],
+                    bg_audio:"audio/inside_olin.mp3"
                 },
                 {
                     bg_name:"DUC: Fun room",
@@ -240,7 +229,8 @@ addVideo();
                     box_specifics:[
                     {box_img_path:"img/outside_olin.jpg", box_coord:[6,0,-5], box_text: "Olin Library", next_index: 2},
                     {box_img_path:"img/STS.jpg", box_coord:[6,0,5], box_text: "STS", next_index: 5}
-                    ]
+                    ],
+                    bg_audio:"audio/fun_room.mp3"
                 },
                 {
                     bg_name:"STS",
@@ -248,7 +238,8 @@ addVideo();
                     box_specifics:[
                     {box_img_path:"img/fun_room.jpg", box_coord:[6,0,-5], box_text: "Fun Room", next_index: 4},
                     {box_img_path:"img/bd.jpg", box_coord:[6,0,5], box_text: "Bear's Den", next_index: 6}
-                    ]
+                    ],
+                    bg_audio:"audio/STS.mp3"
                 },
                 {
                     bg_name:"Bear's Den",
@@ -256,7 +247,8 @@ addVideo();
                     box_specifics:[
                     {box_img_path:"img/STS.jpg", box_coord:[6,0,-5], box_text: "STS", next_index: 5},
                     {box_img_path:"img/samfox.jpg", box_coord:[6,0,5], box_text: "Sam Fox", next_index: 7}
-                    ]
+                    ],
+                    bg_audio:"audio/bd.mp3"
                 },
                 {
                     bg_name:"Sam Fox Art",
@@ -264,12 +256,15 @@ addVideo();
                     box_specifics:[
                     {box_img_path:"img/bd.jpg", box_coord:[6,0,-5], box_text: "Bear's Den", next_index: 6},
                     {box_img_path:"img/brookings.jpg", box_coord:[6,0,5], box_text: "Brookings", next_index: 0}
-                    ]
+                    ],
+                    bg_audio:"audio/samfox.mp3"
                 }
             ];
 
 // Initialize a skybox.
 initSkybox(0);
+
+
 
 // Create a VR manager helper to enter and exit VR mode.
 var manager = new WebVRManager(renderer, effect, {hideButton: false});
