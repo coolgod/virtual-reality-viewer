@@ -1034,9 +1034,7 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
   }
   if ( hasMoved && isGazingCube ) {
       // function exists in functions.js
-      if(!clock.running) clock.start();
       gazeFunction( gazingIndex );
-      showText( gazingIndex );
   }
   else {
       clock.stop();

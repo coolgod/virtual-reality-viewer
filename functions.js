@@ -1,5 +1,6 @@
 var skybox = null;
 var audio = null;
+var doorArray = null;
 
 function initSkybox( skybox_index ) {
 
@@ -48,15 +49,13 @@ function initSkybox( skybox_index ) {
     new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide} ));      // set color to white
     scene.add(ring);
   }
-  
-  // update the clock
-  clock = new THREE.Clock(false);
 
   if ( skybox_index == 0 && videoMesh == null) {
     addVideo();
   }
 
-  initAnimation();
+  doorArray = [];
+  doorArray.push( initAnimation() );
   /* loading audio */
   // audio = new THREE.Audio( listener );
   // audio.load( skybox_images[skybox_index].bg_audio );
@@ -72,12 +71,7 @@ function initCube( box_specific ) {
   var sphereMaterial = new THREE.MeshPhongMaterial({map: THREE.ImageUtils.loadTexture( box_specific.box_img_path ), shading: THREE.SmoothShading, opacity: 0.7, transparent: true});
   var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
   sphere.next_index = box_specific.next_index;
-  
-  sphere.position.x = box_specific.box_coord[0];
-  sphere.position.y = box_specific.box_coord[1];
-  sphere.position.z = box_specific.box_coord[2];
-
-  sphere.lookAt(camera.position);
+  sphere.position.set( box_specific.box_coord[0], box_specific.box_coord[1], box_specific.box_coord[2] );
   scene.add(sphere);
 
   /*
@@ -99,10 +93,6 @@ function initCube( box_specific ) {
   cubeTextArray.push( text3D ); // temp solution, each time a cube is added, the text is pushed to a corresponding array
   //cube.add( text3D ); // text is bined as a child object of cube --> doesn't work out because child rotate with parent
 
-  
-
-
-
   return sphere;
 }
 
@@ -110,7 +100,7 @@ function initText( sphere, txt ) {
   // text above cube
   var textGeometry = new THREE.TextGeometry( txt, 
   {
-    size: 0.3,
+    size: 0.6,
     height: 0.2,
     weight: "normal",
     style: "normal",
@@ -139,7 +129,7 @@ function initAnimation() {
   loader.load('animation/Door.dae', function (result) {
     // cube.material.map = result.scene;
     dae = result.scene;
-    console.log(result.animations);
+    // console.log(result.animations);
     dae.scale.x = dae.scale.y = dae.scale.z = 0.05;
     dae.position.set( -15, -5, -5 );
     dae.updateMatrix();
@@ -147,10 +137,13 @@ function initAnimation() {
     dae.material = newMaterial;
     scene.add(dae);
   });
+  return dae;
 }
 
 function showText( gazingIndex ) {
-  cubeTextArray[gazingIndex].visible = true;
+  if ( !cubeTextArray[gazingIndex].visible ) {
+    cubeTextArray[gazingIndex].visible = true;
+  }
 }
 
 function hideText( gazingIndex ) {
@@ -162,14 +155,16 @@ function hideText( gazingIndex ) {
 }
 
 function gazeFunction( gazingIndex ) {
-  var t = clock.getElapsedTime();
+  if ( !clock.running ) {
+    clock.start();
+  }
+  var t = 0.001 * ( self.performance.now() - clock.oldTime );
   var factor = 1;
 
-  console.log(text3D);
-  text3D.visible = true;
+  showText( gazingIndex );
+  
   // Loading animation
   if(t > 3.65){
-
     if(t > 4.8){          // if zoom-out-zoom-in animation finish
       clock.stop();       // stop the clock;
       /* change scene here */
@@ -225,30 +220,35 @@ function renderVideo() {
   }
 }
 
+/* objects recycle */
+
 function clearOldCubesAndText(){
   /* remove the cubes already in the scene */
   for (var i = 0; i < cubeArray.length; i++){
-    // scene.remove( cubeArray[i].children[0] );
     scene.remove (cubeTextArray[i] );
+    //cubeTextArray[i].material.dispose();
+    cubeTextArray[i].geometry.dispose();
+
     scene.remove( cubeArray[i] );
+    cubeArray[i].material.dispose();
+    cubeArray[i].geometry.dispose();
   }
 }
 
 function clearOldSkybox(){
   if(skybox != null){
+    scene.remove(skybox);
     skybox.geometry.dispose();
     skybox.material.dispose();
-    scene.remove(skybox);
   }
 }
 
 function clearVideoScreen(){
   if(videoMesh != null){
-    console.log("clear video");
+    scene.remove( videoMesh );
     videoMesh.geometry.dispose();
     videoMesh.material.map.dispose();
     videoMesh.material.dispose();
-    scene.remove( videoMesh );
     videoScreenContext.clearRect( 0, 0, videoScreen.width, videoScreen.height )
     videoMesh = null;
   }
@@ -256,9 +256,9 @@ function clearVideoScreen(){
 
 function clearRing () {
   if(ring != null){
+    scene.remove(ring);
     ring.geometry.dispose();
     ring.material.dispose();
-    scene.remove(ring);
     ring = null;
   }
 }
@@ -269,5 +269,13 @@ function clearAudio () {
     audio.stop();
     scene.remove(audio);
     audio = null;
+  }
+}
+
+function clearDoors() {
+  for (var i = 0; i < doorArray.length; i++){
+    // scene.remove( cubeArray[i].children[0] );
+    scene.remove (doorArray[i]);
+    doorArray[i].material.dispose();
   }
 }
