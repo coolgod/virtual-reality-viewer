@@ -119,7 +119,9 @@ var cubeTextArray = [];
 
 // Create a three.js camera.
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-camera.target = new THREE.Vector3( 0, 0, 0 );
+camera.target = new THREE.Vector3( 10, 10, 0 );
+console.log(camera);
+camera.lookAt(new THREE.Vector3( 100, 100, 100 ));
 
 // Apply VR headset positional data to camera.
 var controls = new THREE.VRControls(camera);
