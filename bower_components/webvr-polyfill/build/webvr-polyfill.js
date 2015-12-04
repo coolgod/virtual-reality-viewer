@@ -605,9 +605,10 @@ MouseKeyboardPositionSensorVRDevice.prototype.onMouseMove_ = function(e) {
   // Prevent looking too far up or down.
   this.phi = Util.clamp(this.phi, -Math.PI/2, Math.PI/2);
 
-  camera.target.x = - Math.sin(this.phi + 0.5 * Math.PI) * Math.cos(this.theta - 0.5 * Math.PI) * 3;
-  camera.target.y = - Math.cos(this.phi + 0.5 * Math.PI) * 3;
-  camera.target.z = Math.sin(this.phi + 0.5 * Math.PI) * Math.sin(this.theta - 0.5 * Math.PI) * 3;
+  camera.target.x = - Math.sin(this.phi + 0.5 * Math.PI) * Math.cos(this.theta - 0.5 * Math.PI);
+  camera.target.y = - Math.cos(this.phi + 0.5 * Math.PI);
+  camera.target.z = Math.sin(this.phi + 0.5 * Math.PI) * Math.sin(this.theta - 0.5 * Math.PI);
+  camera.target.normalize();
 };
 
 MouseKeyboardPositionSensorVRDevice.prototype.onMouseUp_ = function(e) {

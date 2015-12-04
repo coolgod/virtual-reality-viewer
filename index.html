@@ -80,20 +80,20 @@ WebVRConfig = {
 <script src="build/webvr-manager.js"></script>
 
 <!--
-  Imports All New Functions 
+  Imports All New Functions
   -->
 
 <script src="functions.js"></script>
 
 <!--
-  Imports Door 
+  Imports Door
   -->
 
 <script src="bower_components/threejs/examples/js/loaders/ColladaLoader.js"></script>
 <script src="bower_components/threejs/examples/js/loaders/OBJLoader.js"></script>
 
 <!--
-  Imports Font 
+  Imports Font
   -->
 
 <script src="fonts/helvetiker_regular.typeface.js"></script>
@@ -134,7 +134,7 @@ var clock = new THREE.Clock(false);
 
 // Lights
 particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0000 } ) );
-scene.add( particleLight );        
+scene.add( particleLight );
 
 scene.add( new THREE.AmbientLight( 0x111111 ) );
 
@@ -171,8 +171,8 @@ camera.add( listener );
 
 // Initialize a list of skybox_images (link to images & coordinates of boxes)
 /*
-            This all_picture_path variable contains all pathing towards the 
-            Struture is 
+            This all_picture_path variable contains all pathing towards the
+            Struture is
 
             background_image:<path>, box_image:[{background_index:<num>,box_img_path:"<path>"},{background_index:<num>,box_img_path:"<path>"}, background_audio:<path>]
                                             first box image and its corresponding background        2nd box image and its corresponding

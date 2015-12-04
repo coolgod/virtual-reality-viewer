@@ -1011,12 +1011,11 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
       cubeArray[i].rotation.y += 0.01;
   }
 
-  ring.position.set(camera.target.x, camera.target.y, camera.target.z);
+  ring.position.set(camera.target.x * 3, camera.target.y * 3, camera.target.z * 3);
   ring.quaternion.copy( camera.quaternion );    // makes the ring face the screen (in conjunction with the camera)
 
-  var cameraTarget = new THREE.Vector3(ring.position.x, ring.position.y, ring.position.z);
-
-  raycaster.set(  camera.position, cameraTarget.normalize() );       // ray is from camera position to camera target
+  /* raycaster */
+  raycaster.set(  camera.position, camera.target );       // ray is from camera position to camera target
   raycaster.near = 1;                                                // ray will collide with the gaze pointer ring, but will ignore it                                  
   var intersects = raycaster.intersectObjects( scene.children );
   // console.log("intersects: ", intersects.length);
