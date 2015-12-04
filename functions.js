@@ -55,13 +55,13 @@ function initSkybox( skybox_index ) {
   }
 
   doorArray = [];
-  doorArray.push( initAnimation() );
+  // doorArray.push( initAnimation() );
   /* loading audio */
-  // audio = new THREE.Audio( listener );
-  // audio.load( skybox_images[skybox_index].bg_audio );
-  // audio.autoplay = true;
-  // audio.setRefDistance( 20 );
-  // scene.add(audio);
+  audio = new THREE.Audio( listener );
+  audio.load( skybox_images[skybox_index].bg_audio );
+  audio.autoplay = true;
+  audio.setRefDistance( 20 );
+  scene.add(audio);
 }
 
 function initCube( box_specific ) {
@@ -129,7 +129,7 @@ function initAnimation() {
   loader.load('animation/Door.dae', function (result) {
     // cube.material.map = result.scene;
     dae = result.scene;
-    // console.log(result.animations);
+    console.log(result);
     dae.scale.x = dae.scale.y = dae.scale.z = 0.05;
     dae.position.set( -15, -5, -5 );
     dae.updateMatrix();
@@ -278,4 +278,10 @@ function clearDoors() {
     scene.remove (doorArray[i]);
     doorArray[i].material.dispose();
   }
+}
+
+function changeCameraTarget( phi, theta ) {
+  camera.target.x = - Math.sin(this.phi + 0.5 * Math.PI) * Math.cos(this.theta - 0.5 * Math.PI) * 3;
+  camera.target.y = - Math.cos(this.phi + 0.5 * Math.PI) * 3;
+  camera.target.z = Math.sin(this.phi + 0.5 * Math.PI) * Math.sin(this.theta - 0.5 * Math.PI) * 3;
 }

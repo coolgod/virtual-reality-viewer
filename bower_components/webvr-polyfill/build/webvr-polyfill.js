@@ -575,13 +575,11 @@ MouseKeyboardPositionSensorVRDevice.prototype.onMouseDown_ = function(e) {
 
 // Very similar to https://gist.github.com/mrflix/8351020
 /*
-  jsp
   Added MouseClick Function
 */
 
 MouseKeyboardPositionSensorVRDevice.prototype.onMouseMove_ = function(e) {
-  hasMoved = true;
-  
+
   if (!this.isDragging && !this.isPointerLocked_()) {
     return;
   }
@@ -609,6 +607,7 @@ MouseKeyboardPositionSensorVRDevice.prototype.onMouseMove_ = function(e) {
   camera.target.y = - Math.cos(this.phi + 0.5 * Math.PI);
   camera.target.z = Math.sin(this.phi + 0.5 * Math.PI) * Math.sin(this.theta - 0.5 * Math.PI);
   camera.target.normalize();
+  hasMoved = true;
 };
 
 MouseKeyboardPositionSensorVRDevice.prototype.onMouseUp_ = function(e) {
@@ -3084,7 +3083,15 @@ TouchPanner.prototype.onTouchMove_ = function(e) {
   this.rotateStart.copy(this.rotateEnd);
 
   var element = document.body;
+  this.phi += 2 * Math.PI * this.rotateDelta.y / element.clientHeight * ROTATE_SPEED;
   this.theta += 2 * Math.PI * this.rotateDelta.x / element.clientWidth * ROTATE_SPEED;
+
+  hasMoved = true;
+
+  camera.target.x = - Math.sin(this.phi + 0.5 * Math.PI) * Math.cos(this.theta - 0.5 * Math.PI) * 3;
+  camera.target.y = - Math.cos(this.phi + 0.5 * Math.PI) * 3;
+  camera.target.z = Math.sin(this.phi + 0.5 * Math.PI) * Math.sin(this.theta - 0.5 * Math.PI) * 3;
+
 };
 
 TouchPanner.prototype.onTouchEnd_ = function(e) {
