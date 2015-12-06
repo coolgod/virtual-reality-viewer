@@ -1004,6 +1004,8 @@ WebVRManager.prototype.isVRMode = function() {
 
 
 WebVRManager.prototype.render = function(scene, camera, timestamp) {
+
+  console.log("in vr render");
   this.resizeIfNeeded_(camera);
 
   /* rotate the cube */
@@ -1015,9 +1017,18 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
   ring.quaternion.copy( camera.quaternion );    // makes the ring face the screen (in conjunction with the camera)
 
   /* raycaster */
+  if (Math.random() < 0.05) {
+    console.log("Raycaster " + raycaster);
+  }
+
   raycaster.set(  camera.position, camera.getWorldDirection() );       // ray is from camera position to camera target
   raycaster.near = 1;                                                // ray will collide with the gaze pointer ring, but will ignore it                                  
   var intersects = raycaster.intersectObjects( scene.children );
+
+  if (Math.random() < 0.05) {
+    console.log("intersects " + intersects.length);
+  }
+
   // console.log("intersects: ", intersects.length);
   var isGazingCube = false, gazingIndex = null, isGazingVideoScreen = false;
   for ( var i = 0; i < intersects.length; i++ ) {
@@ -1031,7 +1042,9 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
         isGazingVideoScreen = true;
     }
   }
-  if ( hasMoved && isGazingCube ) {
+  if ( isGazingCube ) {
+      console.log("gazeFunction");
+
       // function exists in functions.js
       gazeFunction( gazingIndex );
   }
