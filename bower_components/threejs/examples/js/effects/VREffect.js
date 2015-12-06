@@ -131,7 +131,7 @@ THREE.VREffect = function ( renderer, onError ) {
 			size.width /= 2;
 
 			renderer.enableScissorTest( true );
-			renderer.clear();
+			// renderer.clear(); // comment this out for multiple scene rendering
 
 			if ( camera.parent === null ) camera.updateMatrixWorld();
 

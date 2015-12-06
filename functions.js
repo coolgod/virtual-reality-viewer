@@ -42,17 +42,19 @@ function initSkybox( skybox_index ) {
 
   skybox.receiveShadow = true;
 
+  /* load video screen */
+  if ( skybox_index == 0 && videoMesh == null) {
+    addVideo();
+  }
+
   /* loading gaze pointer */
   if(ring == null){
     ring = new THREE.Mesh(
     new THREE.TorusGeometry( 0.17, 0.017, 0, 70 ),            // set 'radius segment' to 0 to make it a flat 2D ring
     new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide} ));      // set color to white
-    scene.add(ring);
+    top_scene.add(ring);
   }
 
-  if ( skybox_index == 0 && videoMesh == null) {
-    addVideo();
-  }
 
   doorArray = [];
   // doorArray.push( initAnimation() );
@@ -73,19 +75,6 @@ function initCube( box_specific ) {
   sphere.next_index = box_specific.next_index;
   sphere.position.set( box_specific.box_coord[0], box_specific.box_coord[1], box_specific.box_coord[2] );
   scene.add(sphere);
-
-  /*
-  var cubeGeometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
-  var cubeMaterial = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( box_specific.box_img_path ) } )
-  var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-  cube.next_index = box_specific.next_index;
-
-  cube.position.x = box_specific.box_coord[0];
-  cube.position.y = box_specific.box_coord[1];
-  cube.position.z = box_specific.box_coord[2];
-
-  scene.add(cube);
-  */
   
   // Initialize 3D Text
   var text3D = initText(sphere, box_specific.box_text);
@@ -100,7 +89,7 @@ function initText( sphere, txt ) {
   // text above cube
   var textGeometry = new THREE.TextGeometry( txt, 
   {
-    size: 0.6,
+    size: 1,
     height: 0.2,
     weight: "normal",
     style: "normal",
@@ -111,11 +100,16 @@ function initText( sphere, txt ) {
   });
 
   var textMaterial = new THREE.MeshFaceMaterial( [
-    new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 15, shading: THREE.SmoothShading, opacity: 0.7, transparent: true } )
+    new THREE.MeshPhongMaterial( { color: 0xDDDDDD  , specular: 0x009900, shininess: 10, shading: THREE.SmoothShading, opacity: 0.8, transparent: true } )
   ] );
   text3D = new THREE.Mesh( textGeometry, textMaterial );
-  text3D.position.set( sphere.position.x, sphere.position.y + 1.2, sphere.position.z + 0.9);
-  //text3D.rotation.y =  - Math.PI / 2;
+
+  var deltaX = ( (sphere.position.z > 0) ? +1 : -1 ) * ( txt.length * 0.2 );
+  var deltaZ = ( (sphere.position.x > 0) ? -1 : +1 ) * ( txt.length * 0.2 );
+  deltaX = (sphere.position.z == 0) ? 0 : deltaX;
+  deltaZ = (sphere.position.x == 0) ? 0 : deltaZ;
+
+  text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 1.5, sphere.position.z + deltaZ);
   text3D.lookAt(camera.position);
   text3D.visible = false;
   return text3D;
@@ -231,6 +225,7 @@ function clearOldCubesAndText(){
 
     scene.remove( cubeArray[i] );
     cubeArray[i].material.dispose();
+    cubeArray[i].material.map.dispose();
     cubeArray[i].geometry.dispose();
   }
 }
@@ -239,6 +234,7 @@ function clearOldSkybox(){
   if(skybox != null){
     scene.remove(skybox);
     skybox.geometry.dispose();
+    skybox.material.map.dispose();
     skybox.material.dispose();
   }
 }
@@ -256,7 +252,7 @@ function clearVideoScreen(){
 
 function clearRing () {
   if(ring != null){
-    scene.remove(ring);
+    top_scene.remove(ring);
     ring.geometry.dispose();
     ring.material.dispose();
     ring = null;

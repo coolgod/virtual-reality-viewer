@@ -104,14 +104,17 @@ WebVRConfig = {
 
 
 //Setup three.js WebGL renderer
-var renderer = new THREE.WebGLRenderer({ antialias: true });
+var renderer = new THREE.WebGLRenderer({ antialias: false });
 renderer.setPixelRatio(window.devicePixelRatio);
+renderer.sortObjects = true;  // not always working
+renderer.autoClear = false;
 
 // Append the canvas element created by the renderer to document body element.
 document.body.appendChild(renderer.domElement);
 
 // Create a three.js scene.
 var scene = new THREE.Scene();
+var top_scene = new THREE.Scene();
 
 // Create cube array used for each scene
 var cubeArray = [];
@@ -192,73 +195,73 @@ camera.add( listener );
             skybox_images = [
                 {
                     bg_name:"Brookings",
-                    bg_img:"img/brookings.jpg",
+                    bg_img:"img/compressed/brookings.jpg",
                     box_specifics:[
-                    {box_img_path:"img/samfox.jpg", box_coord:[-16, 0, 0], box_text: "Sam Fox", next_index: 7},
-                    {box_img_path:"img/engineering.jpg", box_coord:[12, 0, 12], box_text: "Engineering", next_index: 1},
-                    {box_img_path:"img/outside_olin.jpg", box_coord:[10, 0, -18], box_text: "Olin Library", next_index: 2}
+                    {box_img_path:"img/box/samfox.jpg", box_coord:[-16, 0, 0], box_text: "Sam Fox", next_index: 7},
+                    {box_img_path:"img/box/engineering.jpg", box_coord:[12, 0, 12], box_text: "Engineering", next_index: 1},
+                    {box_img_path:"img/box/outside_olin.jpg", box_coord:[10, 0, -18], box_text: "Olin Library", next_index: 2}
                     ],
                     bg_audio:"audio/brookings.mp3"
                 },
                 {
                     bg_name:"Engineering",
-                    bg_img:"img/engineering.jpg",
+                    bg_img:"img/compressed/engineering.jpg",
                     box_specifics:[
-                    {box_img_path:"img/brookings.jpg", box_coord:[-12, -2, 0], box_text: "Brookings", next_index: 0},
-                    {box_img_path:"img/outside_olin.jpg", box_coord:[9, -2, 0], box_text: "Olin Library", next_index: 2}
+                    {box_img_path:"img/box/brookings.jpg", box_coord:[-12, -2, 0], box_text: "Brookings", next_index: 0},
+                    {box_img_path:"img/box/outside_olin.jpg", box_coord:[9, -2, 0], box_text: "Olin Library", next_index: 2}
                     ],
                     bg_audio:"audio/engineering.mp3"
                 },
                 {
                     bg_name:"Olin Outside",
-                    bg_img:"img/outside_olin.jpg",
+                    bg_img:"img/compressed/outside_olin.jpg",
                     box_specifics:[
-                    {box_img_path:"img/inside_olin.jpg", box_coord:[-8,-4,0], box_text: "Olin Circ", next_index: 3},
-                    {box_img_path:"img/fun_room.jpg", box_coord:[6,-4,12], box_text: "Fun Room", next_index: 4}
+                    {box_img_path:"img/box/inside_olin.jpg", box_coord:[-8,-4,0], box_text: "Olin Circ", next_index: 3},
+                    {box_img_path:"img/box/fun_room.jpg", box_coord:[6,-4,12], box_text: "Fun Room", next_index: 4}
                     ],
                     bg_audio:"audio/outside_olin.mp3"
                 },
                 {
                     bg_name:"Olin Circ",
-                    bg_img:"img/inside_olin.jpg",
+                    bg_img:"img/compressed/inside_olin.jpg",
                     box_specifics:[
-                    {box_img_path:"img/outside_olin.jpg", box_coord:[2,0,-10], box_text: "Olin Library", next_index: 2}
+                    {box_img_path:"img/box/outside_olin.jpg", box_coord:[2,0,-10], box_text: "Olin Library", next_index: 2}
                     ],
                     bg_audio:"audio/inside_olin.mp3"
                 },
                 {
                     bg_name:"DUC: Fun room",
-                    bg_img:"img/fun_room.jpg",
+                    bg_img:"img/compressed/fun_room.jpg",
                     box_specifics:[
-                    {box_img_path:"img/outside_olin.jpg", box_coord:[6,0,-5], box_text: "Olin Library", next_index: 2},
-                    {box_img_path:"img/STS.jpg", box_coord:[6,0,5], box_text: "STS", next_index: 5}
+                    {box_img_path:"img/box/outside_olin.jpg", box_coord:[6,0,-5], box_text: "Olin Library", next_index: 2},
+                    {box_img_path:"img/box/STS.jpg", box_coord:[6,0,5], box_text: "STS", next_index: 5}
                     ],
                     bg_audio:"audio/fun_room.mp3"
                 },
                 {
                     bg_name:"STS",
-                    bg_img:"img/STS.jpg",
+                    bg_img:"img/compressed/STS.jpg",
                     box_specifics:[
-                    {box_img_path:"img/fun_room.jpg", box_coord:[6,0,-5], box_text: "Fun Room", next_index: 4},
-                    {box_img_path:"img/bd.jpg", box_coord:[6,0,5], box_text: "Bear's Den", next_index: 6}
+                    {box_img_path:"img/box/fun_room.jpg", box_coord:[6,0,-5], box_text: "Fun Room", next_index: 4},
+                    {box_img_path:"img/box/bd.jpg", box_coord:[6,0,5], box_text: "Bear's Den", next_index: 6}
                     ],
                     bg_audio:"audio/STS.mp3"
                 },
                 {
                     bg_name:"Bear's Den",
-                    bg_img:"img/bd.jpg",
+                    bg_img:"img/compressed/bd.jpg",
                     box_specifics:[
-                    {box_img_path:"img/STS.jpg", box_coord:[6,0,-5], box_text: "STS", next_index: 5},
-                    {box_img_path:"img/samfox.jpg", box_coord:[6,0,5], box_text: "Sam Fox", next_index: 7}
+                    {box_img_path:"img/box/STS.jpg", box_coord:[6,0,-5], box_text: "STS", next_index: 5},
+                    {box_img_path:"img/box/samfox.jpg", box_coord:[6,0,5], box_text: "Sam Fox", next_index: 7}
                     ],
                     bg_audio:"audio/bd.mp3"
                 },
                 {
                     bg_name:"Sam Fox Art",
-                    bg_img:"img/samfox.jpg",
+                    bg_img:"img/compressed/samfox.jpg",
                     box_specifics:[
-                    {box_img_path:"img/bd.jpg", box_coord:[6,0,-5], box_text: "Bear's Den", next_index: 6},
-                    {box_img_path:"img/brookings.jpg", box_coord:[6,0,5], box_text: "Brookings", next_index: 0}
+                    {box_img_path:"img/box/bd.jpg", box_coord:[-10,0,-10], box_text: "Bear's Den", next_index: 6},
+                    {box_img_path:"img/box/brookings.jpg", box_coord:[10,0,-10], box_text: "Brookings", next_index: 0}
                     ],
                     bg_audio:"audio/samfox.mp3"
                 }
@@ -279,6 +282,7 @@ function animate(timestamp) {
 
   // Render the scene through the manager.
   manager.render(scene, camera, timestamp);
+
 
   requestAnimationFrame(animate);
 }

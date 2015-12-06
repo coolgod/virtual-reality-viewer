@@ -1011,11 +1011,11 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
       cubeArray[i].rotation.y += 0.01;
   }
 
-  ring.position.set(camera.target.x * 3, camera.target.y * 3, camera.target.z * 3);
+  ring.position.set(camera.getWorldDirection().x * 3, camera.getWorldDirection().y * 3, camera.getWorldDirection().z * 3);
   ring.quaternion.copy( camera.quaternion );    // makes the ring face the screen (in conjunction with the camera)
 
   /* raycaster */
-  raycaster.set(  camera.position, camera.target );       // ray is from camera position to camera target
+  raycaster.set(  camera.position, camera.getWorldDirection() );       // ray is from camera position to camera target
   raycaster.near = 1;                                                // ray will collide with the gaze pointer ring, but will ignore it                                  
   var intersects = raycaster.intersectObjects( scene.children );
   // console.log("intersects: ", intersects.length);
@@ -1049,20 +1049,27 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
 
   //console.log(clock.startTime);
 
+  
   if (this.isVRMode()) {
     // console.log("VRMode Render");
     this.distorter.preRender();
+    this.renderer.clear();
     this.effect.render(scene, camera);
+    this.renderer.clearDepth();
+    this.effect.render(top_scene, camera);
     this.distorter.postRender();
   } else {
     // Scene may be an array of two scenes, one for each eye.
     // console.log("ElseMode Render");
-
+    this.renderer.clear();
     if (scene instanceof Array) {
       this.renderer.render(scene[0], camera);
     } else {
       this.renderer.render(scene, camera);
     }
+
+    this.renderer.clearDepth();
+    this.renderer.render( top_scene, camera );
   }
 };
 
