@@ -1,15 +1,17 @@
 var skybox = null;
 var audio = null;
 var doorArray = null;
+var introText = null;
+annie = null;
 
 function initSkybox( skybox_index ) {
 
-  hasMoved = false;
   clearRing();
   clearOldSkybox();
   clearOldCubesAndText();
   clearVideoScreen();
   clearAudio();
+  clearIntroText();
   
   var this_skybox = skybox_images[skybox_index];
   var boxWidth = 5;
@@ -44,7 +46,12 @@ function initSkybox( skybox_index ) {
 
   /* load video screen */
   if ( skybox_index == 0 && videoMesh == null) {
-    addVideo();
+    // addVideo();
+  }
+
+  /* load Intro text */
+  if ( skybox_index == 8 ) {
+    addIntroText( skybox_index );
   }
 
   /* loading gaze pointer */
@@ -55,15 +62,20 @@ function initSkybox( skybox_index ) {
     top_scene.add(ring);
   }
 
+  addAnimatedTexture();
+
 
   doorArray = [];
-  // doorArray.push( initAnimation() );
+  doorArray.push( initAnimation() );
+
   /* loading audio */
-  audio = new THREE.Audio( listener );
-  audio.load( skybox_images[skybox_index].bg_audio );
-  audio.autoplay = true;
-  audio.setRefDistance( 20 );
-  scene.add(audio);
+  if (skybox_images[skybox_index].bg_audio != "") {
+    audio = new THREE.Audio( listener );
+    audio.load( skybox_images[skybox_index].bg_audio );
+    audio.autoplay = true;
+    audio.setRefDistance( 20 );
+    scene.add(audio);
+  }
 }
 
 function initCube( box_specific ) {
@@ -125,8 +137,9 @@ function initAnimation() {
     dae = result.scene;
     console.log(result);
     dae.scale.x = dae.scale.y = dae.scale.z = 0.05;
-    dae.position.set( -15, -5, -5 );
+    dae.position.set( 20, -5, -2.5 );
     dae.updateMatrix();
+    dae.lookAt( new THREE.Vector3(camera.position.x, camera.position.y-5, camera.position.z) );
     newMaterial = new THREE.MeshBasicMaterial();
     dae.material = newMaterial;
     scene.add(dae);
@@ -200,11 +213,85 @@ function addVideo() {
   // movie image will be scaled to fit these dimensions.
   var videoGeometry = new THREE.PlaneGeometry( 24, 10, 4, 4 );
   videoMesh = new THREE.Mesh( videoGeometry, videoMaterial );
-  videoMesh.position.set( 10, 0, 60 );
-  videoMesh.rotation.y = 50;
-  videoMesh.rotation.z = 0;
+  videoMesh.position.set( 28, -3, -2.5 );
+  videoMesh.rotation.y = Math.PI/2;
+  // videoMesh.rotation.z = 0;
   scene.add(videoMesh);
 }
+
+function addIntroText( skybox_index ) {
+  var textGeometry = new THREE.TextGeometry( skybox_images[skybox_index].bg_name, 
+  {
+    size: 1,
+    height: 0.2,
+    weight: "normal",
+    style: "normal",
+    curveSegments: 10,
+    font: "Lato",
+    material: 0,
+    extrudeMaterial: 1
+  });
+
+  var textMaterial = new THREE.MeshFaceMaterial( [
+    new THREE.MeshPhongMaterial( { color: 0xffffff, emissive: 0x595050, specular: 0xffffff, shininess: 10, shading: THREE.SmoothShading, opacity: 0.8, transparent: true } )
+  ] );
+  introText = new THREE.Mesh( textGeometry, textMaterial );
+
+  introText.position.set( -10, 5, -15 );
+  introText.lookAt( new THREE.Vector3(camera.position.x-10, camera.position.y, camera.position.z) );
+  introText.visible = true;
+  scene.add( introText );
+
+}
+
+function addAnimatedTexture() {
+  var runnerTexture = new THREE.ImageUtils.loadTexture( 'img/run.png' );
+  annie = new TextureAnimator( runnerTexture, 10, 1, 10, 75 ); // texture, #horiz, #vert, #total, duration.
+  var runnerMaterial = new THREE.MeshBasicMaterial( { map: runnerTexture, side:THREE.DoubleSide } );
+  var runnerGeometry = new THREE.PlaneGeometry(4, 7, 1, 1);
+  var runner = new THREE.Mesh(runnerGeometry, runnerMaterial);
+  runner.position.set(27.5,-2,-1);
+  runner.lookAt( new THREE.Vector3(camera.position.x-10, camera.position.y, camera.position.z) );
+  scene.add(runner);
+
+}
+
+function TextureAnimator(texture, tilesHoriz, tilesVert, numTiles, tileDispDuration) 
+{ 
+  // note: texture passed by reference, will be updated by the update function.
+    
+  this.tilesHorizontal = tilesHoriz;
+  this.tilesVertical = tilesVert;
+  // how many images does this spritesheet contain?
+  //  usually equals tilesHoriz * tilesVert, but not necessarily,
+  //  if there at blank tiles at the bottom of the spritesheet. 
+  this.numberOfTiles = numTiles;
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping; 
+  texture.repeat.set( 1 / this.tilesHorizontal, 1 / this.tilesVertical );
+  // how long should each image be displayed?
+  this.tileDisplayDuration = tileDispDuration;
+  // how long has the current image been displayed?
+  this.currentDisplayTime = 0;
+  // which image is currently being displayed?
+  this.currentTile = 0;
+    
+  this.update = function( milliSec )
+  {
+    this.currentDisplayTime += milliSec;
+    while (this.currentDisplayTime > this.tileDisplayDuration)
+    {
+      this.currentDisplayTime -= this.tileDisplayDuration;
+      this.currentTile++;
+      if (this.currentTile == this.numberOfTiles)
+        this.currentTile = 0;
+      var currentColumn = this.currentTile % this.tilesHorizontal;
+      texture.offset.x = currentColumn / this.tilesHorizontal;
+      var currentRow = Math.floor( this.currentTile / this.tilesHorizontal );
+      texture.offset.y = currentRow / this.tilesVertical;
+    }
+  };
+}   
+
 
 function renderVideo() {
   if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
@@ -273,6 +360,13 @@ function clearDoors() {
     // scene.remove( cubeArray[i].children[0] );
     scene.remove (doorArray[i]);
     doorArray[i].material.dispose();
+  }
+}
+
+function clearIntroText() {
+  if(introText != null) {
+    scene.remove( introText );
+    introText.geometry.dispose();
   }
 }
 

@@ -135,6 +135,7 @@ effect.setSize(window.innerWidth, window.innerHeight);
 
 // Create a clock object for animation control
 var clock = new THREE.Clock(false);
+var animationClock = new THREE.Clock();
 
 // Lights
 particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0000 } ) );
@@ -263,7 +264,18 @@ camera.add( listener );
                     {box_img_path:"img/box/brookings.jpg", box_coord:[10,0,-10], box_text: "Brookings", next_index: 0}
                     ],
                     bg_audio:"audio/samfox.mp3"
+                },
+                {
+                    bg_name:"WashU's Virtual Reality Viewer",
+                    bg_img:"",
+                    box_specifics:[
+                    {box_img_path:"img/box/bd.jpg", box_coord:[-5,0,-10], box_text: "Bear's Den", next_index: 6},
+                    {box_img_path:"img/box/brookings.jpg", box_coord:[5,0,-10], box_text: "Brookings", next_index: 0}
+                    ],
+                    bg_audio:""
                 }
+
+
             ];
 
 // Initialize a skybox.
@@ -278,6 +290,11 @@ var manager = new WebVRManager(renderer, effect, {hideButton: false});
 function animate(timestamp) {
   // Update VR headset position and apply to camera.
   controls.update();
+
+  /* update clock for animation */
+  delta = animationClock.getDelta(); 
+  annie.update(1000 * delta);
+
 
   // Render the scene through the manager.
   manager.render(scene, camera, timestamp);
