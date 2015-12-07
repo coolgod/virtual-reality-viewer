@@ -2,7 +2,7 @@ var skybox = null;
 var audio = null;
 var doorArray = null;
 var introText = null;
-annie = null;
+var annie = null;
 
 function initSkybox( skybox_index ) {
 
@@ -12,6 +12,8 @@ function initSkybox( skybox_index ) {
   clearVideoScreen();
   clearAudio();
   clearIntroText();
+  clearDoors();
+  // clearAnimationTexture();
   
   var this_skybox = skybox_images[skybox_index];
   var boxWidth = 5;
@@ -62,11 +64,14 @@ function initSkybox( skybox_index ) {
     top_scene.add(ring);
   }
 
-  addAnimatedTexture();
+
+  if ( skybox_index != 8 ) {
+    addAnimatedTexture();
+    doorArray = [];
+    doorArray.push( initAnimation() );
+  }
 
 
-  doorArray = [];
-  doorArray.push( initAnimation() );
 
   /* loading audio */
   if (skybox_images[skybox_index].bg_audio != "") {
@@ -249,7 +254,7 @@ function addAnimatedTexture() {
   annie = new TextureAnimator( runnerTexture, 10, 1, 10, 75 ); // texture, #horiz, #vert, #total, duration.
   var runnerMaterial = new THREE.MeshBasicMaterial( { map: runnerTexture, side:THREE.DoubleSide } );
   var runnerGeometry = new THREE.PlaneGeometry(4, 7, 1, 1);
-  var runner = new THREE.Mesh(runnerGeometry, runnerMaterial);
+  runner = new THREE.Mesh(runnerGeometry, runnerMaterial);
   runner.position.set(27.5,-2,-1);
   runner.lookAt( new THREE.Vector3(camera.position.x-10, camera.position.y, camera.position.z) );
   scene.add(runner);
@@ -358,8 +363,8 @@ function clearAudio () {
 function clearDoors() {
   for (var i = 0; i < doorArray.length; i++){
     // scene.remove( cubeArray[i].children[0] );
-    scene.remove (doorArray[i]);
-    doorArray[i].material.dispose();
+    scene.remove(doorArray[i]);
+    // doorArray[i].material.dispose();
   }
 }
 
@@ -369,6 +374,13 @@ function clearIntroText() {
     introText.geometry.dispose();
   }
 }
+
+// function clearAnimationTexture() {
+//   if (runner != null) {
+//     scene.remove( runner );
+//     runner.geometry.dispose();
+//   }
+// }
 
 function changeCameraTarget( phi, theta ) {
   camera.target.x = - Math.sin(this.phi + 0.5 * Math.PI) * Math.cos(this.theta - 0.5 * Math.PI) * 3;

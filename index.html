@@ -116,9 +116,10 @@ document.body.appendChild(renderer.domElement);
 var scene = new THREE.Scene();
 var top_scene = new THREE.Scene();
 
-// Create cube array used for each scene
+// Create cube & door array used for each scene
 var cubeArray = [];
 var cubeTextArray = [];
+var doorArray = [];
 
 // Create a three.js camera.
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
@@ -293,7 +294,9 @@ function animate(timestamp) {
 
   /* update clock for animation */
   delta = animationClock.getDelta(); 
-  annie.update(1000 * delta);
+  if (annie != null) {
+    annie.update(1000 * delta);
+  }
 
   // Render the scene through the manager.
   manager.render(scene, camera, timestamp);
