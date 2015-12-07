@@ -279,7 +279,7 @@ camera.add( listener );
             ];
 
 // Initialize a skybox.
-initSkybox(0);
+initSkybox(8);
 
 
 
@@ -294,7 +294,6 @@ function animate(timestamp) {
   /* update clock for animation */
   delta = animationClock.getDelta(); 
   annie.update(1000 * delta);
-
 
   // Render the scene through the manager.
   manager.render(scene, camera, timestamp);
