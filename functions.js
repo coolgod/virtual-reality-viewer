@@ -218,8 +218,8 @@ function gazeFunction( gazingIndex ) {
   showText( gazingIndex );
   
   // Loading animation
-  if(t > 3.65){
-    if(t > 4.8){          // if zoom-out-zoom-in animation finish
+  if(t > 2){
+    if(t > 3){          // if zoom-out-zoom-in animation finish
       clock.stop();       // stop the clock;
 
       /* zoom in */
@@ -243,7 +243,7 @@ function gazeFunction( gazingIndex ) {
       factor = 1 + t / 10;  // secondly, zoom in the ring
     }
   }else{
-    factor = 1 - t / 80;    // firstly, zoom out the ring
+    factor = 1 - t / 20;    // firstly, zoom out the ring
   }        
   ring.scale.set(ring.scale.x*factor, ring.scale.y*factor, ring.scale.y*factor);
 }
