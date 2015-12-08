@@ -1,8 +1,11 @@
 var skybox = null;
 var audio = null;
 var doorArray = null;
+var animationArray = null;
 var introText = null;
 var annie = null;
+var loadingSkyboxIndex = null;
+var isLoading = false;
 
 function initSkybox( skybox_index ) {
 
@@ -11,9 +14,13 @@ function initSkybox( skybox_index ) {
   clearOldCubesAndText();
   clearVideoScreen();
   clearAudio();
-  clearIntroText();
   clearDoors();
-  // clearAnimationTexture();
+  clearAnimation();
+  if (skybox_index != 8) {
+    clearIntroText();
+  }
+
+  // camera.lookAt( new THREE.Vector3(0,0,0) );
   
   var this_skybox = skybox_images[skybox_index];
   var boxWidth = 5;
@@ -46,6 +53,18 @@ function initSkybox( skybox_index ) {
 
   skybox.receiveShadow = true;
 
+  /* loading new doors & running man */
+  animationArray = [];
+  doorArray = [];
+  // if we are not currently in the first
+  if ( skybox_index != 8 ) {
+    for (i = 0; i < box_count; i++) {
+      animationArray.push( addAnimatedTexture( this_skybox.box_specifics[i] ) );
+      initAnimation( this_skybox.box_specifics[i] );
+    }
+  }
+
+
   /* load video screen */
   if ( skybox_index == 0 && videoMesh == null) {
     // addVideo();
@@ -65,11 +84,6 @@ function initSkybox( skybox_index ) {
   }
 
 
-  if ( skybox_index != 8 ) {
-    addAnimatedTexture();
-    doorArray = [];
-    doorArray.push( initAnimation() );
-  }
 
 
 
@@ -103,6 +117,7 @@ function initCube( box_specific ) {
 }
 
 function initText( sphere, txt ) {
+
   // text above cube
   var textGeometry = new THREE.TextGeometry( txt, 
   {
@@ -132,7 +147,8 @@ function initText( sphere, txt ) {
   return text3D;
 }
 
-function initAnimation() {
+
+function initAnimation( box_specific ) {
   // Add Collada Loader
   var loader = new THREE.ColladaLoader();
   var dae;
@@ -142,15 +158,33 @@ function initAnimation() {
     dae = result.scene;
     console.log(result);
     dae.scale.x = dae.scale.y = dae.scale.z = 0.05;
-    dae.position.set( 20, -5, -2.5 );
+    // dae.position.set( 20, -5, -2.5 );
+    dae.position.set(box_specific.box_coord[0] * 1.15, box_specific.box_coord[1] * 1.15 - 3.6, box_specific.box_coord[2] * 1.15);
     dae.updateMatrix();
-    dae.lookAt( new THREE.Vector3(camera.position.x, camera.position.y-5, camera.position.z) );
-    newMaterial = new THREE.MeshBasicMaterial();
-    dae.material = newMaterial;
+    dae.lookAt( new THREE.Vector3(0,-7,0) );
+    dae.material = new THREE.MeshBasicMaterial();
+
     scene.add(dae);
+    doorArray.push(dae);
+    
   });
-  return dae;
 }
+
+function addAnimatedTexture( box_specific ) {
+  var runnerTexture = new THREE.ImageUtils.loadTexture( 'img/run.png' );
+  annie = new TextureAnimator( runnerTexture, 10, 1, 10, 75 ); // texture, #horiz, #vert, #total, duration.
+  var runnerMaterial = new THREE.MeshBasicMaterial( { map: runnerTexture, side:THREE.DoubleSide } );
+  var runnerGeometry = new THREE.PlaneGeometry(4, 7, 1, 1);
+  runner = new THREE.Mesh(runnerGeometry, runnerMaterial);
+  // runner.position.set(27.5,-2,-1);
+  runner.position.set(box_specific.box_coord[0] * 1.3, box_specific.box_coord[1] * 1.3, box_specific.box_coord[2] * 1.3);
+
+  runner.lookAt( new THREE.Vector3(0,-3,0) );
+  scene.add(runner);
+  return runner;
+
+}
+
 
 function showText( gazingIndex ) {
   if ( !cubeTextArray[gazingIndex].visible ) {
@@ -179,8 +213,21 @@ function gazeFunction( gazingIndex ) {
   if(t > 3.65){
     if(t > 4.8){          // if zoom-out-zoom-in animation finish
       clock.stop();       // stop the clock;
+
+      /* zoom in */
+      if (skybox.material.map.image == null) {
+        loadingSkyboxIndex = gazingIndex;
+        newCameraPosition.x = camera.getWorldDirection().x*400*delta;
+        newCameraPosition.y = camera.getWorldDirection().y*400*delta;
+        newCameraPosition.z = camera.getWorldDirection().z*400*delta;
+      }
       /* change scene here */
-      initSkybox(cubeArray[gazingIndex].next_index);
+      else {
+        initSkybox(cubeArray[gazingIndex].next_index);
+      }
+      // console.log(camera.position);
+      // newCameraPosition = camera.position;
+
     }else{
       factor = 1 + t / 10;  // secondly, zoom in the ring
     }
@@ -249,17 +296,6 @@ function addIntroText( skybox_index ) {
 
 }
 
-function addAnimatedTexture() {
-  var runnerTexture = new THREE.ImageUtils.loadTexture( 'img/run.png' );
-  annie = new TextureAnimator( runnerTexture, 10, 1, 10, 75 ); // texture, #horiz, #vert, #total, duration.
-  var runnerMaterial = new THREE.MeshBasicMaterial( { map: runnerTexture, side:THREE.DoubleSide } );
-  var runnerGeometry = new THREE.PlaneGeometry(4, 7, 1, 1);
-  runner = new THREE.Mesh(runnerGeometry, runnerMaterial);
-  runner.position.set(27.5,-2,-1);
-  runner.lookAt( new THREE.Vector3(camera.position.x-10, camera.position.y, camera.position.z) );
-  scene.add(runner);
-
-}
 
 function TextureAnimator(texture, tilesHoriz, tilesVert, numTiles, tileDispDuration) 
 { 
@@ -311,7 +347,7 @@ function renderVideo() {
 function clearOldCubesAndText(){
   /* remove the cubes already in the scene */
   for (var i = 0; i < cubeArray.length; i++){
-    scene.remove (cubeTextArray[i] );
+    scene.remove( cubeTextArray[i] );
     //cubeTextArray[i].material.dispose();
     cubeTextArray[i].geometry.dispose();
 
@@ -353,6 +389,7 @@ function clearRing () {
 
 function clearAudio () {
   if(audio != null){
+    console.log("hi");
     // audio.dispose();
     audio.stop();
     scene.remove(audio);
@@ -361,11 +398,24 @@ function clearAudio () {
 }
 
 function clearDoors() {
+  console.log("DOOR: " + doorArray.length);
   for (var i = 0; i < doorArray.length; i++){
     // scene.remove( cubeArray[i].children[0] );
+    console.log("DOOR: " + doorArray[i]);
+
     scene.remove(doorArray[i]);
-    // doorArray[i].material.dispose();
+    // doorArray[i].geometry.dispose();
   }
+}
+
+function clearAnimation() {
+  for (var i = 0; i < animationArray.length; i++){
+    // scene.remove( cubeArray[i].children[0] );
+    scene.remove(animationArray[i]);
+    console.log(animationArray[i]);
+    animationArray[i].geometry.dispose();
+  }
+
 }
 
 function clearIntroText() {

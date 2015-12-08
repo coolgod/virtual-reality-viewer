@@ -120,6 +120,7 @@ var top_scene = new THREE.Scene();
 var cubeArray = [];
 var cubeTextArray = [];
 var doorArray = [];
+var animationArray = [];
 
 // Create a three.js camera.
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
@@ -175,6 +176,11 @@ listener = new THREE.AudioListener();
 camera.add( listener );
 
 
+
+newCameraPosition = new THREE.Vector3(0,0,0);
+
+
+
 // Initialize a list of skybox_images (link to images & coordinates of boxes)
 /*
             This all_picture_path variable contains all pathing towards the
@@ -198,9 +204,9 @@ camera.add( listener );
                     bg_name:"Brookings",
                     bg_img:"img/compressed/brookings.jpg",
                     box_specifics:[
-                    {box_img_path:"img/box/samfox.jpg", box_coord:[-16, 0, 0], box_text: "Sam Fox", next_index: 7},
-                    {box_img_path:"img/box/engineering.jpg", box_coord:[12, 0, 12], box_text: "Engineering", next_index: 1},
-                    {box_img_path:"img/box/outside_olin.jpg", box_coord:[10, 0, -18], box_text: "Olin Library", next_index: 2}
+                    {box_img_path:"img/box/samfox.jpg", box_coord:[-22, 0, -6], box_text: "Sam Fox", next_index: 7},
+                    {box_img_path:"img/box/engineering.jpg", box_coord:[20, 0, 20], box_text: "Engineering", next_index: 1},
+                    {box_img_path:"img/box/outside_olin.jpg", box_coord:[14, 0, -22], box_text: "Olin Library", next_index: 2}
                     ],
                     bg_audio:"audio/brookings.mp3"
                 },
@@ -217,8 +223,8 @@ camera.add( listener );
                     bg_name:"Olin Outside",
                     bg_img:"img/compressed/outside_olin.jpg",
                     box_specifics:[
-                    {box_img_path:"img/box/inside_olin.jpg", box_coord:[-8,-4,0], box_text: "Olin Circ", next_index: 3},
-                    {box_img_path:"img/box/fun_room.jpg", box_coord:[6,-4,12], box_text: "Fun Room", next_index: 4}
+                    {box_img_path:"img/box/inside_olin.jpg", box_coord:[-14,-6,-2], box_text: "Olin Circ", next_index: 3},
+                    {box_img_path:"img/box/fun_room.jpg", box_coord:[12,-7,20], box_text: "Fun Room", next_index: 4}
                     ],
                     bg_audio:"audio/outside_olin.mp3"
                 },
@@ -293,9 +299,27 @@ function animate(timestamp) {
   controls.update();
 
   /* update clock for animation */
-  delta = animationClock.getDelta(); 
+  delta = animationClock.getDelta();
   if (annie != null) {
     annie.update(1000 * delta);
+  }
+  if (newCameraPosition.x > camera.position.x) {
+    camera.position.x += camera.getWorldDirection().x*delta*10;
+    camera.position.y += camera.getWorldDirection().y*delta*10;
+    camera.position.z += camera.getWorldDirection().z*delta*10;
+
+    if (newCameraPosition.x < camera.position.x + camera.getWorldDirection().x*delta*50 && !isLoading) {
+      initSkybox(cubeArray[loadingSkyboxIndex].next_index);
+      isLoading = true;
+    }
+  }
+  else if (newCameraPosition.x <= camera.position.x && loadingSkyboxIndex != null && isLoading) {
+    camera.position.x = 0;
+    camera.position.y = 0;
+    camera.position.z = 0;
+    newCameraPosition = camera.position;
+    loadingSkyboxIndex = null;
+    isLoading = false;
   }
 
   // Render the scene through the manager.
