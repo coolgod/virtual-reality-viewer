@@ -1,4 +1,5 @@
 var skybox = null;
+var skybox_index = null;
 var audio = null;
 var doorArray = null;
 var animationArray = null;
@@ -42,6 +43,8 @@ function initSkybox( skybox_index ) {
   skybox = new THREE.Mesh(geometry, material);
   skybox.scale.x = -1.0;
   scene.add(skybox);
+
+
   
   /* loading new cubes */
   cubeTextArray = [];
@@ -104,7 +107,7 @@ function initCube( box_specific ) {
   var sphereMaterial = new THREE.MeshPhongMaterial({map: THREE.ImageUtils.loadTexture( box_specific.box_img_path ), shading: THREE.SmoothShading, opacity: 0.7, transparent: true});
   var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
   sphere.next_index = box_specific.next_index;
-  sphere.position.set( box_specific.box_coord[0], box_specific.box_coord[1], box_specific.box_coord[2] );
+  sphere.position.set( box_specific.box_coord[0] , box_specific.box_coord[1], box_specific.box_coord[2] );
   scene.add(sphere);
   
   // Initialize 3D Text
@@ -141,8 +144,13 @@ function initText( sphere, txt ) {
   deltaX = (sphere.position.z == 0) ? 0 : deltaX;
   deltaZ = (sphere.position.x == 0) ? 0 : deltaZ;
 
-  text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 1.5, sphere.position.z + deltaZ);
-  text3D.lookAt(camera.position);
+  if (skybox_index == 8) {
+    text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 1.5, sphere.position.z + deltaZ);
+  }
+  else {
+    text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 4, sphere.position.z + deltaZ);
+  }
+  text3D.lookAt( new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z) );
   text3D.visible = false;
   return text3D;
 }
@@ -180,7 +188,7 @@ function addAnimatedTexture( box_specific ) {
   runner.position.set(box_specific.box_coord[0] * 1.3, box_specific.box_coord[1] * 1.3, box_specific.box_coord[2] * 1.3);
 
   runner.lookAt( new THREE.Vector3(0,-3,0) );
-  scene.add(runner);
+  // scene.add(runner);
   return runner;
 
 }
@@ -215,14 +223,17 @@ function gazeFunction( gazingIndex ) {
       clock.stop();       // stop the clock;
 
       /* zoom in */
-      if (skybox.material.map.image == null) {
+      if (!skybox.material.map.image) {
+
         loadingSkyboxIndex = gazingIndex;
         newCameraPosition.x = camera.getWorldDirection().x*400*delta;
         newCameraPosition.y = camera.getWorldDirection().y*400*delta;
         newCameraPosition.z = camera.getWorldDirection().z*400*delta;
+        console.log(newCameraPosition);
       }
       /* change scene here */
       else {
+        skybox_index = cubeArray[gazingIndex].next_index;
         initSkybox(cubeArray[gazingIndex].next_index);
       }
       // console.log(camera.position);
@@ -389,7 +400,6 @@ function clearRing () {
 
 function clearAudio () {
   if(audio != null){
-    console.log("hi");
     // audio.dispose();
     audio.stop();
     scene.remove(audio);
@@ -398,11 +408,8 @@ function clearAudio () {
 }
 
 function clearDoors() {
-  console.log("DOOR: " + doorArray.length);
   for (var i = 0; i < doorArray.length; i++){
     // scene.remove( cubeArray[i].children[0] );
-    console.log("DOOR: " + doorArray[i]);
-
     scene.remove(doorArray[i]);
     // doorArray[i].geometry.dispose();
   }

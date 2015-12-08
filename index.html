@@ -240,8 +240,8 @@ newCameraPosition = new THREE.Vector3(0,0,0);
                     bg_name:"DUC: Fun room",
                     bg_img:"img/compressed/fun_room.jpg",
                     box_specifics:[
-                    {box_img_path:"img/box/outside_olin.jpg", box_coord:[6,0,-5], box_text: "Olin Library", next_index: 2},
-                    {box_img_path:"img/box/STS.jpg", box_coord:[6,0,5], box_text: "STS", next_index: 5}
+                    {box_img_path:"img/box/outside_olin.jpg", box_coord:[18,0,-23], box_text: "Olin Library", next_index: 2},
+                    {box_img_path:"img/box/STS.jpg", box_coord:[-3,0,16], box_text: "STS", next_index: 5}
                     ],
                     bg_audio:"audio/fun_room.mp3"
                 },
@@ -249,8 +249,8 @@ newCameraPosition = new THREE.Vector3(0,0,0);
                     bg_name:"STS",
                     bg_img:"img/compressed/STS.jpg",
                     box_specifics:[
-                    {box_img_path:"img/box/fun_room.jpg", box_coord:[6,0,-5], box_text: "Fun Room", next_index: 4},
-                    {box_img_path:"img/box/bd.jpg", box_coord:[6,0,5], box_text: "Bear's Den", next_index: 6}
+                    {box_img_path:"img/box/fun_room.jpg", box_coord:[-17,0,-3], box_text: "Fun Room", next_index: 4},
+                    {box_img_path:"img/box/bd.jpg", box_coord:[12,0,2], box_text: "Bear's Den", next_index: 6}
                     ],
                     bg_audio:"audio/STS.mp3"
                 },
@@ -258,8 +258,8 @@ newCameraPosition = new THREE.Vector3(0,0,0);
                     bg_name:"Bear's Den",
                     bg_img:"img/compressed/bd.jpg",
                     box_specifics:[
-                    {box_img_path:"img/box/STS.jpg", box_coord:[6,0,-5], box_text: "STS", next_index: 5},
-                    {box_img_path:"img/box/samfox.jpg", box_coord:[6,0,5], box_text: "Sam Fox", next_index: 7}
+                    {box_img_path:"img/box/STS.jpg", box_coord:[16,0,-15], box_text: "STS", next_index: 5},
+                    {box_img_path:"img/box/samfox.jpg", box_coord:[16,0,15], box_text: "Sam Fox", next_index: 7}
                     ],
                     bg_audio:"audio/bd.mp3"
                 },
@@ -267,8 +267,8 @@ newCameraPosition = new THREE.Vector3(0,0,0);
                     bg_name:"Sam Fox Art",
                     bg_img:"img/compressed/samfox.jpg",
                     box_specifics:[
-                    {box_img_path:"img/box/bd.jpg", box_coord:[-10,0,-10], box_text: "Bear's Den", next_index: 6},
-                    {box_img_path:"img/box/brookings.jpg", box_coord:[10,0,-10], box_text: "Brookings", next_index: 0}
+                    {box_img_path:"img/box/bd.jpg", box_coord:[-25,0,-20], box_text: "Bear's Den", next_index: 6},
+                    {box_img_path:"img/box/brookings.jpg", box_coord:[20,0,-20], box_text: "Brookings", next_index: 0}
                     ],
                     bg_audio:"audio/samfox.mp3"
                 },
@@ -286,7 +286,8 @@ newCameraPosition = new THREE.Vector3(0,0,0);
             ];
 
 // Initialize a skybox.
-initSkybox(8);
+skybox_index = 8;
+initSkybox(skybox_index);
 
 
 
@@ -303,17 +304,22 @@ function animate(timestamp) {
   if (annie != null) {
     annie.update(1000 * delta);
   }
-  if (newCameraPosition.x > camera.position.x) {
+
+
+  if (Math.abs(newCameraPosition.x) > Math.abs(camera.position.x)) {
+
     camera.position.x += camera.getWorldDirection().x*delta*10;
     camera.position.y += camera.getWorldDirection().y*delta*10;
     camera.position.z += camera.getWorldDirection().z*delta*10;
+  
 
-    if (newCameraPosition.x < camera.position.x + camera.getWorldDirection().x*delta*50 && !isLoading) {
+    if (Math.abs(newCameraPosition.x) < Math.abs(camera.position.x) + Math.abs(camera.getWorldDirection().x*delta*50) && !isLoading) {
+      skybox_index = cubeArray[loadingSkyboxIndex].next_index;
       initSkybox(cubeArray[loadingSkyboxIndex].next_index);
       isLoading = true;
     }
   }
-  else if (newCameraPosition.x <= camera.position.x && loadingSkyboxIndex != null && isLoading) {
+  else if (Math.abs(newCameraPosition.x) <= Math.abs(camera.position.x) && loadingSkyboxIndex != null && isLoading) {
     camera.position.x = 0;
     camera.position.y = 0;
     camera.position.z = 0;
