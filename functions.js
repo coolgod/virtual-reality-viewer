@@ -104,7 +104,9 @@ function initCube( box_specific ) {
 
 
   var sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
-  var sphereMaterial = new THREE.MeshPhongMaterial({map: THREE.ImageUtils.loadTexture( box_specific.box_img_path ), shading: THREE.SmoothShading, opacity: 0.7, transparent: true});
+  var texture = THREE.ImageUtils.loadTexture( box_specific.box_img_path );
+  texture.miniFilter = THREE.LinearFilter;
+  var sphereMaterial = new THREE.MeshPhongMaterial({map: texture , shading: THREE.SmoothShading, opacity: 0.7, transparent: true});
   var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
   sphere.next_index = box_specific.next_index;
   sphere.position.set( box_specific.box_coord[0] , box_specific.box_coord[1], box_specific.box_coord[2] );

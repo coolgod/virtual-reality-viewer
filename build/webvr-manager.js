@@ -1017,9 +1017,8 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
 
   /* raycaster */
   raycaster.set(  camera.position, camera.getWorldDirection() );       // ray is from camera position to camera target
-  raycaster.near = 1;                                                // ray will collide with the gaze pointer ring, but will ignore it                                  
+                                  
   var intersects = raycaster.intersectObjects( scene.children );
-
 
   var isGazingCube = false, gazingIndex = null, isGazingVideoScreen = false;
   for ( var i = 0; i < intersects.length; i++ ) {

@@ -161,6 +161,7 @@ particleLight.add( pointLight );
 
 // gaze pointer
 var raycaster = new THREE.Raycaster();
+raycaster.near = 1;                                              // ray will collide with the gaze pointer ring, but will ignore it  
 var ring = null;
 // var ring = new THREE.Mesh(
 //     new THREE.TorusGeometry( 0.17, 0.017, 4, 70 ),            // set 'radius segment' to 0 to make it a flat 2D ring
