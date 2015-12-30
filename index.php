@@ -1,3 +1,9 @@
+<?php
+// require 'vendor/autoload.php';
+// require 'app/start.php';
+
+?>
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -172,6 +178,7 @@ var ring = null;
 var videoMesh = null, video, videoTexture, videoScreen, videoScreenContext;
 addVideo();
 
+
 // add audio listener
 listener = new THREE.AudioListener();
 camera.add( listener );
@@ -287,7 +294,7 @@ newCameraPosition = new THREE.Vector3(0,0,0);
             ];
 
 // Initialize a skybox.
-skybox_index = 8;
+skybox_index = 1;
 initSkybox(skybox_index);
 
 
@@ -305,26 +312,32 @@ function animate(timestamp) {
   if (annie != null) {
     annie.update(1000 * delta);
   }
+  console.log(newCameraPosition);
+  console.log(camera.position);
 
-
+  // Keep Zooming in until designated position
   if (Math.abs(newCameraPosition.x) > Math.abs(camera.position.x)) {
-
     camera.position.x += camera.getWorldDirection().x*delta*10;
     camera.position.y += camera.getWorldDirection().y*delta*10;
     camera.position.z += camera.getWorldDirection().z*delta*10;
   
-
+    // Start loading the new skybox
     if (Math.abs(newCameraPosition.x) < Math.abs(camera.position.x) + Math.abs(camera.getWorldDirection().x*delta*50) && !isLoading) {
       skybox_index = cubeArray[loadingSkyboxIndex].next_index;
       initSkybox(cubeArray[loadingSkyboxIndex].next_index);
       isLoading = true;
     }
   }
+
+  // Stop Zooming in when reach designated position
+  // Reset camera position to default(0,0,0)
   else if (Math.abs(newCameraPosition.x) <= Math.abs(camera.position.x) && loadingSkyboxIndex != null && isLoading) {
     camera.position.x = 0;
     camera.position.y = 0;
     camera.position.z = 0;
-    newCameraPosition = camera.position;
+    newCameraPosition.x = 0;
+    newCameraPosition.y = 0;
+    newCameraPosition.z = 0;
     loadingSkyboxIndex = null;
     isLoading = false;
   }
@@ -348,6 +361,10 @@ function onKey(event) {
 
 window.addEventListener('keydown', onKey, true);
 
+
+
 </script>
 
 </html>
+
+

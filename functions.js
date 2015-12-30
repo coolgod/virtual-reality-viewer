@@ -20,12 +20,28 @@ function initSkybox( skybox_index ) {
   if (skybox_index != 8) {
     clearIntroText();
   }
-
-  // camera.lookAt( new THREE.Vector3(0,0,0) );
   
   var this_skybox = skybox_images[skybox_index];
   var boxWidth = 5;
   var texture = THREE.ImageUtils.loadTexture(this_skybox.bg_img);
+
+
+  // 360 Video Tryout
+  //
+  //
+  //
+  //
+  /*
+  var video = document.createElement( 'video' );
+  video.width = 640;
+  video.height = 360;
+  video.autoplay = true;
+  video.loop = true;
+  video.src = "video/Overpass.webm";
+
+  var texture = new THREE.VideoTexture(video);
+  texture.minFilter = THREE.LinearFilter;
+  */
 
   var geometry = new THREE.SphereGeometry( 500, 60, 40 );
 
@@ -70,7 +86,7 @@ function initSkybox( skybox_index ) {
 
   /* load video screen */
   if ( skybox_index == 0 && videoMesh == null) {
-    // addVideo();
+    addVideo();
   }
 
   /* load Intro text */
@@ -190,7 +206,7 @@ function addAnimatedTexture( box_specific ) {
   runner.position.set(box_specific.box_coord[0] * 1.3, box_specific.box_coord[1] * 1.3, box_specific.box_coord[2] * 1.3);
 
   runner.lookAt( new THREE.Vector3(0,-3,0) );
-  // scene.add(runner);
+  scene.add(runner);
   return runner;
 
 }
@@ -224,22 +240,28 @@ function gazeFunction( gazingIndex ) {
     if(t > 3){          // if zoom-out-zoom-in animation finish
       clock.stop();       // stop the clock;
 
-      /* zoom in */
-      if (!skybox.material.map.image) {
+      loadingSkyboxIndex = gazingIndex;
+      newCameraPosition.x = camera.getWorldDirection().x*400*delta;
+      newCameraPosition.y = camera.getWorldDirection().y*400*delta;
+      newCameraPosition.z = camera.getWorldDirection().z*400*delta;
+      console.log("new?")
+      console.log(newCameraPosition);
+      // /* zoom in */
+      // if (!skybox.material.map.image) {
 
-        loadingSkyboxIndex = gazingIndex;
-        newCameraPosition.x = camera.getWorldDirection().x*400*delta;
-        newCameraPosition.y = camera.getWorldDirection().y*400*delta;
-        newCameraPosition.z = camera.getWorldDirection().z*400*delta;
-        console.log(newCameraPosition);
-      }
-      /* change scene here */
-      else {
-        skybox_index = cubeArray[gazingIndex].next_index;
-        initSkybox(cubeArray[gazingIndex].next_index);
-      }
-      // console.log(camera.position);
-      // newCameraPosition = camera.position;
+      //   loadingSkyboxIndex = gazingIndex;
+      //   newCameraPosition.x = camera.getWorldDirection().x*400*delta;
+      //   newCameraPosition.y = camera.getWorldDirection().y*400*delta;
+      //   newCameraPosition.z = camera.getWorldDirection().z*400*delta;
+      //   console.log(newCameraPosition);
+      // }
+      // /* change scene here */
+      // else {
+      //   console.log("I'm Here")
+
+      //   skybox_index = cubeArray[gazingIndex].next_index;
+      //   initSkybox(cubeArray[gazingIndex].next_index);
+      // }
 
     }else{
       factor = 1 + t / 10;  // secondly, zoom in the ring
@@ -381,14 +403,14 @@ function clearOldSkybox(){
 }
 
 function clearVideoScreen(){
-  if(videoMesh != null){
-    scene.remove( videoMesh );
-    videoMesh.geometry.dispose();
-    videoMesh.material.map.dispose();
-    videoMesh.material.dispose();
-    videoScreenContext.clearRect( 0, 0, videoScreen.width, videoScreen.height )
-    videoMesh = null;
-  }
+  // if(videoMesh != null){
+  //   scene.remove( videoMesh );
+  //   videoMesh.geometry.dispose();
+  //   videoMesh.material.map.dispose();
+  //   videoMesh.material.dispose();
+  //   videoScreenContext.clearRect( 0, 0, videoScreen.width, videoScreen.height )
+  //   videoMesh = null;
+  // }
 }
 
 function clearRing () {
