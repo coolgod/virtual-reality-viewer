@@ -240,29 +240,12 @@ function gazeFunction( gazingIndex ) {
     if(t > 3){          // if zoom-out-zoom-in animation finish
       clock.stop();       // stop the clock;
 
+      // /* zoom in */
       loadingSkyboxIndex = gazingIndex;
       newCameraPosition.x = camera.getWorldDirection().x*400*delta;
       newCameraPosition.y = camera.getWorldDirection().y*400*delta;
       newCameraPosition.z = camera.getWorldDirection().z*400*delta;
-      console.log("new?")
-      console.log(newCameraPosition);
-      // /* zoom in */
-      // if (!skybox.material.map.image) {
-
-      //   loadingSkyboxIndex = gazingIndex;
-      //   newCameraPosition.x = camera.getWorldDirection().x*400*delta;
-      //   newCameraPosition.y = camera.getWorldDirection().y*400*delta;
-      //   newCameraPosition.z = camera.getWorldDirection().z*400*delta;
-      //   console.log(newCameraPosition);
-      // }
-      // /* change scene here */
-      // else {
-      //   console.log("I'm Here")
-
-      //   skybox_index = cubeArray[gazingIndex].next_index;
-      //   initSkybox(cubeArray[gazingIndex].next_index);
-      // }
-
+      
     }else{
       factor = 1 + t / 10;  // secondly, zoom in the ring
     }
