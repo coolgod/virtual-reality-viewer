@@ -1,9 +1,3 @@
-<?php
-// require 'vendor/autoload.php';
-// require 'app/start.php';
-
-?>
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -89,6 +83,9 @@ WebVRConfig = {
   Imports All New Functions
   -->
 
+<script src="initObjects.js"></script>
+<script src="removeObjects.js"></script>
+<script src="cameraFunctions.js"></script>
 <script src="functions.js"></script>
 
 <!--
@@ -176,7 +173,7 @@ var ring = null;
 
 // add video texture
 var videoMesh = null, video, videoTexture, videoScreen, videoScreenContext;
-addVideo();
+initVideo();
 
 
 // add audio listener
@@ -184,7 +181,7 @@ listener = new THREE.AudioListener();
 camera.add( listener );
 
 
-
+// helper object for zooming camera in/out
 newCameraPosition = new THREE.Vector3(0,0,0);
 
 
@@ -199,7 +196,7 @@ box_image:[{background_index:<num>,box_img_path:"<path>"},{background_index:<num
 first box image and its corresponding background        2nd box image and its corresponding
 
 Current background ----------------------------------------- bg paths from this current bg
-0.brookings ------------------------------------------------ samfox &engineering---------------------   7,1
+0.brookings ------------------------------------------------ samfox & engineering---------------------   7,1
 1.engineering ---------------------------------------------- outside olin & brookings----------------   2,0
 2.outside olin --------------------------------------------- olin circ & fun room & engineering------   3,4
 3.olin circ ------------------------------------------------ outside olin   -------------------------   2
@@ -207,6 +204,7 @@ Current background ----------------------------------------- bg paths from this 
 5.sts ------------------------------------------------------ fun room & bd --------------------------   4,6
 6.bd ------------------------------------------------------- sts & samfox----------------------------   5,7
 7.samfox --------------------------------------------------- bd & brookings--------------------------   6,0
+8.Introduction --------------------------------------------- brookings & bd--------------------------   0,6
 */
 var request = new XMLHttpRequest();
 request.open("GET", "./data.json", false);
@@ -214,7 +212,7 @@ request.send();
 skybox_images = JSON.parse(request.responseText).locations;
 
 // Initialize a skybox.
-skybox_index = 1;
+skybox_index = 8;
 initSkybox(skybox_index);
 
 
@@ -236,31 +234,7 @@ function animate(timestamp) {
   console.log(camera.position);
 
   // Keep Zooming in until designated position
-  if (Math.abs(newCameraPosition.x) > Math.abs(camera.position.x)) {
-    camera.position.x += camera.getWorldDirection().x*delta*10;
-    camera.position.y += camera.getWorldDirection().y*delta*10;
-    camera.position.z += camera.getWorldDirection().z*delta*10;
-  
-    // Start loading the new skybox
-    if (Math.abs(newCameraPosition.x) < Math.abs(camera.position.x) + Math.abs(camera.getWorldDirection().x*delta*50) && !isLoading) {
-      skybox_index = cubeArray[loadingSkyboxIndex].next_index;
-      initSkybox(cubeArray[loadingSkyboxIndex].next_index);
-      isLoading = true;
-    }
-  }
-
-  // Stop Zooming in when reach designated position
-  // Reset camera position to default(0,0,0)
-  else if (Math.abs(newCameraPosition.x) <= Math.abs(camera.position.x) && loadingSkyboxIndex != null && isLoading) {
-    camera.position.x = 0;
-    camera.position.y = 0;
-    camera.position.z = 0;
-    newCameraPosition.x = 0;
-    newCameraPosition.y = 0;
-    newCameraPosition.z = 0;
-    loadingSkyboxIndex = null;
-    isLoading = false;
-  }
+  zoomInCamera();
 
   // Render the scene through the manager.
   manager.render(scene, camera, timestamp);
