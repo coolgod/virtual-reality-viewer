@@ -15,7 +15,7 @@
                     "bg_img":"img/compressed/engineering.jpg",
                     "box_specifics":[
                     {"box_img_path":"img/box/brookings.jpg", "box_coord":[-12, -2, 0], "box_text": "Brookings", "next_index": 0},
-                    {"box_img_path":"img/box/outside_olin.jpg", "box_coord":[9, -2, 0], "box_text": "Olin Library", "next_index": 2}
+                    {"box_img_path":"img/box/outside_olin.jpg", "box_coord":[16.12, -2.97, 1.7], "box_text": "Olin Library", "next_index": 2}
                     ],
                     "bg_audio":"audio/engineering.mp3"
                 },
@@ -23,8 +23,10 @@
                     "bg_name":"Olin Outside",
                     "bg_img":"img/compressed/outside_olin.jpg",
                     "box_specifics":[
-                    {"box_img_path":"img/box/inside_olin.jpg", "box_coord":[-14,-6,-2], "box_text": "Olin Circ", "next_index": 3},
-                    {"box_img_path":"img/box/fun_room.jpg", "box_coord":[12,-7,20], "box_text": "Fun Room", "next_index": 4}
+                    {"box_img_path":"img/box/engineering.jpg", "box_coord":[-7.56, -3.96, -15.84], "box_text": "Engineering", "next_index": 1},
+                    {"box_img_path":"img/box/brookings.jpg", "box_coord":[8, -2.9, -12.3], "box_text": "Brookings", "next_index": 0},
+                    {"box_img_path":"img/box/inside_olin.jpg", "box_coord":[-13.9, -4.7, -2.85], "box_text": "Olin Circ", "next_index": 3},
+                    {"box_img_path":"img/box/fun_room.jpg", "box_coord":[6.75, -4.35, 12.65], "box_text": "Fun Room", "next_index": 4}
                     ],
                     "bg_audio":"audio/outside_olin.mp3"
                 },
