@@ -1,5 +1,16 @@
 /* objects recycle */
 
+function clearAll(){
+  clearRing();
+  clearOldSkybox();
+  clearOldCubesAndText();
+  clearVideoScreen();
+  clearAudio();
+  clearDoors();
+  clearAnimation();
+
+}
+
 function clearOldCubesAndText(){
   /* remove the cubes already in the scene */
   for (var i = 0; i < cubeArray.length; i++){

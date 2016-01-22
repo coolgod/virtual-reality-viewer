@@ -1,4 +1,51 @@
+function rotateCube() {
+  for ( var i = 0; i < cubeArray.length; i++ ) {
+    cubeArray[i].rotation.y += 0.01;
+  }
+}
 
+function positionRing() {
+  ring.position.set(camera.getWorldDirection().x * 3, camera.getWorldDirection().y * 3, camera.getWorldDirection().z * 3);
+  ring.quaternion.copy( camera.quaternion );    // makes the ring face the screen (in conjunction with the camera)
+}
+
+function positionRaycaster() {
+  raycaster.set(  camera.position, camera.getWorldDirection() );       // ray is from camera position to camera target
+}
+
+function renderIntersects() {
+  var intersects = raycaster.intersectObjects( scene.children );
+
+  var isGazingCube = false, gazingIndex = null, isGazingVideoScreen = false;
+  for ( var i = 0; i < intersects.length; i++ ) {
+    for ( var j = 0; j < cubeArray.length; j++ ) {
+      if ( intersects[ i ].object == cubeArray[ j ] ) {                         // if collide with the cube
+          isGazingCube = true;
+          gazingIndex = j;
+      }
+    }
+    if ( videoMesh != null && intersects[ i ].object == videoMesh ) {                                // if collide with movie screen
+        isGazingVideoScreen = true;
+    }
+  }
+  if ( isGazingCube ) {
+      // function exists in functions.js
+      gazeFunction( gazingIndex );
+  }
+  else {
+      clock.stop();
+      ring.scale.set(1, 1, 1);
+      hideText();
+  }
+  if ( video != null ) {
+    if ( isGazingVideoScreen ) {
+      // Render the 2D Video Texture
+      renderVideo();
+      video.play();
+    }
+    else video.pause();
+  }
+}
 
 function showText( gazingIndex ) {
   if ( !cubeTextArray[gazingIndex].visible ) {

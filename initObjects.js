@@ -10,13 +10,7 @@ var isLoading = false;
 
 function initSkybox( skybox_index ) {
 
-  clearRing();
-  clearOldSkybox();
-  clearOldCubesAndText();
-  clearVideoScreen();
-  clearAudio();
-  clearDoors();
-  clearAnimation();
+  clearAll();
   if (skybox_index != 8) {
     clearIntroText();
   }
@@ -72,22 +66,22 @@ function initSkybox( skybox_index ) {
 
   skybox.receiveShadow = true;
 
-  /* loading new doors & running man */
-  animationArray = [];
-  doorArray = [];
-  // if we are not currently in the first
-  if ( skybox_index != 8 ) {
-    for (i = 0; i < box_count; i++) {
-      animationArray.push( initAnimatedTexture( this_skybox.box_specifics[i] ) );
-      initAnimation( this_skybox.box_specifics[i] );
-    }
-  }
 
+  /* loading new doors & running man */
+  // animationArray = [];
+  // doorArray = [];
+  // // if we are not currently in the first
+  // if ( skybox_index != 8 ) {
+  //   for (i = 0; i < box_count; i++) {
+  //     animationArray.push( initAnimatedTexture( this_skybox.box_specifics[i] ) );
+  //     initAnimation( this_skybox.box_specifics[i] );
+  //   }
+  // }
 
   /* load video screen */
-  if ( skybox_index == 0 && videoMesh == null) {
-    initVideo();
-  }
+  // if ( skybox_index == 0 && videoMesh == null) {
+  //   initVideo();
+  // }
 
   /* load Intro text */
   if ( skybox_index == 8 ) {
@@ -162,12 +156,16 @@ function initText( sphere, txt ) {
   deltaX = (sphere.position.z == 0) ? 0 : deltaX;
   deltaZ = (sphere.position.x == 0) ? 0 : deltaZ;
 
-  if (skybox_index == 8) {
-    text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 1.5, sphere.position.z + deltaZ);
-  }
-  else {
-    text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 4, sphere.position.z + deltaZ);
-  }
+  /* Change this if we want to implement door and text needs to be in a higher position*/
+  // if (skybox_index == 8) {
+  //   text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 1.5, sphere.position.z + deltaZ);
+  // }
+  // else {
+  //   text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 4, sphere.position.z + deltaZ);
+  // }
+  text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 1.5, sphere.position.z + deltaZ);
+
+
   text3D.lookAt( new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z) );
   text3D.visible = false;
   return text3D;
@@ -249,6 +247,7 @@ function initAnimation( box_specific ) {
     dae.lookAt( new THREE.Vector3(0,-7,0) );
     dae.material = new THREE.MeshBasicMaterial();
 
+    /* disable door Animation */
     scene.add(dae);
     doorArray.push(dae);
     

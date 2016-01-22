@@ -173,7 +173,7 @@ var ring = null;
 
 // add video texture
 var videoMesh = null, video, videoTexture, videoScreen, videoScreenContext;
-initVideo();
+// initVideo();
 
 
 // add audio listener
@@ -230,8 +230,6 @@ function animate(timestamp) {
   if (annie != null) {
     annie.update(1000 * delta);
   }
-  console.log(newCameraPosition);
-  console.log(camera.position);
 
   // Keep Zooming in until designated position
   zoomInCamera();
