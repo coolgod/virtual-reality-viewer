@@ -58,3 +58,4 @@ Util.isLandscapeMode = function() {
 
 
 module.exports = Util;
+

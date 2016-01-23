@@ -87,7 +87,7 @@ WebVRConfig = {
 <script src="removeObjects.js"></script>
 <script src="cameraFunctions.js"></script>
 <script src="functions.js"></script>
-
+<script src="src/util.js"></script>
 <!--
   Imports Door
   -->
@@ -212,7 +212,10 @@ request.send();
 skybox_images = JSON.parse(request.responseText).locations;
 
 // Initialize a skybox.
-skybox_index = 8;
+skybox_index = Util.getQueryParameter("skybox_index");
+if ( skybox_index == "" ) {
+  skybox_index = 8;
+}
 initSkybox(skybox_index);
 
 
@@ -236,7 +239,6 @@ function animate(timestamp) {
 
   // Render the scene through the manager.
   manager.render(scene, camera, timestamp);
-
 
   requestAnimationFrame(animate);
 }
