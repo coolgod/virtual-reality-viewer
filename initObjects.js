@@ -96,10 +96,6 @@ function initSkybox( skybox_index ) {
     top_scene.add(ring);
   }
 
-
-
-
-
   /* loading audio */
   if (skybox_images[skybox_index].bg_audio != "") {
     audio = new THREE.Audio( listener );
@@ -108,6 +104,7 @@ function initSkybox( skybox_index ) {
     audio.setRefDistance( 20 );
     scene.add(audio);
   }
+
 }
 
 function initCube( box_specific ) {
@@ -167,6 +164,7 @@ function initText( sphere, txt ) {
 
 
   text3D.lookAt( new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z) );
+
   text3D.visible = false;
   return text3D;
 }

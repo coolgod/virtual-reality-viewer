@@ -22,10 +22,11 @@ body {
 </head>
 
 <body>
+  <!-- 
   <video id="video" loop="" style="display:none">
       <source src="video/Friends.mp4" type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;">
   </video>
-
+  -->
 </body>
 
 <script>
@@ -128,7 +129,7 @@ var animationArray = [];
 // Create a three.js camera.
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
 camera.target = new THREE.Vector3( 10, 10, 0 );
-console.log(camera);
+// console.log(camera);
 camera.lookAt(new THREE.Vector3( 100, 100, 100 ));
 
 // Apply VR headset positional data to camera.
@@ -241,6 +242,9 @@ function animate(timestamp) {
   manager.render(scene, camera, timestamp);
 
   requestAnimationFrame(animate);
+
+  // Below are for debugging
+  // console.log( camera.position.x + ", " + camera.position.y + " ," + camera.position.z );
 }
 
 // Kick off animation loop
@@ -255,8 +259,7 @@ function onKey(event) {
 
 window.addEventListener('keydown', onKey, true);
 
-
-
+window.scrollTo(0, 20);
 </script>
 
 </html>
