@@ -88,6 +88,7 @@ WebVRConfig = {
 <script src="removeObjects.js"></script>
 <script src="cameraFunctions.js"></script>
 <script src="functions.js"></script>
+
 <script src="src/util.js"></script>
 <!--
   Imports Door
@@ -258,8 +259,6 @@ function onKey(event) {
 }
 
 window.addEventListener('keydown', onKey, true);
-
-window.scrollTo(0, 20);
 </script>
 
 </html>

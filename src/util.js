@@ -57,5 +57,7 @@ Util.isLandscapeMode = function() {
 };
 
 
-module.exports = Util;
+if ('undefined' !== typeof module) {
+  module.exports = EventEmitter;
+}
 
