@@ -1,2 +1,2 @@
 # vrv
-Run index.html
+Run index.php
