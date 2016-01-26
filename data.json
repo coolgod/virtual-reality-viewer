@@ -8,7 +8,7 @@
                     {"box_img_path":"img/box/engineering.jpg", "box_coord":[10.9, 0.2, 10.3], "box_text": "Engineering", "next_index": 1},
                     {"box_img_path":"img/box/outside_olin.jpg", "box_coord":[8.75, 0.5, -12.2], "box_text": "Olin Library", "next_index": 2}
                     ],
-                    "bg_audio":"audio/brookings.mp3"
+                    "bg_audio":"audio/Brookings.mp3"
                 },
                 {
                     "bg_name":"Engineering",
