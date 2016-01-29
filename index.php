@@ -58,44 +58,44 @@ WebVRConfig = {
 <!--
   three.js 3d library
   -->
-<script src="bower_components/threejs/build/three.js"></script>
+<script src="old_bower/bower_components/threejs/build/three.js"></script>
 
 <!--
   VRControls.js acquires positional information from connected VR devices and applies the transformations to a three.js camera object.
    -->
-<script src="bower_components/threejs/examples/js/controls/VRControls.js"></script>
+<script src="old_bower/bower_components/threejs/examples/js/controls/VRControls.js"></script>
 
 <!--
   VREffect.js handles stereo camera setup and rendering.
   -->
-<script src="bower_components/threejs/examples/js/effects/VREffect.js"></script>
+<script src="old_bower/bower_components/threejs/examples/js/effects/VREffect.js"></script>
 
 <!--
   A polyfill for WebVR using the Device{Motion,Orientation}Event API.
   -->
-<script src="bower_components/webvr-polyfill/build/webvr-polyfill.js"></script>
+<script src="old_bower/bower_components/webvr-polyfill/build/webvr-polyfill.js"></script>
 
 <!--
   Helps enter and exit VR mode, provides best practices while in VR.
   -->
-<script src="build/webvr-manager.js"></script>
+<script src="old_bower/build/webvr-manager.js"></script>
 
 <!--
   Imports All New Functions
   -->
 
-<script src="initObjects.js"></script>
-<script src="removeObjects.js"></script>
-<script src="cameraFunctions.js"></script>
-<script src="functions.js"></script>
+<script src="js/initObjects.js"></script>
+<script src="js/removeObjects.js"></script>
+<script src="js/cameraFunctions.js"></script>
+<script src="js/functions.js"></script>
 
-<script src="src/util.js"></script>
+<script src="old_bower/src/util.js"></script>
 <!--
   Imports Door
   -->
 
-<script src="bower_components/threejs/examples/js/loaders/ColladaLoader.js"></script>
-<script src="bower_components/threejs/examples/js/loaders/OBJLoader.js"></script>
+<script src="old_bower/bower_components/threejs/examples/js/loaders/ColladaLoader.js"></script>
+<script src="old_bower/bower_components/threejs/examples/js/loaders/OBJLoader.js"></script>
 
 <!--
   Imports Font
@@ -209,7 +209,7 @@ Current background ----------------------------------------- bg paths from this 
 8.Introduction --------------------------------------------- brookings & bd--------------------------   0,6
 */
 var request = new XMLHttpRequest();
-request.open("GET", "./data.json", false);
+request.open("GET", "data/data.json", false);
 request.send();
 skybox_images = JSON.parse(request.responseText).locations;
 
