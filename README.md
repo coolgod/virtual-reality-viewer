@@ -9,7 +9,7 @@ put all the files on a local or remote Apache server, use chrome to access the i
   - where all dependent packages and library files are, including threejs, webvr-polyfill.js and webvr-boilerplate.
   - all necessary files are in folders named "build" in each of the package or library folder.
   - **DO NOT INCLUDE ANYTHING OUTSIDE THE "BUILD" FOLDERS, BECAUSE THOSE ARE JUST NON-DISTRIBUTED SOURCE FILES OF OPEN-SOURCED PROJECTS. IF YOU DO NEED TO MAKE USE OF THEM, COPY TO "js" FOLDER OF OUR VRV PROJECT ROOT DIRECTORY.**
-  - DO NOT MODIFY ANYTHING HERE BECAUSE THEY'RE ALL MANAGED BY BOWER.**
+  - **DO NOT MODIFY ANYTHING HERE BECAUSE THEY'RE ALL MANAGED BY BOWER.**
 - data: where all configuration files and data files are, following the design principle of data and code separation.
 - fonts: where all font files are for three.js so far.
 - img: where all pictures are.
@@ -20,7 +20,7 @@ put all the files on a local or remote Apache server, use chrome to access the i
 - bower.json: bower configuration file, containing library dependency information of our project.
 
 #LIBRARY AND PACKAGE DEPENDENCY#
-our project is dependent on threejs and webvr-boilerplate.
-webvr-boilerplate is dependent on threejs, webvr-polyfill and promise-polyfill(we won't need this part).
-so the include order should be threejs->webvr-polyfill->webvr-boilerplate.
+- our project is dependent on threejs and webvr-boilerplate.
+- webvr-boilerplate is dependent on threejs, webvr-polyfill and promise-polyfill(we won't need this part).
+- so the include order should be threejs->webvr-polyfill->webvr-boilerplate.
 ![include header](img/others/readme.png)
