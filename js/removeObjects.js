@@ -56,8 +56,11 @@ function clearRing () {
 
 function clearAudio () {
   if(audio != null){
-    // audio.dispose();
-    audio.stop();
+    if (audio.isPlaying == true) {
+      audio.stop();
+    }else{
+      audio.autoplay = false;
+    }
     scene.remove(audio);
     audio = null;
   }

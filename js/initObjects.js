@@ -62,11 +62,10 @@ function initSkybox( skybox_index ) {
   /* loading audio */
   if (skybox_images[skybox_index].bg_audio != "") {
     audio = new THREE.Audio( listener );
-    audio.load( skybox_images[skybox_index].bg_audio );
-    audio.autoplay = true;
     audio.setRefDistance( 20 );
+    audio.autoplay = true;
+    audio.load( skybox_images[skybox_index].bg_audio );
     scene.add(audio);
-
   }
 
 }
