@@ -175,8 +175,15 @@ Current background ----------------------------------------- bg paths from this 
 7.samfox --------------------------------------------------- bd & brookings--------------------------   6,0
 8.Introduction --------------------------------------------- brookings & bd--------------------------   0,6
 */
+// Create a VR manager helper to enter and exit VR mode.
+var manager = new WebVRManager(renderer, effect, {hideButton: false});
+
 var request = new XMLHttpRequest();
-request.open("GET", "data/data.json", false);
+if(manager.getDevice().height < 1080){
+  request.open("GET", "data/data-mobile.json", false);
+}else{
+  request.open("GET", "data/data.json", false);
+}
 request.send();
 skybox_images = JSON.parse(request.responseText).locations;
 
@@ -186,11 +193,6 @@ if ( skybox_index == "" ) {
   skybox_index = 8;
 }
 initSkybox(skybox_index);
-
-
-
-// Create a VR manager helper to enter and exit VR mode.
-var manager = new WebVRManager(renderer, effect, {hideButton: false});
 
 // Request animation frame loop function
 function animate(timestamp) {

@@ -21,9 +21,19 @@ function initSkybox( skybox_index ) {
   var texture = loader.load(
     this_skybox.bg_img,
     function ( texture ) {
+      // start loading skybox images for other scenes asynchronously
+      var cacheLoader = new THREE.ImageLoader( THREE.DefaultLoadingManager );
+      cacheLoader.setCrossOrigin( this.crossOrigin );
+      for(i = 0; i < this_skybox.box_specifics.length; i++) {
+        var path = skybox_images[this_skybox.box_specifics[i].next_index].bg_img;
+        cacheLoader.load( path );
+      }
       return texture;
     }
   );
+
+  
+
   texture.minFilter = THREE.NearestMipMapLinearFilter;
 
   var geometry = new THREE.SphereGeometry( 500, 60, 40 );
