@@ -1,0 +1,21 @@
+{
+  "name": "stsvrv",
+  "homepage": "https://github.com/studenttechnology/vrv",
+  "authors": [
+    "sts"
+  ],
+  "description": "",
+  "main": "index.php",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "webvr-boilerplate": "^0.3.6"
+  }
+}

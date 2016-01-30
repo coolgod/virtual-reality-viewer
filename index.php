@@ -55,58 +55,29 @@ WebVRConfig = {
 };
 </script>
 
-<!--
-  three.js 3d library
-  -->
-<script src="old_bower/bower_components/threejs/build/three.js"></script>
+<!-- All Library dependencies -->
+<!-- three.js: JavaScript 3D library -->
+<script src="bower_components/threejs/build/three.js"></script>
+<script src="js/threejs-extras/TextGeometry.js"></script>
+<script src="js/threejs-extras/FontUtils.js"></script>
+<script src="js/threejs-extras/VRControls.js"></script>
+<script src="js/threejs-extras/VREffect.js"></script>
+<script src="fonts/helvetiker_regular.typeface.js"></script>
+<script src="fonts/Lato_Regular.js"></script>
+<!-- WebVR Polyfill: a JavaScript implementation of the WebVR spec -->
+<script src="bower_components/webvr-polyfill/build/webvr-polyfill.js"></script>
+<!-- WebVR Boilerplate: A THREE.js-based starting point for VR experiences -->
+<script src="bower_components/webvr-boilerplate/build/webvr-manager.js"></script>
+<script src="js/webvr-boilerplate/webvr-manager-extras.js"></script>
 
-<!--
-  VRControls.js acquires positional information from connected VR devices and applies the transformations to a three.js camera object.
-   -->
-<script src="old_bower/bower_components/threejs/examples/js/controls/VRControls.js"></script>
-
-<!--
-  VREffect.js handles stereo camera setup and rendering.
-  -->
-<script src="old_bower/bower_components/threejs/examples/js/effects/VREffect.js"></script>
-
-<!--
-  A polyfill for WebVR using the Device{Motion,Orientation}Event API.
-  -->
-<script src="old_bower/bower_components/webvr-polyfill/build/webvr-polyfill.js"></script>
-
-<!--
-  Helps enter and exit VR mode, provides best practices while in VR.
-  -->
-<script src="old_bower/build/webvr-manager.js"></script>
-
-<!--
-  Imports All New Functions
-  -->
-
+<!--All Self-implemented Script -->
 <script src="js/initObjects.js"></script>
 <script src="js/removeObjects.js"></script>
 <script src="js/cameraFunctions.js"></script>
 <script src="js/functions.js"></script>
-
-<script src="old_bower/src/util.js"></script>
-<!--
-  Imports Door
-  -->
-
-<script src="old_bower/bower_components/threejs/examples/js/loaders/ColladaLoader.js"></script>
-<script src="old_bower/bower_components/threejs/examples/js/loaders/OBJLoader.js"></script>
-
-<!--
-  Imports Font
-  -->
-
-<script src="fonts/helvetiker_regular.typeface.js"></script>
-<script src="fonts/Lato_Regular.js"></script>
-
+<script src="js/util.js"></script>
 
 <script>
-
 
 //Setup three.js WebGL renderer
 var renderer = new THREE.WebGLRenderer({ antialias: false });
@@ -168,10 +139,6 @@ particleLight.add( pointLight );
 var raycaster = new THREE.Raycaster();
 raycaster.near = 1;                                              // ray will collide with the gaze pointer ring, but will ignore it  
 var ring = null;
-// var ring = new THREE.Mesh(
-//     new THREE.TorusGeometry( 0.17, 0.017, 4, 70 ),            // set 'radius segment' to 0 to make it a flat 2D ring
-//     new THREE.MeshBasicMaterial( { color: 0xffffff } ));      // set color to white
-// scene.add(ring);
 
 // add video texture
 var videoMesh = null, video, videoTexture, videoScreen, videoScreenContext;
@@ -243,9 +210,6 @@ function animate(timestamp) {
   manager.render(scene, camera, timestamp);
 
   requestAnimationFrame(animate);
-
-  // Below are for debugging
-  // console.log( camera.position.x + ", " + camera.position.y + " ," + camera.position.z );
 }
 
 // Kick off animation loop

@@ -30,10 +30,14 @@ function renderIntersects() {
   }
   if ( isGazingCube ) {
       // function exists in functions.js
+      cubeArray[ gazingIndex ].scale.set(1.2, 1.2, 1.2); // 1 is the initial value
       gazeFunction( gazingIndex );
   }
   else {
       clock.stop();
+      for ( var i = 0; i < cubeArray.length; i++ ) {
+        cubeArray[ i ].scale.set(1, 1, 1);
+      }
       ring.scale.set(1, 1, 1);
       hideText();
   }
@@ -62,6 +66,7 @@ function hideText( gazingIndex ) {
 }
 
 function gazeFunction( gazingIndex ) {
+  //console.log(gazingIndex);
   if ( !clock.running ) {
     clock.start();
   }
@@ -71,6 +76,7 @@ function gazeFunction( gazingIndex ) {
   showText( gazingIndex );
   
   // Loading animation
+  //if(t > 2){
   if(t > 2){
     if(t > 3){          // if zoom-out-zoom-in animation finish
       clock.stop();       // stop the clock;
@@ -89,10 +95,6 @@ function gazeFunction( gazingIndex ) {
   }        
   ring.scale.set(ring.scale.x*factor, ring.scale.y*factor, ring.scale.y*factor);
 }
-
-
-
-
 
 function TextureAnimator(texture, tilesHoriz, tilesVert, numTiles, tileDispDuration) 
 { 
@@ -129,7 +131,6 @@ function TextureAnimator(texture, tilesHoriz, tilesVert, numTiles, tileDispDurat
     }
   };
 }   
-
 
 function renderVideo() {
   if ( video.readyState === video.HAVE_ENOUGH_DATA ) {

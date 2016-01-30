@@ -17,34 +17,16 @@ function initSkybox( skybox_index ) {
   
   var this_skybox = skybox_images[skybox_index];
   var boxWidth = 5;
-  var texture = THREE.ImageUtils.loadTexture(this_skybox.bg_img);
-
-
-  // 360 Video Tryout
-  //
-  //
-  //
-  //
-  /*
-  var video = document.createElement( 'video' );
-  video.width = 640;
-  video.height = 360;
-  video.autoplay = true;
-  video.loop = true;
-  video.src = "video/Overpass.webm";
-
-  var texture = new THREE.VideoTexture(video);
-  texture.minFilter = THREE.LinearFilter;
-  */
+  var loader = new THREE.TextureLoader();
+  var texture = loader.load(
+    this_skybox.bg_img,
+    function ( texture ) {
+      return texture;
+    }
+  );
+  texture.minFilter = THREE.NearestMipMapLinearFilter;
 
   var geometry = new THREE.SphereGeometry( 500, 60, 40 );
-
-  //
-  // damn that's soooooooo weird:
-  // a potential problem here
-  // any 3d object insert before the declaration of skybox material(with BackSide parameter) will disappear in vreffect mode
-  // so I have to declare "ring" and "cubeArray" after the next line of code is executed
-  //
 
   var material = new THREE.MeshBasicMaterial({
     map: texture
@@ -54,8 +36,6 @@ function initSkybox( skybox_index ) {
   skybox.scale.x = -1.0;
   scene.add(skybox);
 
-
-  
   /* loading new cubes */
   cubeTextArray = [];
   cubeArray = [];
@@ -65,23 +45,6 @@ function initSkybox( skybox_index ) {
   }
 
   skybox.receiveShadow = true;
-
-
-  /* loading new doors & running man */
-  // animationArray = [];
-  // doorArray = [];
-  // // if we are not currently in the first
-  // if ( skybox_index != 8 ) {
-  //   for (i = 0; i < box_count; i++) {
-  //     animationArray.push( initAnimatedTexture( this_skybox.box_specifics[i] ) );
-  //     initAnimation( this_skybox.box_specifics[i] );
-  //   }
-  // }
-
-  /* load video screen */
-  // if ( skybox_index == 0 && videoMesh == null) {
-  //   initVideo();
-  // }
 
   /* load Intro text */
   if ( skybox_index == 8 ) {
@@ -112,7 +75,13 @@ function initCube( box_specific ) {
 
 
   var sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
-  var texture = THREE.ImageUtils.loadTexture( box_specific.box_img_path );
+  var loader = new THREE.TextureLoader();
+  var texture = loader.load(
+    box_specific.box_img_path,
+    function ( texture ) {
+      return texture;
+    }
+  );
   texture.miniFilter = THREE.LinearFilter;
   var sphereMaterial = new THREE.MeshPhongMaterial({map: texture , shading: THREE.SmoothShading, opacity: 0.7, transparent: true});
   var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
@@ -143,10 +112,8 @@ function initText( sphere, txt ) {
     material: 0,
     extrudeMaterial: 1
   });
-
-  var textMaterial = new THREE.MeshFaceMaterial( [
-    new THREE.MeshPhongMaterial( { color: 0xDDDDDD  , specular: 0x009900, shininess: 10, shading: THREE.SmoothShading, opacity: 0.8, transparent: true } )
-  ] );
+  var textMaterial = new THREE.MeshPhongMaterial( { color: 0xDDDDDD, specular: 0x009900, shininess: 10, shading: THREE.SmoothShading, opacity: 0.8, transparent: true } );
+  
   text3D = new THREE.Mesh( textGeometry, textMaterial );
 
   var deltaX = ( (sphere.position.z > 0) ? +1 : -1 ) * ( txt.length * 0.2 );
@@ -183,9 +150,7 @@ function initIntroText( skybox_index ) {
     extrudeMaterial: 1
   });
 
-  var textMaterial = new THREE.MeshFaceMaterial( [
-    new THREE.MeshPhongMaterial( { color: 0xffffff, emissive: 0x595050, specular: 0xffffff, shininess: 10, shading: THREE.SmoothShading, opacity: 0.8, transparent: true } )
-  ] );
+  var textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, emissive: 0x595050, specular: 0xffffff, shininess: 10, shading: THREE.SmoothShading, opacity: 0.8, transparent: true } );
   introText = new THREE.Mesh( textGeometry, textMaterial );
 
   introText.position.set( -10, 5, -15 );
