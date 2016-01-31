@@ -11,7 +11,7 @@ var isLoading = false;
 function initSkybox( skybox_index ) {
 
   clearAll();
-  if (skybox_index != 8) {
+  if (skybox_index != 8 || skybox_index != 9) {
     clearIntroText();
   }
   
@@ -57,17 +57,21 @@ function initSkybox( skybox_index ) {
   skybox.receiveShadow = true;
 
   /* load Intro text */
-  if ( skybox_index == 8 ) {
-    initIntroText( skybox_index );
+  if ( skybox_index == 9 ) {
+
+  } else {
+    if ( skybox_index == 8 ) {
+      initIntroText( skybox_index );
+    }
+    /* loading gaze pointer */
+    if(ring == null){
+      ring = new THREE.Mesh(
+      new THREE.TorusGeometry( 0.17, 0.017, 0, 70 ),            // set 'radius segment' to 0 to make it a flat 2D ring
+      new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide} ));      // set color to white
+      top_scene.add(ring);
+    }
   }
 
-  /* loading gaze pointer */
-  if(ring == null){
-    ring = new THREE.Mesh(
-    new THREE.TorusGeometry( 0.17, 0.017, 0, 70 ),            // set 'radius segment' to 0 to make it a flat 2D ring
-    new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide} ));      // set color to white
-    top_scene.add(ring);
-  }
 
   /* loading audio */
   if (skybox_images[skybox_index].bg_audio != "") {

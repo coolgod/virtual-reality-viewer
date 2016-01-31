@@ -51,11 +51,11 @@ body {
 
 
 .wrapper {
-  background: -webkit-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Chrome 10+, Saf5.1+ */
-  background:    -moz-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* FF3.6+ */
-  background:     -ms-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* IE10 */
-  background:      -o-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Opera 11.10+ */
-  background:         linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* W3C */
+  /*background: -webkit-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Chrome 10+, Saf5.1+ */*/
+  /*background:    -moz-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* FF3.6+ */*/
+  /*background:     -ms-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* IE10 */*/
+  /*background:      -o-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Opera 11.10+ */*/
+  /*background:         linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* W3C */*/
 
   color: #fff;
 }
@@ -129,6 +129,7 @@ body {
   color: inherit;
   text-decoration: none;
   box-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
+
 }
 .wrapper .btn:hover {
   border-color: #fff;

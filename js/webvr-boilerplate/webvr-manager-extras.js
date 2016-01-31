@@ -1,11 +1,13 @@
 WebVRManager.prototype.render = function(scene, camera, timestamp) {
   this.resizeIfNeeded_(camera);
 
-  /* functions exist in functions.js */
-  rotateCube();
-  positionRing();
-  positionRaycaster();
-  renderIntersects();
+  if (skybox_index != 9) {
+    /* functions exist in functions.js */
+    rotateCube();
+    positionRing();
+    positionRaycaster();
+    renderIntersects();
+  }
 
   if (this.isVRMode()) {
     // console.log("VRMode Render");

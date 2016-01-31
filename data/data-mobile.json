@@ -82,6 +82,26 @@
                     {"box_img_path":"img/box/brookings.jpg", "box_coord":[5,0,-10], "box_text": "Brookings", "next_index": 0}
                     ],
                     "bg_audio":""
+                },
+                {
+                    "bg_name":"Intro Page",
+                    "bg_img":"img/compressed/brookings.jpg",
+                    "box_specifics":[
+                    ],
+                    "bg_audio":"audio/samfox.mp3"
                 }
+            ],
+
+"audio":    [
+                    "audio/brookings.mp3",
+                    "audio/engineering.mp3",
+                    "audio/outside_olin.mp3",
+                    "audio/inside_olin.mp3",
+                    "audio/fun_room.mp3",
+                    "audio/STS.mp3",
+                    "audio/bd.mp3",
+                    "audio/samfox.mp3"
+            ]
+
             ]
 }
