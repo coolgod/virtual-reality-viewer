@@ -140,6 +140,12 @@ function renderVideo() {
   }
 }
 
+function animateIntroText() {
+  if (introText != null) {
+    
+  }
+}
+
 
 
 // function clearAnimationTexture() {

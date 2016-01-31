@@ -117,7 +117,7 @@ function initText( sphere, txt ) {
     weight: "normal",
     style: "normal",
     curveSegments: 3,
-    font: "Lato",
+    font: "raleway",
     material: 0,
     extrudeMaterial: 1
   });
@@ -153,8 +153,8 @@ function initIntroText( skybox_index ) {
     height: 0.2,
     weight: "normal",
     style: "normal",
-    curveSegments: 10,
-    font: "Lato",
+    curveSegments: 20,
+    font: "raleway",
     material: 0,
     extrudeMaterial: 1
   });
