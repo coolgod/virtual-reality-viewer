@@ -46,6 +46,11 @@ html, body {
 }
 
 body {
+  background: #000000;
+}
+
+
+.wrapper {
   background: -webkit-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Chrome 10+, Saf5.1+ */
   background:    -moz-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* FF3.6+ */
   background:     -ms-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* IE10 */
@@ -208,7 +213,7 @@ WebVRConfig = {
 <script src="js/threejs-extras/VREffect.js"></script>
 <!-- <script src="fonts/helvetiker_regular.typeface.js"></script> -->
 <!-- <script src="fonts/Lato_Regular.js"></script> -->
-<script src="fonts/Raleway_Light.js"></script>
+<script src="fonts/Raleway_Medium.js"></script>
 <!-- WebVR Polyfill: a JavaScript implementation of the WebVR spec -->
 <script src="bower_components/webvr-polyfill/build/webvr-polyfill.js"></script>
 <!-- WebVR Boilerplate: A THREE.js-based starting point for VR experiences -->
