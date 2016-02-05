@@ -1,0 +1,107 @@
+{
+"locations":[
+                {
+                    "bg_name":"Brookings",
+                    "bg_img":"img/android/brookings.jpg",
+                    "box_specifics":[
+                    {"box_img_path":"img/box/samfox.jpg", "box_coord":[-13.1, 0.05, -7.35], "box_text": "Sam Fox", "next_index": 7},
+                    {"box_img_path":"img/box/engineering.jpg", "box_coord":[10.9, 0.2, 10.3], "box_text": "Engineering", "next_index": 1},
+                    {"box_img_path":"img/box/outside_olin.jpg", "box_coord":[8.75, 0.5, -12.2], "box_text": "Olin Library", "next_index": 2}
+                    ],
+                    "bg_audio":"audio/Brookings.mp3"
+                },
+                {
+                    "bg_name":"Engineering",
+                    "bg_img":"img/android/engineering.jpg",
+                    "box_specifics":[
+                    {"box_img_path":"img/box/brookings.jpg", "box_coord":[-6.6, -2.35, -13.25], "box_text": "Brookings", "next_index": 0},
+                    {"box_img_path":"img/box/outside_olin.jpg", "box_coord":[14.3, -2.45, -3.8], "box_text": "Olin Library", "next_index": 2}
+                    ],
+                    "bg_audio":"audio/engineering.mp3"
+                },
+                {
+                    "bg_name":"Olin Outside",
+                    "bg_img":"img/android/outside_olin.jpg",
+                    "box_specifics":[
+                    {"box_img_path":"img/box/engineering.jpg", "box_coord":[-6.4, -3.2, -13.2], "box_text": "Engineering", "next_index": 1},
+                    {"box_img_path":"img/box/brookings.jpg", "box_coord":[8.2, -2.65, -12.3], "box_text": "Brookings", "next_index": 0},
+                    {"box_img_path":"img/box/inside_olin.jpg", "box_coord":[-14.1, -4.65, 2.25], "box_text": "Olin Circ", "next_index": 3},
+                    {"box_img_path":"img/box/fun_room.jpg", "box_coord":[7.15, -3.5, 12.7], "box_text": "Fun Room", "next_index": 4}
+                    ],
+                    "bg_audio":"audio/outside_olin.mp3"
+                },
+                {
+                    "bg_name":"Olin Circ",
+                    "bg_img":"img/android/inside_olin.jpg",
+                    "box_specifics":[
+                    {"box_img_path":"img/box/outside_olin.jpg", "box_coord":[4.55 , -0.3, -14.3], "box_text": "Olin Library", "next_index": 2}
+                    ],
+                    "bg_audio":"audio/inside_olin.mp3"
+                },
+                {
+                    "bg_name":"DUC: Fun room",
+                    "bg_img":"img/android/fun_room.jpg",
+                    "box_specifics":[
+                    {"box_img_path":"img/box/outside_olin.jpg", "box_coord":[-6.15, -0.15, 13.7], "box_text": "Olin Library", "next_index": 2},
+                    {"box_img_path":"img/box/STS.jpg", "box_coord":[13.95, 0.95, -5.45], "box_text": "STS", "next_index": 5}
+                    ],
+                    "bg_audio":"audio/fun_room.mp3"
+                },
+                {
+                    "bg_name":"STS",
+                    "bg_img":"img/android/STS.jpg",
+                    "box_specifics":[
+                    {"box_img_path":"img/box/fun_room.jpg", "box_coord":[-12.15, 1.9, -8.55], "box_text": "Fun Room", "next_index": 4},
+                    {"box_img_path":"img/box/bd.jpg", "box_coord":[12.55, 2.15, 7.9], "box_text": "Bear's Den", "next_index": 6}
+                    ],
+                    "bg_audio":"audio/STS.mp3"
+                },
+                {
+                    "bg_name":"Bear's Den",
+                    "bg_img":"img/android/bd.jpg",
+                    "box_specifics":[
+                    {"box_img_path":"img/box/STS.jpg", "box_coord":[11.75, 1.1, -9.3], "box_text": "STS", "next_index": 5},
+                    {"box_img_path":"img/box/samfox.jpg", "box_coord":[10.75, 1.35, 10.35], "box_text": "Sam Fox", "next_index": 7}
+                    ],
+                    "bg_audio":"audio/bd.mp3"
+                },
+                {
+                    "bg_name":"Sam Fox Art",
+                    "bg_img":"img/android/samfox.jpg",
+                    "box_specifics":[
+                    {"box_img_path":"img/box/bd.jpg", "box_coord":[-0.7, 0.3, -15], "box_text": "Bear's Den", "next_index": 6},
+                    {"box_img_path":"img/box/brookings.jpg", "box_coord":[8, 0.5, -12.65], "box_text": "Brookings", "next_index": 0}
+                    ],
+                    "bg_audio":"audio/samfox.mp3"
+                },
+                {
+                    "bg_name":"WashU's Virtual Reality Viewer",
+                    "bg_img":"",
+                    "box_specifics":[
+                    {"box_img_path":"img/box/bd.jpg", "box_coord":[-5,0,-10], "box_text": "Bear's Den", "next_index": 6},
+                    {"box_img_path":"img/box/brookings.jpg", "box_coord":[5,0,-10], "box_text": "Brookings", "next_index": 0}
+                    ],
+                    "bg_audio":""
+                },
+                {
+                    "bg_name":"Intro Page",
+                    "bg_img":"img/compressed/brookings.jpg",
+                    "box_specifics":[
+                    ],
+                    "bg_audio":"audio/samfox.mp3"
+                }
+            ],
+
+"audio":    [
+                    "audio/brookings.mp3",
+                    "audio/engineering.mp3",
+                    "audio/outside_olin.mp3",
+                    "audio/inside_olin.mp3",
+                    "audio/fun_room.mp3",
+                    "audio/STS.mp3",
+                    "audio/bd.mp3",
+                    "audio/samfox.mp3"
+            ]
+
+            ]
+}

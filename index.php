@@ -253,9 +253,11 @@ var doorArray = [];
 var animationArray = [];
 
 // Create a three.js camera.
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+// fov calculating referencing https://github.com/mrdoob/three.js/issues/1239
+var vFOV = 2 * Math.atan( window.screen.availHeight / ( 2 * 500 ) );
+vFOV = vFOV/(2*Math.PI)*360;
+var camera = new THREE.PerspectiveCamera(vFOV, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.target = new THREE.Vector3( 10, 10, 0 );
-// console.log(camera);
 camera.lookAt(new THREE.Vector3( 100, 100, 100 ));
 
 // Apply VR headset positional data to camera.
@@ -333,11 +335,19 @@ Current background ----------------------------------------- bg paths from this 
 var manager = new WebVRManager(renderer, effect, {hideButton: false});
 
 var request = new XMLHttpRequest();
-if(manager.getDevice().height < 1080){
-  request.open("GET", "data/data-mobile.json", false);
+if ( /iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream ) {
+  request.open("GET", "data/data-iphone.json", false);
+}else if ( /iPad/i.test(navigator.userAgent) ) {
+  //request.open("GET", "data/data-ipad.json", false);
+  request.open("GET", "data/data.json", false);
+}else if ( /Anroid/i.test(navigator.userAgent)  ){
+  //request.open("GET", "data/data-android.json", false);
+  request.open("GET", "data/data.json", false);
 }else{
   request.open("GET", "data/data.json", false);
 }
+
+
 request.send();
 skybox_images = JSON.parse(request.responseText).locations;
 
