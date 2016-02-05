@@ -2,16 +2,16 @@
 
 <html lang="en">
 <head>
+<title>WashU VRV</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>WashU VRV</title>
 <meta name="description" content="">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
 <style>
 /*body {
@@ -343,8 +343,7 @@ if ( /iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream ) {
   //request.open("GET", "data/data-ipad.json", false);
   request.open("GET", "data/data.json", false);
 }else if ( /Anroid/i.test(navigator.userAgent)  ){
-  //request.open("GET", "data/data-android.json", false);
-  request.open("GET", "data/data.json", false);
+  request.open("GET", "data/data-android.json", false);
 }else{
   request.open("GET", "data/data.json", false);
 }

@@ -21,7 +21,7 @@ function initSkybox( skybox_index ) {
   var texture = loader.load(
     this_skybox.bg_img,
     function ( texture ) {
-      // start loading skybox images for other scenes asynchronously
+      // start caching skybox images for other scenes asynchronously
       var cacheLoader = new THREE.ImageLoader( THREE.DefaultLoadingManager );
       cacheLoader.setCrossOrigin( this.crossOrigin );
       for(i = 0; i < this_skybox.box_specifics.length; i++) {
