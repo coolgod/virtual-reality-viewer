@@ -254,9 +254,11 @@ var animationArray = [];
 
 // Create a three.js camera.
 // fov calculating referencing https://github.com/mrdoob/three.js/issues/1239
-var vFOV = 2 * Math.atan( window.screen.availHeight / ( 2 * 500 ) );
-vFOV = vFOV/(2*Math.PI)*360;
-var camera = new THREE.PerspectiveCamera(vFOV, window.innerWidth / window.innerHeight, 0.1, 1000);
+var aspect = window.screen.availWidth / window.screen.availHeight;
+// var vFOV = 2 * Math.atan( window.screen.availHeight / ( 2 * 500 ) );
+// vFOV = vFOV/(2*Math.PI)*360;
+// console.log("vFOV: "+vFOV);
+var camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 501);
 camera.target = new THREE.Vector3( 10, 10, 0 );
 camera.lookAt(new THREE.Vector3( 100, 100, 100 ));
 
