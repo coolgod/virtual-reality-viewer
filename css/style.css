@@ -1,0 +1,140 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 300;
+  line-height: 34px;
+  letter-spacing: .02em;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  float: left;
+  display: block;
+  font-family: "Raleway", sans-serif;
+  font-size: 1rem;
+}
+
+body {
+  background: #000000;
+}
+
+.wrapper {
+  /*background: -webkit-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Chrome 10+, Saf5.1+ */*/
+  /*background:    -moz-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* FF3.6+ */*/
+  /*background:     -ms-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* IE10 */*/
+  /*background:      -o-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Opera 11.10+ */*/
+  /*background:         linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* W3C */*/
+  color: #fff;
+}
+
+.wrapper {
+  padding: 2em 1em;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  float: left;
+  display: block;
+  text-align: center;
+}
+
+.wrapper .header {
+  height: auto;
+  margin-top: 6em;
+  width: 100%;
+  float: left;
+}
+
+.wrapper .header .title {
+  color: #fff;
+  font-size: 2.875em;
+}
+
+.wrapper .content {
+  height: auto;
+  margin-top: 1em;
+  width: 100%;
+  float: left;
+}
+
+.wrapper .content .info p {
+  color: #fff;
+  font-size: 1.25em;
+}
+
+.wrapper .content .button {
+  margin-top: 3em;
+}
+
+.wrapper .footer {
+  height: auto;
+  margin-top: 1em;
+  width: 100%;
+  float: left;
+  bottom: 1em;
+  position: absolute;
+  font-size: .9rem;
+}
+
+.wrapper .footer .link {
+  color: #fff;
+  text-decoration: none;
+}
+
+.wrapper .footer .link:hover {
+  color: #fff;
+}
+
+.wrapper .footer .link:hover:after {
+  color: #fff;
+}
+
+.wrapper .footer .link:not(:last-child):after {
+  content: ' - ';
+  font-weight: bold;
+  color: #fff;
+}
+
+.wrapper .btn {
+  text-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
+  margin-bottom: 1em;
+  display: inline-block;
+  margin: auto .5em;
+  padding: .5em 1.2em;
+  border: .1em solid;
+  border-radius: 5px;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
+
+}
+
+.wrapper .btn:hover {
+  border-color: #fff;
+}
+
+@media all and (max-width: 40em) {
+  html, body {
+    font-size: .85rem;
+    line-height: 22px;
+  }
+}
+
+@media all and (max-width: 60em) {
+  html, body {
+    font-size: .9rem;
+    line-height: 24px;
+  }
+}
+
+.webvr-button{
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}

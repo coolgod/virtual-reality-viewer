@@ -18,12 +18,13 @@ function initSkybox( skybox_index ) {
   var this_skybox = skybox_images[skybox_index];
   var boxWidth = 5;
   var loader = new THREE.TextureLoader();
+  loader.crossOrigin = '';
   var texture = loader.load(
     this_skybox.bg_img,
     function ( texture ) {
       // start caching skybox images for other scenes asynchronously
       var cacheLoader = new THREE.ImageLoader( THREE.DefaultLoadingManager );
-      cacheLoader.setCrossOrigin( this.crossOrigin );
+      cacheLoader.setCrossOrigin( '' );
       for(i = 0; i < this_skybox.box_specifics.length; i++) {
         var path = skybox_images[this_skybox.box_specifics[i].next_index].bg_img;
         cacheLoader.load( path );
@@ -89,6 +90,7 @@ function initCube( box_specific ) {
 
   var sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
   var loader = new THREE.TextureLoader();
+  loader.crossOrigin = '';
   var texture = loader.load(
     box_specific.box_img_path,
     function ( texture ) {

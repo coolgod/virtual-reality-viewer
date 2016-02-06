@@ -2,153 +2,17 @@
 
 <html lang="en">
 <head>
-<title>WashU VRV</title>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="description" content="">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>WashU VRV</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-
-<style>
-/*body {
-  width: 100%;
-  height: 100%;
-  background-color: #000;
-  color: #fff;
-  margin: 0px;
-  padding: 0;
-  overflow: hidden;
-}*/
-* {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-weight: 300;
-  line-height: 34px;
-  letter-spacing: .02em;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  float: left;
-  display: block;
-  font-family: "Raleway", sans-serif;
-  font-size: 1rem;
-}
-
-body {
-  background: #000000;
-}
-
-
-.wrapper {
-  /*background: -webkit-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Chrome 10+, Saf5.1+ */*/
-  /*background:    -moz-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* FF3.6+ */*/
-  /*background:     -ms-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* IE10 */*/
-  /*background:      -o-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Opera 11.10+ */*/
-  /*background:         linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* W3C */*/
-
-  color: #fff;
-}
-
-.wrapper {
-  padding: 2em 1em;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  float: left;
-  display: block;
-  text-align: center;
-}
-
-.wrapper .header {
-  height: auto;
-  margin-top: 6em;
-  width: 100%;
-  float: left;
-}
-.wrapper .header .title {
-  color: #fff;
-  font-size: 2.875em;
-}
-.wrapper .content {
-  height: auto;
-  margin-top: 1em;
-  width: 100%;
-  float: left;
-}
-.wrapper .content .info p {
-  color: #fff;
-  font-size: 1.25em;
-}
-.wrapper .content .button {
-  margin-top: 3em;
-}
-.wrapper .footer {
-  height: auto;
-  margin-top: 1em;
-  width: 100%;
-  float: left;
-  bottom: 1em;
-  position: absolute;
-  font-size: .9rem;
-}
-.wrapper .footer .link {
-  color: #fff;
-  text-decoration: none;
-}
-.wrapper .footer .link:hover {
-  color: #fff;
-}
-.wrapper .footer .link:hover:after {
-  color: #fff;
-}
-.wrapper .footer .link:not(:last-child):after {
-  content: ' - ';
-  font-weight: bold;
-  color: #fff;
-}
-.wrapper .btn {
-  text-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
-  margin-bottom: 1em;
-  display: inline-block;
-  margin: auto .5em;
-  padding: .5em 1.2em;
-  border: .1em solid;
-  border-radius: 5px;
-  color: inherit;
-  text-decoration: none;
-  box-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
-
-}
-.wrapper .btn:hover {
-  border-color: #fff;
-}
-
-@media all and (max-width: 40em) {
-  html, body {
-    font-size: .85rem;
-    line-height: 22px;
-  }
-}
-@media all and (max-width: 60em) {
-  html, body {
-    font-size: .9rem;
-    line-height: 24px;
-  }
-}
-
-</style>
+  <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+  <link href='css/style.css' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
@@ -157,27 +21,28 @@ body {
       <source src="video/Friends.mp4" type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;">
   </video>
   -->
-
-<!--   <div class="wrapper" id="wrapper">
-    <div class="header">
-      <h1 class="title">WuVR</h1>
-    </div>
-    <div class="content">
-      <div class="info">
-        <p>Welcome to a virtual tour of Washington University in St.Louis</p>
+  <!-- 
+    <div class="wrapper" id="wrapper">
+      <div class="header">
+        <h1 class="title">WuVR</h1>
       </div>
-      <div class="button">
-        <a href="#" class="btn">Get Started</a>
+      <div class="content">
+        <div class="info">
+          <p>Welcome to a virtual tour of Washington University in St.Louis</p>
+        </div>
+        <div class="button">
+          <a href="#" class="btn">Get Started</a>
+        </div>
+      </div>
+      <div class="footer">
+        <span class="copyright">Washington University in St. Louis </span> —
+        <a href="#" class="link">STS</a>
+        <a href="#" class="link">SDC</a>
+        <a href="#" class="link">VRV</a>
       </div>
     </div>
-    <div class="footer">
-      <span class="copyright">Washington University in St. Louis </span> —
-      <a href="#" class="link">STS</a>
-      <a href="#" class="link">SDC</a>
-      <a href="#" class="link">VRV</a>
-    </div>
-  </div>
- --></body>
+  -->
+</body>
 
 <script>
 /*
@@ -220,11 +85,11 @@ WebVRConfig = {
 <!-- WebVR Boilerplate: A THREE.js-based starting point for VR experiences -->
 <script src="bower_components/webvr-boilerplate/build/webvr-manager.js"></script>
 <script src="js/webvr-boilerplate/webvr-manager-extras.js"></script>
-<!-- AJAX library-->
+<!-- jquery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
 <!--All Self-implemented Script -->
-<script src="htmlFunctions.js"></script>
+<script src="js/htmlFunctions.js"></script>
 <script src="js/initObjects.js"></script>
 <script src="js/removeObjects.js"></script>
 <script src="js/cameraFunctions.js"></script>
@@ -253,11 +118,8 @@ var doorArray = [];
 var animationArray = [];
 
 // Create a three.js camera.
-// fov calculating referencing https://github.com/mrdoob/three.js/issues/1239
+// dynamic vFOV ref: https://github.com/mrdoob/three.js/issues/1239
 var aspect = window.screen.availWidth / window.screen.availHeight;
-// var vFOV = 2 * Math.atan( window.screen.availHeight / ( 2 * 500 ) );
-// vFOV = vFOV/(2*Math.PI)*360;
-// console.log("vFOV: "+vFOV);
 var camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 501);
 camera.target = new THREE.Vector3( 10, 10, 0 );
 camera.lookAt(new THREE.Vector3( 100, 100, 100 ));
@@ -274,19 +136,15 @@ var clock = new THREE.Clock(false);
 var animationClock = new THREE.Clock();
 
 // Lights
-particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0000 } ) );
+var particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0000 } ) );
 scene.add( particleLight );
-
 scene.add( new THREE.AmbientLight( 0x111111 ) );
 
 var directionalLight = new THREE.DirectionalLight( Math.random() *  0xff0000, 0.4 );
-
 directionalLight.position.x = Math.random() - 0.5;
 directionalLight.position.y = Math.random() - 0.5;
 directionalLight.position.z = Math.random() - 0.5;
-
 directionalLight.position.normalize();
-
 scene.add( directionalLight );
 
 var pointLight = new THREE.PointLight( 0xffffff, 1 );
@@ -302,40 +160,17 @@ var ring = null;
 var videoMesh = null, video, videoTexture, videoScreen, videoScreenContext;
 // initVideo();
 
-
 // add audio listener
 listener = new THREE.AudioListener();
 camera.add( listener );
 
-
 // helper object for zooming camera in/out
 newCameraPosition = new THREE.Vector3(0,0,0);
 
-
-
-// Initialize a list of skybox_images (link to images & coordinates of boxes)
-/*
-This all_picture_path variable contains all pathing towards the
-Struture is
-
-background_image:<path>, 
-box_image:[{background_index:<num>,box_img_path:"<path>"},{background_index:<num>,box_img_path:"<path>"}, background_audio:<path>]
-first box image and its corresponding background        2nd box image and its corresponding
-
-Current background ----------------------------------------- bg paths from this current bg
-0.brookings ------------------------------------------------ samfox & engineering---------------------   7,1
-1.engineering ---------------------------------------------- outside olin & brookings----------------   2,0
-2.outside olin --------------------------------------------- olin circ & fun room & engineering------   3,4
-3.olin circ ------------------------------------------------ outside olin   -------------------------   2
-4.fun room ------------------------------------------------- outside olin & sts----------------------   2,5
-5.sts ------------------------------------------------------ fun room & bd --------------------------   4,6
-6.bd ------------------------------------------------------- sts & samfox----------------------------   5,7
-7.samfox --------------------------------------------------- bd & brookings--------------------------   6,0
-8.Introduction --------------------------------------------- brookings & bd--------------------------   0,6
-*/
 // Create a VR manager helper to enter and exit VR mode.
 var manager = new WebVRManager(renderer, effect, {hideButton: false});
 
+// Load resource data files
 var request = new XMLHttpRequest();
 if ( /iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream ) {
   request.open("GET", "data/data-iphone.json", false);
@@ -347,8 +182,6 @@ if ( /iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream ) {
 }else{
   request.open("GET", "data/data.json", false);
 }
-
-
 request.send();
 skybox_images = JSON.parse(request.responseText).locations;
 
