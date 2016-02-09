@@ -15,13 +15,144 @@
   <link href='css/style.css' rel='stylesheet' type='text/css'>
 </head>
 
+<style>
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 300;
+  line-height: 34px;
+  letter-spacing: .02em;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  float: left;
+  display: block;
+  font-family: "Raleway", sans-serif;
+  font-size: 1rem;
+}
+
+body {
+  background: #000000;
+}
+
+
+.wrapper {
+  background: -webkit-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Chrome 10+, Saf5.1+ */
+  background:    -moz-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* FF3.6+ */
+  background:     -ms-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* IE10 */
+  background:      -o-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Opera 11.10+ */
+  background:         linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* W3C */
+
+  color: #fff;
+}
+
+.wrapper {
+  position: absolute;
+  padding: 2em 1em;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  float: left;
+  display: block;
+  text-align: center;
+}
+
+.wrapper .header {
+  height: auto;
+  margin-top: 6em;
+  width: 100%;
+  float: left;
+}
+.wrapper .header .title {
+  color: #fff;
+  font-size: 2.875em;
+}
+.wrapper .content {
+  height: auto;
+  margin-top: 1em;
+  width: 100%;
+  float: left;
+}
+.wrapper .content .info p {
+  color: #fff;
+  font-size: 1.25em;
+}
+.wrapper .content .button {
+  margin-top: 3em;
+}
+.wrapper .footer {
+  height: auto;
+  margin-top: 1em;
+  width: 100%;
+  float: left;
+  bottom: 1em;
+  position: absolute;
+  font-size: .9rem;
+}
+.wrapper .footer .link {
+  color: #fff;
+  text-decoration: none;
+}
+.wrapper .footer .link:hover {
+  color: #fff;
+}
+.wrapper .footer .link:hover:after {
+  color: #fff;
+}
+.wrapper .footer .link:not(:last-child):after {
+  content: ' - ';
+  font-weight: bold;
+  color: #fff;
+}
+.wrapper .btn {
+  text-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
+  margin-bottom: 1em;
+  display: inline-block;
+  margin: auto .5em;
+  padding: .5em 1.2em;
+  border: .1em solid;
+  border-radius: 5px;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
+
+}
+.wrapper .btn:hover {
+  border-color: #fff;
+}
+
+@media all and (max-width: 40em) {
+  html, body {
+    font-size: .85rem;
+    line-height: 22px;
+  }
+}
+@media all and (max-width: 60em) {
+  html, body {
+    font-size: .9rem;
+    line-height: 24px;
+  }
+}
+
+</style>
+</head>
+
+
 <body>
   <!-- 
   <video id="video" loop="" style="display:none">
       <source src="video/Friends.mp4" type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;">
   </video>
   -->
-  <!-- 
+  
     <div class="wrapper" id="wrapper">
       <div class="header">
         <h1 class="title">WuVR</h1>
@@ -36,12 +167,12 @@
       </div>
       <div class="footer">
         <span class="copyright">Washington University in St. Louis </span> —
-        <a href="#" class="link">STS</a>
+        <a href="http://sts.wustl.edu" class="link">STS</a>
         <a href="#" class="link">SDC</a>
-        <a href="#" class="link">VRV</a>
+        <a href="http://sts.wustl.edu/vrv/" class="link">VRV</a>
       </div>
     </div>
-  -->
+ 
 </body>
 
 <script>
@@ -104,8 +235,16 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.sortObjects = true;  // not always working
 renderer.autoClear = false;
 
+/* Restructuring
+
+Moved below line to htmlFunctions.js due to div resizing issues for the starting screen (wrapper)
+
 // Append the canvas element created by the renderer to document body element.
-document.body.appendChild(renderer.domElement);
+// document.body.appendChild(renderer.domElement);
+
+*/
+
+
 
 // Create a three.js scene.
 var scene = new THREE.Scene();
