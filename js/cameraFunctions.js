@@ -29,7 +29,7 @@ function zoomInCamera() {
 
     // Load the new skybox after the camera is reset
     initSkybox(cubeArray[loadingSkyboxIndex].next_index);
-
+    // updateSkybox(cubeArray[loadingSkyboxIndex].next_index);
     loadingSkyboxIndex = null;
     isLoading = false;
   }

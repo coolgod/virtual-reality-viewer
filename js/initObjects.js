@@ -8,6 +8,33 @@ var annie = null;
 var loadingSkyboxIndex = null;
 var isLoading = false;
 
+
+// function updateSkybox( skybox_index ) {
+
+//   var this_skybox = skybox_images[skybox_index];
+//   var boxWidth = 5;
+//   var loader = new THREE.TextureLoader();
+//   loader.crossOrigin = '';
+//   var texture = loader.load(
+//     this_skybox.bg_img,
+//     function ( texture ) {
+//       // start caching skybox images for other scenes asynchronously
+//       var cacheLoader = new THREE.ImageLoader( THREE.DefaultLoadingManager );
+//       cacheLoader.setCrossOrigin( '' );
+//       for(i = 0; i < this_skybox.box_specifics.length; i++) {
+//         var path = skybox_images[this_skybox.box_specifics[i].next_index].bg_img;
+//         cacheLoader.load( path );
+//       }
+//       return texture;
+//     }
+//   );
+
+//   skybox.material.map.needsUpdate = true;
+//   skybox.material.map.texture = texture;
+//   skybox.material.map.needsUpdate = false;
+
+// }
+
 function initSkybox( skybox_index ) {
 
   clearAll();
