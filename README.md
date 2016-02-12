@@ -6,7 +6,7 @@ put all the files on a local or remote Apache server, use chrome to access the i
 - animation: for future use and experiments, contain all those animation model files
 - audio: where all the audio files like .mp3 files are
 - bower_components: 
-  - where all dependent packages and library files are, including threejs, webvr-polyfill.js and webvr-boilerplate.
+  - where all dependent packages and library files are, including threejs, webvr-polyfill.js, webvr-boilerplate, howler.js, tween.js.
   - all necessary files are in folders named "build" in each of the package or library folder.
   - **DO NOT INCLUDE ANYTHING OUTSIDE THE "BUILD" FOLDERS, BECAUSE THOSE ARE JUST NON-DISTRIBUTED SOURCE FILES OF OPEN-SOURCED PROJECTS. IF YOU DO NEED TO MAKE USE OF THEM, COPY TO "js" FOLDER OF OUR VRV PROJECT ROOT DIRECTORY.**
   - **DO NOT MODIFY ANYTHING HERE BECAUSE THEY'RE ALL MANAGED BY BOWER.**
