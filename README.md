@@ -17,7 +17,7 @@ put all the files on a local or remote Apache server, use chrome to access the i
 - js: where self-implemented script files are.
 - test: put all unfinished test files here until everything has been done.
 - video: all video file are here.
-- .gitignore: standard git repo file, indicating what files are not going to be commited.
+- .gitignore: git repo file, indicating what files are not going to be commited.
 - bower.json: bower configuration file, containing library dependency information of our project.
 
 #LIBRARY AND PACKAGE DEPENDENCY#
