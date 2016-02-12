@@ -3,15 +3,10 @@ $(document).ready(function(){
     $(".button").click(function(){
         $(".wrapper").fadeOut(2000,"swing")
 
-        var img = document.getElementsByTagName('img');
-        img[0].style.width = '48px';
-        img[0].style.height = '48px';
-        img[1].style.width = '48px';
-        img[1].style.height = '48px';
-        img[2].style.width = '48px';
-        img[2].style.height = '48px';
-        img[3].style.width = '48px';
-        img[3].style.height = '48px';
+        var vr_btn = $(".webvr-button");
+        vr_btn.css("-webkit-box-sizing","content-box");
+        vr_btn.css("moz-box-sizing","content-box");
+        vr_btn.css("box-sizing","content-box");
         document.body.appendChild(renderer.domElement);
     });
     // $(".btn2").click(function(){

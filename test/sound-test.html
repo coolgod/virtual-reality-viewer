@@ -1,0 +1,37 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script type="text/javascript">
+	var request = new XMLHttpRequest();
+	request.open( 'GET', "../audio/test.mp3", true );
+	request.responseType = 'arraybuffer';
+	request.onload = function ( e ) {
+		var context = new ( window.AudioContext || window.webkitAudioContext )();
+		context.decodeAudioData( request.response, function ( buffer ) {
+			var source = context.createBufferSource();
+			source.buffer = buffer;
+			source.loop = false;
+			// source.onended = this.source.onended;
+			// source.start( 0, 0 );
+			// source.playbackRate.value = 1;
+			var panner = context.createPanner();
+			//panner.setPosition(-1, 0, 0);
+			panner.connect( context.destination );
+
+			var gainNode = context.createGain();
+			gainNode.connect( panner );
+			gainNode.gain.value = 0.6;
+
+
+
+			// source.connect( panner );
+			source.connect(gainNode);
+			source.start( 0 );
+		} );
+	};
+	request.send();
+</script>
+</body>
+</html>
