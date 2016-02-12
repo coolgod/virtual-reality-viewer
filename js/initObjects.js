@@ -1,13 +1,13 @@
 var skybox = null;
 var skybox_index = null;
-var audio = null;
+var prev_skybox_index = null;
 var doorArray = null;
 var animationArray = null;
 var introText = null;
 var annie = null;
 var loadingSkyboxIndex = null;
 var isLoading = false;
-
+var audios = new Array();
 
 // function updateSkybox( skybox_index ) {
 
@@ -35,11 +35,23 @@ var isLoading = false;
 
 // }
 
-function initSkybox( skybox_index ) {
-
-  clearAll();
+function initSkybox( skybox_index, prev_skybox_index ) {
+  console.log(skybox_index+" "+prev_skybox_index);
+  if ( prev_skybox_index != null || prev_skybox_index != undefined){
+    clearAll( prev_skybox_index );
+  }
   if (skybox_index != 8 || skybox_index != 9) {
     clearIntroText();
+  }
+
+  if (skybox_index == 8 || skybox_index == 9){
+    // pre-load audio for brookings and bears den
+    audios[skybox_images[0].bg_audio] = new Howl({
+    urls: [skybox_images[0].bg_audio]
+    });
+    audios[skybox_images[6].bg_audio] = new Howl({
+    urls: [skybox_images[6].bg_audio]
+    });
   }
   
   var this_skybox = skybox_images[skybox_index];
@@ -100,16 +112,20 @@ function initSkybox( skybox_index ) {
     }
   }
 
-
-  /* loading audio */
-  if (skybox_images[skybox_index].bg_audio != "") {
-    audio = new THREE.Audio( listener );
-    audio.setRefDistance( 20 );
-    audio.autoplay = true;
-    audio.load( skybox_images[skybox_index].bg_audio );
-    scene.add(audio);
+  /* load audio using Howler.js */
+  var audio_path = skybox_images[skybox_index].bg_audio;
+  if(audio_path != ""){
+    if(audios[audio_path] == null){ // if it hasn't been loaded
+      audios[audio_path] = new Howl({
+        urls: [audio_path]
+      }).play();
+      // console.log( audios[audio_path] );
+    }else{
+      if( audios[audio_path] != false ){ //if it has been loaded but not played
+        audios[audio_path].play();
+      }
+    }
   }
-
 }
 
 function initCube( box_specific ) {

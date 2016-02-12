@@ -89,10 +89,12 @@ WebVRConfig = {
 <script src="js/webvr-boilerplate/webvr-manager-extras.js"></script>
 <!-- jquery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<!-- howler.js - Modern Web Audio Javascript Library -->
+<script src="bower_components/howler.js/howler.js"></script>
 
 <!--All Self-implemented Script -->
-<script src="js/htmlFunctions.js"></script>
 <script src="js/initObjects.js"></script>
+<script src="js/htmlFunctions.js"></script>
 <script src="js/removeObjects.js"></script>
 <script src="js/cameraFunctions.js"></script>
 <script src="js/functions.js"></script>
@@ -114,8 +116,6 @@ Moved below line to htmlFunctions.js due to div resizing issues for the starting
 // document.body.appendChild(renderer.domElement);
 
 */
-
-
 
 // Create a three.js scene.
 var scene = new THREE.Scene();
@@ -170,10 +170,6 @@ var ring = null;
 var videoMesh = null, video, videoTexture, videoScreen, videoScreenContext;
 // initVideo();
 
-// add audio listener
-listener = new THREE.AudioListener();
-camera.add( listener );
-
 // helper object for zooming camera in/out
 newCameraPosition = new THREE.Vector3(0,0,0);
 
@@ -200,7 +196,7 @@ skybox_index = Util.getQueryParameter("skybox_index");
 if ( skybox_index == "" ) {
   skybox_index = 8;
 }
-initSkybox(skybox_index);
+initSkybox(skybox_index, null);
 
 // Request animation frame loop function
 function animate(timestamp) {

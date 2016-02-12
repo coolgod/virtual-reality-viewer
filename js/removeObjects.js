@@ -1,11 +1,11 @@
 /* objects recycle */
 
-function clearAll(){
+function clearAll( prev_skybox_index ){
   clearRing();
   clearOldSkybox();
   clearOldCubesAndText();
   clearVideoScreen();
-  clearAudio();
+  clearAudio( prev_skybox_index );
   clearDoors();
   clearAnimation();
 
@@ -54,15 +54,15 @@ function clearRing () {
   }
 }
 
-function clearAudio () {
-  if(audio != null){
-    if (audio.isPlaying == true) {
-      audio.stop();
-    }else{
-      audio.autoplay = false;
+function clearAudio ( prev_skybox_index ) {
+  var audio_path = skybox_images[prev_skybox_index].bg_audio;
+  // console.log(audio_path);
+  if(audio_path != ""){
+    // console.log(audios[audio_path]);
+    if(audios[audio_path] != null && audios[audio_path] != false){
+      audios[audio_path].stop();
+      audios[audio_path] = false;
     }
-    scene.remove(audio);
-    audio = null;
   }
 }
 

@@ -12,6 +12,7 @@ function zoomInCamera() {
   
     // Trigger loading the new skybox
     if (Math.abs(newCameraPosition.x) < Math.abs(camera.position.x) + Math.abs(camera.getWorldDirection().x*delta*50) && !isLoading) {
+      prev_skybox_index = skybox_index;
       skybox_index = cubeArray[loadingSkyboxIndex].next_index;
       isLoading = true;
     }
@@ -28,7 +29,7 @@ function zoomInCamera() {
     newCameraPosition.z = 0;
 
     // Load the new skybox after the camera is reset
-    initSkybox(cubeArray[loadingSkyboxIndex].next_index);
+    initSkybox(cubeArray[loadingSkyboxIndex].next_index, prev_skybox_index);
     // updateSkybox(cubeArray[loadingSkyboxIndex].next_index);
     loadingSkyboxIndex = null;
     isLoading = false;
