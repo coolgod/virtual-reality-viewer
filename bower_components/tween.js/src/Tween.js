@@ -155,12 +155,6 @@ TWEEN.Tween = function (object) {
 
 			}
 
-			// If `to()` specifies a property that doesn't exist in the source object,
-			// we should not set that property in the object
-			if (_valuesStart[property] === undefined) {
-				continue;
-			}
-
 			_valuesStart[property] = _object[property];
 
 			if ((_valuesStart[property] instanceof Array) === false) {
@@ -299,11 +293,6 @@ TWEEN.Tween = function (object) {
 
 		for (property in _valuesEnd) {
 
-			// Don't update properties that do not exist in the source object
-			if (_valuesStart[property] === undefined) {
-				continue;
-			}
-
 			var start = _valuesStart[property] || 0;
 			var end = _valuesEnd[property];
 
@@ -315,12 +304,7 @@ TWEEN.Tween = function (object) {
 
 				// Parses relative end values with start as base (e.g.: +10, -3)
 				if (typeof (end) === 'string') {
-
-					if (end.startsWith('+') || end.startsWith('-')) {
-						end = start + parseFloat(end, 10);
-					} else {
-						end = parseFloat(end, 10);
-					}
+					end = start + parseFloat(end, 10);
 				}
 
 				// Protect against non numeric properties.
@@ -377,9 +361,7 @@ TWEEN.Tween = function (object) {
 				}
 
 				for (var i = 0, numChainedTweens = _chainedTweens.length; i < numChainedTweens; i++) {
-					// Make the chained tweens start exactly at the time they should,
-					// even if the `update()` method was called way past the duration of the tween
-					_chainedTweens[i].start(_startTime + _duration);
+					_chainedTweens[i].start(time);
 				}
 
 				return false;
@@ -875,12 +857,12 @@ TWEEN.Interpolation = {
 			return TWEEN;
 		});
 
-	} else if (typeof module !== 'undefined' && typeof exports === 'object') {
+	} else if (typeof exports === 'object') {
 
 		// Node.js
 		module.exports = TWEEN;
 
-	} else if (root !== undefined) {
+	} else {
 
 		// Global variable
 		root.TWEEN = TWEEN;
