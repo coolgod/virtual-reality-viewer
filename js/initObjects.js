@@ -9,111 +9,77 @@ var loadingSkyboxIndex = null;
 var isLoading = false;
 var audios = new Array();
 
-// function updateSkybox( skybox_index ) {
-
-//   var this_skybox = skybox_images[skybox_index];
-//   var boxWidth = 5;
-//   var loader = new THREE.TextureLoader();
-//   loader.crossOrigin = '';
-//   var texture = loader.load(
-//     this_skybox.bg_img,
-//     function ( texture ) {
-//       // start caching skybox images for other scenes asynchronously
-//       var cacheLoader = new THREE.ImageLoader( THREE.DefaultLoadingManager );
-//       cacheLoader.setCrossOrigin( '' );
-//       for(i = 0; i < this_skybox.box_specifics.length; i++) {
-//         var path = skybox_images[this_skybox.box_specifics[i].next_index].bg_img;
-//         cacheLoader.load( path );
-//       }
-//       return texture;
-//     }
-//   );
-
-//   skybox.material.map.needsUpdate = true;
-//   skybox.material.map.texture = texture;
-//   skybox.material.map.needsUpdate = false;
-
-// }
-
 function initSkybox( skybox_index, prev_skybox_index ) {
-  console.log(skybox_index+" "+prev_skybox_index);
+  console.log("enter scene: " + skybox_index + ", prev scene: " + prev_skybox_index );
+
+  // clean up previous scene
   if ( prev_skybox_index != null || prev_skybox_index != undefined){
     clearAll( prev_skybox_index );
-  }
-  if (skybox_index != 8 || skybox_index != 9) {
-    clearIntroText();
+    if( prev_skybox_index == 1 ){
+      clearIntroText();
+    }
   }
 
-  if (skybox_index == 8 || skybox_index == 9){
-    // pre-load audio for brookings and bears den
-    audios[skybox_images[0].bg_audio] = new Howl({
-    urls: [skybox_images[0].bg_audio]
+  // preload audio
+  if (skybox_index == 0 || skybox_index == 1){
+    audios[skybox_imgs[0].bg_audio] = new Howl({
+    urls: [skybox_imgs[0].bg_audio]
     });
-    audios[skybox_images[6].bg_audio] = new Howl({
-    urls: [skybox_images[6].bg_audio]
+    audios[skybox_imgs[6].bg_audio] = new Howl({
+    urls: [skybox_imgs[6].bg_audio]
     });
   }
   
-  var this_skybox = skybox_images[skybox_index];
-  var boxWidth = 5;
+  // load intro text and gaze pointer
+  if ( skybox_index != 0 ) {
+    /* intro text */
+    if ( skybox_index == 1 ) {
+      initIntroText( skybox_index );
+    }
+    // gaze pointer
+    if(ring == null){
+      ring = new THREE.Mesh(
+      new THREE.TorusGeometry( 0.17, 0.017, 0, 70 ),
+      new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide} ));
+      top_scene.add(ring);
+    }
+  }
+
+  // load skybox
+  var this_skybox = skybox_imgs[skybox_index];
   var loader = new THREE.TextureLoader();
   loader.crossOrigin = '';
   var texture = loader.load(
-    this_skybox.bg_img,
+    path_pre + this_skybox.bg_img,
     function ( texture ) {
       // start caching skybox images for other scenes asynchronously
       var cacheLoader = new THREE.ImageLoader( THREE.DefaultLoadingManager );
       cacheLoader.setCrossOrigin( '' );
-      for(i = 0; i < this_skybox.box_specifics.length; i++) {
-        var path = skybox_images[this_skybox.box_specifics[i].next_index].bg_img;
+      for(i = 0; i < this_skybox.box.length; i++) {
+        var path = path_pre + skybox_imgs[this_skybox.box[i].next_idx].bg_img;
         cacheLoader.load( path );
       }
       return texture;
     }
   );
-
-  
-
   texture.minFilter = THREE.NearestMipMapLinearFilter;
-
   var geometry = new THREE.SphereGeometry( 500, 60, 40 );
-
-  var material = new THREE.MeshBasicMaterial({
-    map: texture
-  });
-  
+  var material = new THREE.MeshBasicMaterial({ map: texture });
   skybox = new THREE.Mesh(geometry, material);
   skybox.scale.x = -1.0;
+  skybox.receiveShadow = true;
   scene.add(skybox);
 
-  /* loading new cubes */
+  // loading new cubes
   cubeTextArray = [];
   cubeArray = [];
-  box_count = this_skybox.box_specifics.length;
+  box_count = this_skybox.box.length;
   for (i = 0; i < box_count; i++) {
-    cubeArray.push( initCube( this_skybox.box_specifics[i] ) );
+    cubeArray.push( initCube( this_skybox.box[i] ) );
   }
-
-  skybox.receiveShadow = true;
-
-  /* load Intro text */
-  if ( skybox_index == 9 ) {
-
-  } else {
-    if ( skybox_index == 8 ) {
-      initIntroText( skybox_index );
-    }
-    /* loading gaze pointer */
-    if(ring == null){
-      ring = new THREE.Mesh(
-      new THREE.TorusGeometry( 0.17, 0.017, 0, 70 ),            // set 'radius segment' to 0 to make it a flat 2D ring
-      new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide} ));      // set color to white
-      top_scene.add(ring);
-    }
-  }
-
-  /* load audio using Howler.js */
-  var audio_path = skybox_images[skybox_index].bg_audio;
+  
+  // load audio using Howler.js
+  var audio_path = skybox_imgs[skybox_index].bg_audio;
   if(audio_path != ""){
     if(audios[audio_path] == null){ // if it hasn't been loaded
       audios[audio_path] = new Howl({
@@ -129,30 +95,31 @@ function initSkybox( skybox_index, prev_skybox_index ) {
 }
 
 function initCube( box_specific ) {
-
-
-  var sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+  // load texture images
   var loader = new THREE.TextureLoader();
   loader.crossOrigin = '';
   var texture = loader.load(
-    box_specific.box_img_path,
+    box_path_pre + skybox_imgs[box_specific.next_idx].bg_img,
     function ( texture ) {
       return texture;
     }
   );
   texture.miniFilter = THREE.LinearFilter;
-  var sphereMaterial = new THREE.MeshPhongMaterial({map: texture , shading: THREE.SmoothShading, opacity: 0.7, transparent: true});
-  var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-  sphere.next_index = box_specific.next_index;
-  sphere.position.set( box_specific.box_coord[0] , box_specific.box_coord[1], box_specific.box_coord[2] );
+
+  // create cube mesh
+  var sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(1, 32, 32),
+    new THREE.MeshPhongMaterial({map: texture, shading: THREE.SmoothShading, opacity: 0.7, transparent: true})
+  );
+  sphere.next_idx = box_specific.next_idx;
+  sphere.position.set( box_specific.coord[0] , box_specific.coord[1], box_specific.coord[2] );
   scene.add(sphere);
   
-  // Initialize 3D Text
-  var text3D = initText(sphere, box_specific.box_text);
+  // initialize 3D Text
+  var text3D = initText(sphere, box_specific.text);
   scene.add( text3D );
-  cubeTextArray.push( text3D ); // temp solution, each time a cube is added, the text is pushed to a corresponding array
-  //cube.add( text3D ); // text is bined as a child object of cube --> doesn't work out because child rotate with parent
-
+  cubeTextArray.push( text3D );
+  
   return sphere;
 }
 
@@ -178,14 +145,6 @@ function initText( sphere, txt ) {
   var deltaZ = ( (sphere.position.x > 0) ? -1 : +1 ) * ( txt.length * 0.2 );
   deltaX = (sphere.position.z == 0) ? 0 : deltaX;
   deltaZ = (sphere.position.x == 0) ? 0 : deltaZ;
-
-  /* Change this if we want to implement door and text needs to be in a higher position*/
-  // if (skybox_index == 8) {
-  //   text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 1.5, sphere.position.z + deltaZ);
-  // }
-  // else {
-  //   text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 4, sphere.position.z + deltaZ);
-  // }
   text3D.position.set( sphere.position.x + deltaX, sphere.position.y + 1.5, sphere.position.z + deltaZ);
 
 
@@ -196,7 +155,7 @@ function initText( sphere, txt ) {
 }
 
 function initIntroText( skybox_index ) {
-  var textGeometry = new THREE.TextGeometry( skybox_images[skybox_index].bg_name, 
+  var textGeometry = new THREE.TextGeometry( skybox_imgs[skybox_index].bg_name, 
   {
     size: 1,
     height: 0.2,
@@ -207,15 +166,12 @@ function initIntroText( skybox_index ) {
     material: 0,
     extrudeMaterial: 1
   });
-
   var textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, emissive: 0x595050, specular: 0xffffff, shininess: 10, shading: THREE.SmoothShading, opacity: 0.8, transparent: true } );
   introText = new THREE.Mesh( textGeometry, textMaterial );
-
   introText.position.set( -10, 5, -15 );
   introText.lookAt( new THREE.Vector3(camera.position.x-10, camera.position.y, camera.position.z) );
   introText.visible = true;
   scene.add( introText );
-
 }
 
 function initVideo() {
@@ -252,7 +208,6 @@ function initVideo() {
   scene.add(videoMesh);
 }
 
-
 function initAnimation( box_specific ) {
   // Add Collada Loader
   var loader = new THREE.ColladaLoader();
@@ -264,7 +219,7 @@ function initAnimation( box_specific ) {
     console.log(result);
     dae.scale.x = dae.scale.y = dae.scale.z = 0.05;
     // dae.position.set( 20, -5, -2.5 );
-    dae.position.set(box_specific.box_coord[0] * 1.15, box_specific.box_coord[1] * 1.15 - 3.6, box_specific.box_coord[2] * 1.15);
+    dae.position.set(box_specific.coord[0] * 1.15, box_specific.coord[1] * 1.15 - 3.6, box_specific.coord[2] * 1.15);
     dae.updateMatrix();
     dae.lookAt( new THREE.Vector3(0,-7,0) );
     dae.material = new THREE.MeshBasicMaterial();
@@ -283,10 +238,9 @@ function initAnimatedTexture( box_specific ) {
   var runnerGeometry = new THREE.PlaneGeometry(4, 7, 1, 1);
   runner = new THREE.Mesh(runnerGeometry, runnerMaterial);
   // runner.position.set(27.5,-2,-1);
-  runner.position.set(box_specific.box_coord[0] * 1.3, box_specific.box_coord[1] * 1.3, box_specific.box_coord[2] * 1.3);
+  runner.position.set(box_specific.coord[0] * 1.3, box_specific.coord[1] * 1.3, box_specific.coord[2] * 1.3);
 
   runner.lookAt( new THREE.Vector3(0,-3,0) );
   scene.add(runner);
   return runner;
-
 }

@@ -29,7 +29,6 @@ function renderIntersects() {
     }
   }
   if ( isGazingCube ) {
-      // function exists in functions.js
       cubeArray[ gazingIndex ].scale.set(1.2, 1.2, 1.2); // 1 is the initial value
       gazeFunction( gazingIndex );
   }
@@ -96,8 +95,7 @@ function gazeFunction( gazingIndex ) {
   ring.scale.set(ring.scale.x*factor, ring.scale.y*factor, ring.scale.y*factor);
 }
 
-function TextureAnimator(texture, tilesHoriz, tilesVert, numTiles, tileDispDuration) 
-{ 
+function TextureAnimator(texture, tilesHoriz, tilesVert, numTiles, tileDispDuration) { 
   // note: texture passed by reference, will be updated by the update function.
     
   this.tilesHorizontal = tilesHoriz;
@@ -142,16 +140,6 @@ function renderVideo() {
 
 function animateIntroText() {
   if (introText != null) {
-    
   }
 }
-
-
-
-// function clearAnimationTexture() {
-//   if (runner != null) {
-//     scene.remove( runner );
-//     runner.geometry.dispose();
-//   }
-// }
 
