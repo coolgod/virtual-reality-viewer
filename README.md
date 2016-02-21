@@ -1,6 +1,6 @@
 # vrv
 #HOW TO RUN#
-put all the files on a local or remote Apache server, use chrome to access the index.php under the root directory.
+put all the files on a local or remote Apache server, use any webkit browser to access the index.php under the root directory.
 
 #PROJECT STRUCTURE#
 - animation: for future use and experiments, contain all those animation model files

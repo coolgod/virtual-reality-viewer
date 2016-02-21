@@ -4,24 +4,26 @@
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-weight: 300;
-  line-height: 34px;
-  letter-spacing: .02em;
 }
-html, body {
-  width: 100%;
+html {
+  height: 100%;
+}
+
+body {
   height: 100%;
   margin: 0;
   padding: 0;
-  float: left;
-  display: block;
   font-family: "Raleway", sans-serif;
   font-size: 1rem;
 }
-body {
-  background: #000000;
+
+div{
+  float: left;
+  width: 100%;
+  height: 100%；
 }
-.wrapper {
+
+#wrapper {
   background: -webkit-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Chrome 10+, Saf5.1+ */
   background:    -moz-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* FF3.6+ */
   background:     -ms-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* IE10 */
@@ -29,69 +31,82 @@ body {
   background:         linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* W3C */
   color: #fff;
 }
-.wrapper {
-  position: absolute;
-  padding: 2em 1em;
+
+#wrapper {
+  display: block;
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  float: left;
-  display: block;
   text-align: center;
 }
-.wrapper .header {
-  height: auto;
-  margin-top: 6em;
+
+#header {
+  height: 25%;
   width: 100%;
   float: left;
 }
-.wrapper .header .title {
+
+#title {
+  display: block;
+  float: left;
+  width: 100%;
+  margin-top: 12vh;
   color: #fff;
   font-size: 2.875em;
 }
-.wrapper .content {
-  height: auto;
-  margin-top: 1em;
+
+#content {
   width: 100%;
-  float: left;
+  height: 65%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
-.wrapper .content .info p {
+
+#content p {
+  display: block;
+  float: left;
+  width: 100%;
   color: #fff;
   font-size: 1.25em;
+  margin: 4vh 0 auto 0;
 }
-.wrapper .content .button {
-  margin-top: 3em;
-}
-.wrapper .footer {
-  height: auto;
-  margin-top: 1em;
-  width: 100%;
-  float: left;
-  bottom: 1em;
-  position: absolute;
-  font-size: .9rem;
-}
-.wrapper .footer .link {
-  color: #fff;
-  text-decoration: none;
-}
-.wrapper .footer .link:hover {
-  color: #fff;
-}
-.wrapper .footer .link:hover:after {
-  color: #fff;
-}
-.wrapper .footer .link:not(:last-child):after {
-  content: ' - ';
-  font-weight: bold;
-  color: #fff;
-}
-.wrapper .btn {
-  text-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
-  margin-bottom: 1em;
+
+#progressbar-text{
+  float: initial;
   display: inline-block;
-  margin: auto .5em;
+  margin: 4vh 0 1vh 0;
+}
+
+#content #progressbar{
+  float: initial;
+  display: inline-block;
+  margin: 0;
+  width: 15em;
+  height: 1em;
+  
+  background-color: rgba(0, 0, 0, 0.1);
+  /* overwrite jquery style */
+  background-image: none;
+  color: white;
+  font-size: 0.8em;
+  border-color: white;
+}
+
+#content .ui-progressbar-value{
+  /* overwrite jquery style */
+  margin: 0;
+  border: none;
+  background-image: none;
+  background-color: white;
+}
+
+#content a {
+/*  display: inline-block;*/
+  display: none;
+  margin: 5vh auto;
+  text-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
   padding: .5em 1.2em;
   border: .1em solid;
   border-radius: 5px;
@@ -99,18 +114,32 @@ body {
   text-decoration: none;
   box-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
 }
-.wrapper .btn:hover {
+
+#wrapper a:hover {
   border-color: #fff;
 }
-@media all and (max-width: 40em) {
-  html, body {
-    font-size: .85rem;
-    line-height: 22px;
-  }
+
+#footer {
+  height: 10%;;
+  width: 100%;
+  font-size: .9rem;
 }
-@media all and (max-width: 60em) {
-  html, body {
-    font-size: .9rem;
-    line-height: 24px;
-  }
+
+#wrapper #footer .link {
+  color: #fff;
+  text-decoration: none;
+}
+
+#wrapper #footer .link:hover {
+  color: #fff;
+}
+
+#wrapper #footer .link:hover:after {
+  color: #fff;
+}
+
+#wrapper #footer .link:not(:last-child):after {
+  content: ' - ';
+  font-weight: bold;
+  color: #fff;
 }

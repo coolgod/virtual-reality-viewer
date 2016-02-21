@@ -55,7 +55,7 @@ function clearRing () {
 }
 
 function clearAudio ( prev_skybox_index ) {
-  var audio_path = skybox_images[prev_skybox_index].bg_audio;
+  var audio_path = skybox_imgs[prev_skybox_index].bg_audio;
   // console.log(audio_path);
   if(audio_path != ""){
     // console.log(audios[audio_path]);
