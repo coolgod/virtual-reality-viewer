@@ -195,7 +195,7 @@
                 },
                 {
                     "bg_name":"STS Inside",
-                    "bg_img":"sts.jpg",
+                    "bg_img":"STS.jpg",
                     "box":[
                     {"coord":[14.79, -2.25, 1.14], "text": "STS", "next_idx": 19},
                     {"coord":[-7.25, -1.25, 13.07], "text": "Rusofo Area", "next_idx": 23},
