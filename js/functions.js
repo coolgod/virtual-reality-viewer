@@ -16,30 +16,48 @@ function positionRaycaster() {
 function renderIntersects() {
   var intersects = raycaster.intersectObjects( scene.children );
 
-  var isGazingCube = false, gazingIndex = null, isGazingVideoScreen = false;
+  var isGazingCube = false, gazingIndex = null, isGazingVideoScreen = false, isGazingLogo = false;
   for ( var i = 0; i < intersects.length; i++ ) {
+    // if collide with the cubes
     for ( var j = 0; j < cubeArray.length; j++ ) {
-      if ( intersects[ i ].object == cubeArray[ j ] ) {                         // if collide with the cube
+      if ( intersects[ i ].object == cubeArray[ j ] ) { 
           isGazingCube = true;
           gazingIndex = j;
       }
     }
-    if ( videoMesh != null && intersects[ i ].object == videoMesh ) {                                // if collide with movie screen
-        isGazingVideoScreen = true;
+
+    // if collide with the logo
+    if ( homeLogo != null && intersects[i].object == homeLogo ) {
+      isGazingLogo = true;
+    }
+
+    // if collide with movie screen
+    if ( videoMesh != null && intersects[ i ].object == videoMesh ) {     
+      isGazingVideoScreen = true;
     }
   }
+
   if ( isGazingCube ) {
       cubeArray[ gazingIndex ].scale.set(1.2, 1.2, 1.2); // 1 is the initial value
       gazeFunction( gazingIndex );
+  } else if ( isGazingLogo ) {
+      homeLogo.scale.set( 3.5, 3.5, 3.5 ); // 3 is the initial value
+      homeLogo.material.opacity = 0.6;
+      gazeFunction( -1 ); // -1 means go back to start
   }
   else {
       clock.stop();
+      // reset cubes
       for ( var i = 0; i < cubeArray.length; i++ ) {
         cubeArray[ i ].scale.set(1, 1, 1);
       }
       ring.scale.set(1, 1, 1);
       hideText();
+      // reset logo
+      homeLogo.scale.set( 3, 3, 3 );
+      homeLogo.material.opacity = 0.2;
   }
+
   if ( video != null ) {
     if ( isGazingVideoScreen ) {
       // Render the 2D Video Texture
@@ -65,22 +83,23 @@ function hideText( gazingIndex ) {
 }
 
 function gazeFunction( gazingIndex ) {
-  //console.log(gazingIndex);
   if ( !clock.running ) {
     clock.start();
   }
   var t = 0.001 * ( self.performance.now() - clock.oldTime );
   var factor = 1;
 
-  showText( gazingIndex );
-  
+  if ( gazingIndex != -1 ){
+    showText( gazingIndex );
+  }
+
   // Loading animation
   //if(t > 2){
   if(t > 2){
     if(t > 3){          // if zoom-out-zoom-in animation finish
       clock.stop();       // stop the clock;
 
-      // /* zoom in */
+      // zoom in
       loadingSkyboxIndex = gazingIndex;
       newCameraPosition.x = camera.getWorldDirection().x*400*delta;
       newCameraPosition.y = camera.getWorldDirection().y*400*delta;

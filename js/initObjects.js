@@ -10,7 +10,13 @@ var isLoading = false;
 var audios = new Array();
 
 function initSkybox( skybox_index, prev_skybox_index ) {
-  console.log("enter scene: " + skybox_index + ", prev scene: " + prev_skybox_index );
+  console.log("enter scene: " + skybox_index + ", prev scene: " + prev_skybox_index );    
+
+  // manager.input is defined after invoking render method
+  if( manager.input != undefined ){
+    manager.input.theta = 0;
+    manager.input.phi = 0;
+  }
 
   // clean up previous scene
   if ( prev_skybox_index != null || prev_skybox_index != undefined){
@@ -32,9 +38,17 @@ function initSkybox( skybox_index, prev_skybox_index ) {
   
   // load intro text and gaze pointer
   if ( skybox_index != 0 ) {
-    /* intro text */
+    // logo
+    if ( homeLogo == null ){
+        initHomeLogo(); //load logo only when it hasn't been initialized
+    }
+
+    // intro text
     if ( skybox_index == 1 ) {
       initIntroText( skybox_index );
+      homeLogo.visible = false;
+    }else{
+      homeLogo.visible = true;
     }
     // gaze pointer
     if(ring == null){
@@ -243,4 +257,26 @@ function initAnimatedTexture( box_specific ) {
   runner.lookAt( new THREE.Vector3(0,-3,0) );
   scene.add(runner);
   return runner;
+}
+
+function initHomeLogo() {
+  var loader = new THREE.TextureLoader();
+  loader.crossOrigin = '';
+  var texture = loader.load(
+    logo_img,
+    function ( texture ) {
+      return texture;
+    }
+  );
+
+  homeLogo = new THREE.Mesh(
+    new THREE.CircleGeometry( 1, 30 ), 
+    new THREE.MeshPhongMaterial({map: texture, shading: THREE.SmoothShading, opacity: 0.2, transparent: true})
+    );
+  homeLogo.position.set(camera.position.x, camera.position.y - 10, camera.position.z);
+  homeLogo.lookAt( camera.position );
+  homeLogo.scale.set( 3, 3, 3 );
+
+  homeLogo.visible = true;
+  scene.add( homeLogo );
 }

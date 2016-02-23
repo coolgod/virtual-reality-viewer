@@ -140,6 +140,7 @@ var cubeArray = [];
 var cubeTextArray = [];
 var doorArray = [];
 var animationArray = [];
+var homeLogo = null;
 
 // Create a three.js camera.
 // dynamic vFOV ref: https://github.com/mrdoob/three.js/issues/1239
@@ -194,6 +195,7 @@ var data_file = new XMLHttpRequest();
 data_file.open("GET", "data/data.json", false);
 data_file.send();
 var skybox_imgs = JSON.parse(data_file.responseText).locations;
+var logo_img = JSON.parse(data_file.responseText).logo;
 var path_pre = JSON.parse(data_file.responseText).path_pre;
 var box_path_pre = path_pre["box"];
 if ( /iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream ) {
@@ -238,6 +240,9 @@ preLoader.load( path_pre + skybox_imgs[3].bg_img, function(){
     }
 
     data_file.open("GET", "audio/bd.mp3", false);
+    data_file.send();
+
+    data_file.open("GET", logo_img, false);
     data_file.send();
 
     progress(100, 99);
