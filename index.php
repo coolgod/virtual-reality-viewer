@@ -115,6 +115,8 @@ progress(99, 0);
 
 <!-- howler.js - Modern Web Audio Javascript Library -->
 <script src="bower_components/howler.js/howler.js"></script>
+<!-- External library for smooth animations -->
+<script src='bower_components/tween.js/src/Tween.js'></script>
 
 <!--All Self-implemented Script -->
 <script src="js/initObjects.js"></script>
@@ -159,6 +161,7 @@ effect.setSize(window.innerWidth, window.innerHeight);
 // Create a clock object for animation control
 var clock = new THREE.Clock(false);
 var animationClock = new THREE.Clock();
+var updateTween = false;
 
 // Lights
 var particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0000 } ) );
@@ -266,8 +269,9 @@ function animate(timestamp) {
     annie.update(1000 * delta);
   }
 
-  // Keep Zooming in until designated position
-  zoomInCamera();
+  if (updateTween == true) {
+    TWEEN.update();
+  }
 
   // Render the scene through the manager.
   manager.render(scene, camera, timestamp);

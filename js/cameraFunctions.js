@@ -4,37 +4,44 @@ function changeCameraTarget( phi, theta ) {
   camera.target.z = Math.sin(this.phi + 0.5 * Math.PI) * Math.sin(this.theta - 0.5 * Math.PI) * 3;
 }
 
-function zoomInCamera() {
-  if (Math.abs(newCameraPosition.x) > Math.abs(camera.position.x)) {
-    camera.position.x += camera.getWorldDirection().x*delta*10;
-    camera.position.y += camera.getWorldDirection().y*delta*10;
-    camera.position.z += camera.getWorldDirection().z*delta*10;
+function zoomInCamera( loadingSkyboxIndex ) {
+  var position = { x: 0, y: 0, z: 0 };
+  var target = { x: camera.getWorldDirection().x*delta*400, 
+                 y: camera.getWorldDirection().y*delta*400, 
+                 z: camera.getWorldDirection().z*delta*400 };
   
-    // Trigger loading the new skybox
-    if (Math.abs(newCameraPosition.x) < Math.abs(camera.position.x) + Math.abs(camera.getWorldDirection().x*delta*50) && !isLoading) {
-      prev_skybox_index = skybox_index;
-      if (loadingSkyboxIndex == -1) { // go back to start
-        skybox_index = 1;
-      } else {
-        skybox_index = cubeArray[loadingSkyboxIndex].next_idx;
-      }
-      isLoading = true;
-    }
-  }
+  updateTween = true;
 
-  // Stop Zooming in when reach designated position
-  // Reset camera position to default(0,0,0)
-  else if (Math.abs(newCameraPosition.x) <= Math.abs(camera.position.x) && loadingSkyboxIndex != null && isLoading) {
+  var cameraTween = new TWEEN.Tween(position).to(target, 1500).start();
+  cameraTween.easing(TWEEN.Easing.Quartic.Out);
+
+  //ADD EVENTS TO TWEEN
+  cameraTween.onStart(function() { 
+    // jump is from the current skybox
+    prev_skybox_index = skybox_index;
+    // loadingSkyboxIndex is the index of the cube whose 'next_idx' attribute is the target skybox
+    if (loadingSkyboxIndex == -1) { // go back to start when look on the ground
+        skybox_index = 1;
+    } else { // find the target skybox index by 'next_idx' of the cube
+        skybox_index = cubeArray[loadingSkyboxIndex].next_idx;
+    }
+  });
+
+  cameraTween.onUpdate(function() {
+    camera.position.x = position.x;
+    camera.position.y = position.y;
+    camera.position.z = position.z;
+  });
+
+  cameraTween.onComplete(function() { console.log("complete");
     camera.position.x = 0;
     camera.position.y = 0;
     camera.position.z = 0;
-    newCameraPosition.x = 0;
-    newCameraPosition.y = 0;
-    newCameraPosition.z = 0;
 
-    // Load the new skybox after the camera is reset
-    initSkybox(skybox_index, prev_skybox_index);
-    loadingSkyboxIndex = null;
-    isLoading = false;
-  }
+    // jump from 'prev_skybox_index', jump to 'skybox_index'
+    initSkybox(skybox_index, prev_skybox_index);;
+
+    updateTween = false;
+  });
+
 }

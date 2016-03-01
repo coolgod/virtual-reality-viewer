@@ -9,6 +9,12 @@ var loadingSkyboxIndex = null;
 var isLoading = false;
 var audios = new Array();
 
+// global image loader for skybox and cubes only
+var imgLoader = new THREE.TextureLoader();
+imgLoader.crossOrigin = '';
+// global texture for skybox
+var skyboxTexture;
+
 function initSkybox( skybox_index, prev_skybox_index ) {
   console.log("enter scene: " + skybox_index + ", prev scene: " + prev_skybox_index );    
 
@@ -61,9 +67,7 @@ function initSkybox( skybox_index, prev_skybox_index ) {
 
   // load skybox
   var this_skybox = skybox_imgs[skybox_index];
-  var loader = new THREE.TextureLoader();
-  loader.crossOrigin = '';
-  var texture = loader.load(
+  skyboxTexture = imgLoader.load(
     path_pre + this_skybox.bg_img,
     function ( texture ) {
       // start caching skybox images for other scenes asynchronously
@@ -76,13 +80,19 @@ function initSkybox( skybox_index, prev_skybox_index ) {
       return texture;
     }
   );
-  texture.minFilter = THREE.NearestMipMapLinearFilter;
-  var geometry = new THREE.SphereGeometry( 500, 60, 40 );
-  var material = new THREE.MeshBasicMaterial({ map: texture });
-  skybox = new THREE.Mesh(geometry, material);
-  skybox.scale.x = -1.0;
-  skybox.receiveShadow = true;
-  scene.add(skybox);
+
+  skyboxTexture.minFilter = THREE.NearestMipMapLinearFilter;
+  if ( skybox == null ){
+    var geometry = new THREE.SphereGeometry( 500, 60, 40 );
+    var material = new THREE.MeshBasicMaterial({ map: skyboxTexture });
+    skybox = new THREE.Mesh(geometry, material);
+    skybox.scale.x = -1.0;
+    skybox.receiveShadow = true;
+    scene.add(skybox);
+  }else{
+    skybox.material.map = skyboxTexture;
+  }
+  
 
   // loading new cubes
   cubeTextArray = [];
@@ -110,9 +120,7 @@ function initSkybox( skybox_index, prev_skybox_index ) {
 
 function initCube( box_specific ) {
   // load texture images
-  var loader = new THREE.TextureLoader();
-  loader.crossOrigin = '';
-  var texture = loader.load(
+  var texture = imgLoader.load(
     box_path_pre + skybox_imgs[box_specific.next_idx].bg_img,
     function ( texture ) {
       return texture;

@@ -100,10 +100,7 @@ function gazeFunction( gazingIndex ) {
       clock.stop();       // stop the clock;
 
       // zoom in
-      loadingSkyboxIndex = gazingIndex;
-      newCameraPosition.x = camera.getWorldDirection().x*400*delta;
-      newCameraPosition.y = camera.getWorldDirection().y*400*delta;
-      newCameraPosition.z = camera.getWorldDirection().z*400*delta;
+      zoomInCamera( gazingIndex );
       
     }else{
       factor = 1 + t / 10;  // secondly, zoom in the ring

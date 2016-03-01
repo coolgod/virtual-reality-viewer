@@ -53,7 +53,8 @@
 				video.css("width", window.innerWidth);
 				video.css("height", window.innerHeight);
 
-				video.Valiant360( {muted: false, hideControls: true} );
+				//video.Valiant360( {muted: false, hideControls: true} );
+				video.Valiant360( {muted: false} );
 				video = video.data().plugin_Valiant360;
 				// video.options.muted = false;
 				renderer = video._renderer;
@@ -61,6 +62,7 @@
 				effect = new THREE.VREffect( renderer );
 				effect.setSize(window.innerWidth, window.innerHeight);
 				manager = new WebVRManager(renderer, effect, {hideButton: false});
+
 
 				video.animate = function animate(){
 					// set our animate function to fire next time a frame is ready
