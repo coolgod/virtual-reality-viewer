@@ -1,14 +1,16 @@
 var skybox = null;
-// test
 var frontSkybox = null;
 var skybox_index = null;
 var prev_skybox_index = null;
-var doorArray = null;
-var animationArray = null;
-var introText = null;
-var annie = null;
 var loadingSkyboxIndex = null;
 var isLoading = false;
+
+var introText = null;
+var homeLogo = null;
+var cubeArray = [];
+var cubeTextArray = [];
+
+var annie = null;
 var audios = new Array();
 
 // global image loader for skybox and cubes only
@@ -253,43 +255,6 @@ function initVideo() {
   scene.add(videoMesh);
 }
 
-function initAnimation( box_specific ) {
-  // Add Collada Loader
-  var loader = new THREE.ColladaLoader();
-  var dae;
-  loader.options.convertUpAxis = true;
-  loader.load('animation/Door.dae', function (result) {
-    // cube.material.map = result.scene;
-    dae = result.scene;
-    console.log(result);
-    dae.scale.x = dae.scale.y = dae.scale.z = 0.05;
-    // dae.position.set( 20, -5, -2.5 );
-    dae.position.set(box_specific.coord[0] * 1.15, box_specific.coord[1] * 1.15 - 3.6, box_specific.coord[2] * 1.15);
-    dae.updateMatrix();
-    dae.lookAt( new THREE.Vector3(0,-7,0) );
-    dae.material = new THREE.MeshBasicMaterial();
-
-    /* disable door Animation */
-    scene.add(dae);
-    doorArray.push(dae);
-    
-  });
-}
-
-function initAnimatedTexture( box_specific ) {
-  var runnerTexture = new THREE.ImageUtils.loadTexture( 'img/run.png' );
-  annie = new TextureAnimator( runnerTexture, 10, 1, 10, 75 ); // texture, #horiz, #vert, #total, duration.
-  var runnerMaterial = new THREE.MeshBasicMaterial( { map: runnerTexture, side:THREE.DoubleSide } );
-  var runnerGeometry = new THREE.PlaneGeometry(4, 7, 1, 1);
-  runner = new THREE.Mesh(runnerGeometry, runnerMaterial);
-  // runner.position.set(27.5,-2,-1);
-  runner.position.set(box_specific.coord[0] * 1.3, box_specific.coord[1] * 1.3, box_specific.coord[2] * 1.3);
-
-  runner.lookAt( new THREE.Vector3(0,-3,0) );
-  scene.add(runner);
-  return runner;
-}
-
 function initHomeLogo() {
   var loader = new THREE.TextureLoader();
   loader.crossOrigin = '';
@@ -302,12 +267,16 @@ function initHomeLogo() {
 
   homeLogo = new THREE.Mesh(
     new THREE.CircleGeometry( 1, 30 ), 
-    new THREE.MeshPhongMaterial({map: texture, shading: THREE.SmoothShading, opacity: 0.2, transparent: true})
+    new THREE.MeshPhongMaterial({map: texture, shading: THREE.SmoothShading, transparent: true})
     );
   homeLogo.position.set(camera.position.x, camera.position.y - 10, camera.position.z);
   homeLogo.lookAt( camera.position );
-  homeLogo.scale.set( 3, 3, 3 );
-
+  resetHomeLogo();
   homeLogo.visible = true;
   scene.add( homeLogo );
+}
+
+function resetHomeLogo() {
+  homeLogo.scale.set(3, 3, 3);
+  homeLogo.material.opacity = 0.2;
 }

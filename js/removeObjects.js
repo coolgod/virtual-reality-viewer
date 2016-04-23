@@ -3,10 +3,7 @@
 function clearAll( prev_skybox_index ){
   clearRing();
   clearOldCubesAndText();
-  clearVideoScreen();
   clearAudio( prev_skybox_index );
-  clearDoors();
-  clearAnimation();
 }
 
 function clearOldCubesAndText(){
@@ -25,17 +22,6 @@ function clearOldCubesAndText(){
   // empty the array
   cubeTextArray = [];
   cubeArray = [];
-}
-
-function clearVideoScreen(){
-  // if(videoMesh != null){
-  //   scene.remove( videoMesh );
-  //   videoMesh.geometry.dispose();
-  //   videoMesh.material.map.dispose();
-  //   videoMesh.material.dispose();
-  //   videoScreenContext.clearRect( 0, 0, videoScreen.width, videoScreen.height )
-  //   videoMesh = null;
-  // }
 }
 
 function clearRing () {
@@ -57,24 +43,6 @@ function clearAudio ( prev_skybox_index ) {
       audios[audio_path] = false;
     }
   }
-}
-
-function clearDoors() {
-  for (var i = 0; i < doorArray.length; i++){
-    // scene.remove( cubeArray[i].children[0] );
-    scene.remove(doorArray[i]);
-    // doorArray[i].geometry.dispose();
-  }
-}
-
-function clearAnimation() {
-  for (var i = 0; i < animationArray.length; i++){
-    // scene.remove( cubeArray[i].children[0] );
-    scene.remove(animationArray[i]);
-    console.log(animationArray[i]);
-    animationArray[i].geometry.dispose();
-  }
-
 }
 
 function clearIntroText() {

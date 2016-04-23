@@ -137,13 +137,6 @@ renderer.autoClear = false;
 var scene = new THREE.Scene();
 var top_scene = new THREE.Scene();
 
-// Create cube & door array used for each scene
-var cubeArray = [];
-var cubeTextArray = [];
-var doorArray = [];
-var animationArray = [];
-var homeLogo = null;
-
 // Create a three.js camera.
 // dynamic vFOV ref: https://github.com/mrdoob/three.js/issues/1239
 var aspect = window.screen.availWidth / window.screen.availHeight;
