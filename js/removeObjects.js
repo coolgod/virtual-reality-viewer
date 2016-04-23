@@ -21,6 +21,10 @@ function clearOldCubesAndText(){
     cubeArray[i].material.map.dispose();
     cubeArray[i].geometry.dispose();
   }
+
+  // empty the array
+  cubeTextArray = [];
+  cubeArray = [];
 }
 
 function clearVideoScreen(){

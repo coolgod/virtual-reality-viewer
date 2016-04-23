@@ -6,13 +6,13 @@ function changeCameraTarget( phi, theta ) {
 
 function zoomInCamera( loadingSkyboxIndex ) {
   var position = { x: 0, y: 0, z: 0 };
-  var target = { x: camera.getWorldDirection().x*delta*400, 
-                 y: camera.getWorldDirection().y*delta*400, 
-                 z: camera.getWorldDirection().z*delta*400 };
+  var target = { x: camera.getWorldDirection().x*delta*500, 
+                 y: camera.getWorldDirection().y*delta*500, 
+                 z: camera.getWorldDirection().z*delta*500 };
   
   updateTween = true;
 
-  var cameraTween = new TWEEN.Tween(position).to(target, 1500).start();
+  var cameraTween = new TWEEN.Tween(position).to(target, 2000).start();
   cameraTween.easing(TWEEN.Easing.Quartic.Out);
 
   //ADD EVENTS TO TWEEN

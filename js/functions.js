@@ -20,26 +20,18 @@ function renderIntersects() {
     gazingIndex = null,
     isGazingVideoScreen = false,
     isGazingLogo = false;
-  for (var i = 0; i < intersects.length; i++) {
-    // if collide with the cubes
-    for (var j = 0; j < cubeArray.length; j++) {
-      if (intersects[i].object == cubeArray[j]) {
-        isGazingCube = true;
-        gazingIndex = j;
-      }
-    }
 
-    // if collide with the logo
-    if (homeLogo != null && intersects[i].object == homeLogo) {
+  if (intersects.length > 0) {
+    // first check if collide with the logo
+    if (intersects[0].object === homeLogo) {
       isGazingLogo = true;
     }
-
-    // if collide with movie screen
-    if (videoMesh != null && intersects[i].object == videoMesh) {
-      isGazingVideoScreen = true;
+    // second check if collide with the cubes
+    else if ((gazingIndex = cubeArray.indexOf(intersects[0].object)) != -1) {
+      isGazingCube = true;
     }
   }
-
+  
   if (isGazingCube) {
     cubeArray[gazingIndex].scale.set(1.2, 1.2, 1.2); // 1 is the initial value
     gazeFunction(gazingIndex);
@@ -58,14 +50,6 @@ function renderIntersects() {
     // reset logo
     homeLogo.scale.set(3, 3, 3);
     homeLogo.material.opacity = 0.2;
-  }
-
-  if (video != null) {
-    if (isGazingVideoScreen) {
-      // Render the 2D Video Texture
-      renderVideo();
-      video.play();
-    } else video.pause();
   }
 }
 

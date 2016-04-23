@@ -9,7 +9,7 @@
                 },
                 {
                     "bg_name":"WashU's Virtual Reality Viewer",
-                    "bg_img":"",
+                    "bg_img":"intro.jpg",
                     "box":[
                     {"coord":[-5,0,-10], "text": "Bear's Den", "next_idx": 24},
                     {"coord":[5,0,-10], "text": "Brookings", "next_idx": 3}

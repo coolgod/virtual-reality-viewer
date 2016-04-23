@@ -1,4 +1,6 @@
 var skybox = null;
+// test
+var frontSkybox = null;
 var skybox_index = null;
 var prev_skybox_index = null;
 var doorArray = null;
@@ -12,14 +14,12 @@ var audios = new Array();
 // global image loader for skybox and cubes only
 var imgLoader = new THREE.TextureLoader();
 imgLoader.crossOrigin = '';
-// global texture for skybox
-var skyboxTexture;
 
 function initSkybox( skybox_index, prev_skybox_index ) {
   console.log("enter scene: " + skybox_index + ", prev scene: " + prev_skybox_index );    
 
   // manager.input is defined after invoking render method
-  if( manager.input != undefined ){
+  if( manager.input != undefined && skybox_index == 1){
     manager.input.theta = 0;
     manager.input.phi = 0;
   }
@@ -56,6 +56,7 @@ function initSkybox( skybox_index, prev_skybox_index ) {
     }else{
       homeLogo.visible = true;
     }
+
     // gaze pointer
     if(ring == null){
       ring = new THREE.Mesh(
@@ -67,7 +68,7 @@ function initSkybox( skybox_index, prev_skybox_index ) {
 
   // load skybox
   var this_skybox = skybox_imgs[skybox_index];
-  skyboxTexture = imgLoader.load(
+  imgLoader.load(
     path_pre + this_skybox.bg_img,
     function ( texture ) {
       // start caching skybox images for other scenes asynchronously
@@ -77,30 +78,52 @@ function initSkybox( skybox_index, prev_skybox_index ) {
         var path = path_pre + skybox_imgs[this_skybox.box[i].next_idx].bg_img;
         cacheLoader.load( path );
       }
-      return texture;
+      
+      if ( this_skybox.bg_img != ""){
+        texture.minFilter = THREE.NearestMipMapLinearFilter
+      }
+      
+      if ( this.skybox == null ){
+        this.skybox = new THREE.Mesh(new THREE.SphereGeometry( 500, 60, 40 ), 
+                  new THREE.MeshBasicMaterial({ map: texture }));
+        this.skybox.scale.x = -1.0;
+        this.skybox.receiveShadow = true;
+        this.skybox.material.transparent = true;
+        this.scene.add(skybox);
+
+        // test
+        this.frontSkybox = new THREE.Mesh(new THREE.SphereGeometry( 490, 60, 40 ), 
+                  new THREE.MeshBasicMaterial({ map: texture }));
+        this.frontSkybox.scale.x = -1.0;
+        this.frontSkybox.receiveShadow = true;
+        this.frontSkybox.material.transparent = true;
+        this.scene.add(frontSkybox);
+
+      }else{
+        // test
+        (function fadeout(){
+          if( this.frontSkybox.material.opacity > 0.2 ){
+            this.frontSkybox.material.opacity -= 0.1;
+            requestAnimationFrame(fadeout);
+          }else{
+            // test
+            this.frontSkybox.material.map = texture;
+            this.frontSkybox.material.opacity = 1
+          }
+        })();
+
+        this.skybox.material.map = texture;
+      }
+
+      // loading new cubes
+      box_count = this_skybox.box.length;
+      for (i = 0; i < box_count; i++) {
+        this.cubeArray.push( this.initCube( this_skybox.box[i] ) );
+      }
     }
   );
-
-  skyboxTexture.minFilter = THREE.NearestMipMapLinearFilter;
-  if ( skybox == null ){
-    var geometry = new THREE.SphereGeometry( 500, 60, 40 );
-    var material = new THREE.MeshBasicMaterial({ map: skyboxTexture });
-    skybox = new THREE.Mesh(geometry, material);
-    skybox.scale.x = -1.0;
-    skybox.receiveShadow = true;
-    scene.add(skybox);
-  }else{
-    skybox.material.map = skyboxTexture;
-  }
   
-
-  // loading new cubes
-  cubeTextArray = [];
-  cubeArray = [];
-  box_count = this_skybox.box.length;
-  for (i = 0; i < box_count; i++) {
-    cubeArray.push( initCube( this_skybox.box[i] ) );
-  }
+  
   
   // load audio using Howler.js
   var audio_path = skybox_imgs[skybox_index].bg_audio;
