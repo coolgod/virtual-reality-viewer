@@ -4,6 +4,7 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
   if (skybox_index != 0) {
     /* functions exist in functions.js */
     rotateCube();
+    raycaster.set(camera.position, camera.getWorldDirection());
     positionRing();
     renderIntersects();
   }

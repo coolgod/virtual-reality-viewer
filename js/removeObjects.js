@@ -11,7 +11,6 @@ function clearOldCubesAndText(){
     scene.remove( cubeTextArray[i] );
     //cubeTextArray[i].material.dispose();
     cubeTextArray[i].geometry.dispose();
-
     scene.remove( cubeArray[i] );
     cubeArray[i].material.dispose();
     cubeArray[i].material.map.dispose();

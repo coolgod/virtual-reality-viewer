@@ -205,17 +205,11 @@ if ( skybox_index == "" ) {
 
 // preload images for intro page, brookings and bears den
 var preLoader = new THREE.ImageLoader( THREE.DefaultLoadingManager );
-preLoader.setCrossOrigin( '' );
 preLoader.load( path_pre + skybox_imgs[3].bg_img, function(){
-  data_file.open("GET", box_path_pre+"brookings.jpg", false);
-  data_file.send();
-  data_file.open("GET", box_path_pre+"bd.jpg", false);
-  data_file.send();
-
-
+  preLoader.load(box_path_pre+"brookings.jpg");
+  preLoader.load(box_path_pre+"bd.jpg");
   for(i = 0; i < skybox_imgs[3].box.length; i++) {  
-    data_file.open("GET", box_path_pre+skybox_imgs[skybox_imgs[3].box[i].next_idx].bg_img, false);
-    data_file.send();
+    preLoader.load(box_path_pre+skybox_imgs[skybox_imgs[3].box[i].next_idx].bg_img);
   }
 
   data_file.open("GET", "audio/Brookings.mp3", false);
