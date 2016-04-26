@@ -42,18 +42,11 @@
 
 <script>
 WebVRConfig = {
-  /**
-   * webvr-polyfill configuration
-   */
-  // Forces availability of VR mode.
-  FORCE_ENABLE_VR: true, // Default: false.
-  // Complementary filter coefficient. 0 for accelerometer, 1 for gyro.
-  K_FILTER: 0.98, // Default: 0.98.
-  /**
-   * webvr-boilerplate configuration
-   */
-  // Forces distortion in VR mode.
-  FORCE_DISTORTION: true, // Default: false.
+  /* webvr-polyfill configuration */
+  FORCE_ENABLE_VR: true,            // Forces VR mode, default: false.
+  K_FILTER: 0.98,                   // Default: 0.98.
+  /* webvr-boilerplate configuration */
+  FORCE_DISTORTION: true,           // Forces distortion, default: false.
   MOUSE_KEYBOARD_CONTROLS_DISABLED: false,
 };
 </script>
@@ -195,7 +188,6 @@ function animate(timestamp) {
 // keyboard event listener handler
 function onKey(event) {
   if (event.keyCode == 90) { // z
-    // controls.resetSensor(); // Reset the position sensor when 'z' pressed.
     console.log(
       Math.round ( camera.getWorldDirection().x * 15 * 100 ) / 100 + ", " +
       Math.round ( camera.getWorldDirection().y * 15 * 100 ) / 100+ ", " +
@@ -203,7 +195,6 @@ function onKey(event) {
     );
   }
 }
-
 window.addEventListener('keydown', onKey, true);
 </script>
 
