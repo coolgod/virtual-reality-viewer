@@ -1,7 +1,6 @@
 /* objects recycle */
 
 function clearAll( prev_skybox_index ){
-  clearRing();
   clearOldCubesAndText();
   clearAudio( prev_skybox_index );
 }
@@ -22,15 +21,6 @@ function clearOldCubesAndText(){
   // empty the array
   cubeTextArray = [];
   cubeArray = [];
-}
-
-function clearRing () {
-  if(ring != null){
-    top_scene.remove(ring);
-    ring.geometry.dispose();
-    ring.material.dispose();
-    ring = null;
-  }
 }
 
 function clearAudio ( prev_skybox_index ) {
