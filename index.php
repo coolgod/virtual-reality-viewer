@@ -56,47 +56,6 @@ WebVRConfig = {
   FORCE_DISTORTION: true, // Default: false.
   MOUSE_KEYBOARD_CONTROLS_DISABLED: false,
 };
-
-// change progress bar status
-function progress( percent, prevPercent ) {
-    $("#progressbar").progressbar();
-    var val = $( "#progressbar" ).progressbar( "value" );
-    if( val < 90 ){
-      $( "#progressbar-text" ).text( "Loading resource..." );
-    }
-    if( val <= 70 ){
-      $( "#progressbar-text" ).text( "Loading configuration..." );
-    }
-    if( val <= 50 ){
-      $( "#progressbar-text" ).text( "Initializing graphics..." );
-    }
-    if( val <= 30 ){
-      $( "#progressbar-text" ).text( "Loading scripts" );
-    }
-    if( val >= 90 ){
-      $( "#progressbar-text" ).text( "Loading resource..." );
-    }
-    if( prevPercent == 99 ){
-      $( "#progressbar" ).progressbar( "value", val + 1 );
-    }
-    if(val < percent){
-      $( "#progressbar" ).progressbar( "value", val + 1 );
-      setTimeout(function() { progress( percent, prevPercent ); }, 80);
-    }
-}
-// initialize loading bar
-$("#progressbar").progressbar({
-    value: 0,
-    change: function() {
-    },
-    complete: function() {
-      $("#progressbar").fadeOut(1000, "swing", function() {
-        $("#progressbar-text").css("display", "none");
-        $("#start-btn").css("display", "inline-block");
-      }); 
-    }
-});
-progress(99, 0);
 </script>
 
 <!-- All Library dependencies -->
@@ -125,6 +84,7 @@ progress(99, 0);
 <script src="js/cameraFunctions.js"></script>
 <script src="js/functions.js"></script>
 <script src="js/util.js"></script>
+<script src="js/loading.js"></script>
 
 <script>
 //Setup three.js WebGL renderer
@@ -203,34 +163,8 @@ if ( skybox_index == "" ) {
   skybox_index = 1;
 }
 
-// preload images for intro page, brookings and bears den
-var preLoader = new THREE.ImageLoader( THREE.DefaultLoadingManager );
-preLoader.load( path_pre + skybox_imgs[3].bg_img, function(){
-  preLoader.load(box_path_pre+"brookings.jpg");
-  preLoader.load(box_path_pre+"bd.jpg");
-  for(i = 0; i < skybox_imgs[3].box.length; i++) {  
-    preLoader.load(box_path_pre+skybox_imgs[skybox_imgs[3].box[i].next_idx].bg_img);
-  }
-
-  data_file.open("GET", "audio/Brookings.mp3", false);
-  data_file.send();
-
-  preLoader.load(path_pre + skybox_imgs[24].bg_img, function(){
-
-    for(i = 0; i < skybox_imgs[24].box.length; i++) {  
-        data_file.open("GET", box_path_pre+skybox_imgs[skybox_imgs[24].box[i].next_idx].bg_img, false);
-        data_file.send();
-    }
-
-    data_file.open("GET", "audio/bd.mp3", false);
-    data_file.send();
-
-    data_file.open("GET", logo_img, false);
-    data_file.send();
-
-    progress(100, 99);
-  });
-});
+// pre load images and audios
+preLoad();
 
 // Initialize a skybox.
 initSkybox(skybox_index, null);
