@@ -138,8 +138,7 @@ var scene = new THREE.Scene();
 var top_scene = new THREE.Scene();
 
 // Create a three.js camera.
-// dynamic vFOV ref: https://github.com/mrdoob/three.js/issues/1239
-var aspect = window.screen.availWidth / window.screen.availHeight;
+var aspect = document.body.clientWidth / document.body.clientHeight;
 var camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 501);
 camera.position.set(0, 0, 0);
 camera.lookAt(new THREE.Vector3( 0, 0, -1 ) );
@@ -149,7 +148,7 @@ var controls = new THREE.VRControls(camera);
 
 // Apply VR stereo rendering to renderer.
 var effect = new THREE.VREffect(renderer);
-effect.setSize(window.innerWidth, window.innerHeight);
+effect.setSize(document.body.clientWidth, document.body.clientHeight);
 
 // Create a clock object for animation control
 var clock = new THREE.Clock(false);
@@ -162,23 +161,17 @@ scene.add( particleLight );
 scene.add( new THREE.AmbientLight( 0x111111 ) );
 
 var directionalLight = new THREE.DirectionalLight( Math.random() *  0xff0000, 0.4 );
-directionalLight.position.x = Math.random() - 0.5;
-directionalLight.position.y = Math.random() - 0.5;
-directionalLight.position.z = Math.random() - 0.5;
+directionalLight.position.set(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5);
 directionalLight.position.normalize();
 scene.add( directionalLight );
 
 var pointLight = new THREE.PointLight( 0xffffff, 1 );
 particleLight.add( pointLight );
 
-// gaze pointer
-var raycaster = new THREE.Raycaster();
-raycaster.near = 1;
+// raycaster for gaze indicator
+var raycaster = new THREE.Raycaster(camera.position, camera.getWorldDirection(), 1);
+// gaze indicator
 var ring = null;
-
-// add video texture
-var videoMesh = null, video, videoTexture, videoScreen, videoScreenContext;
-// initVideo();
 
 // helper object for zooming camera in/out
 newCameraPosition = new THREE.Vector3(0,0,0);

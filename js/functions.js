@@ -9,10 +9,6 @@ function positionRing() {
   ring.quaternion.copy(camera.quaternion); // makes the ring face the screen (in conjunction with the camera)
 }
 
-function positionRaycaster() {
-  raycaster.set(camera.position, camera.getWorldDirection()); // ray is from camera position to camera target
-}
-
 function renderIntersects() {
   var intersects = raycaster.intersectObjects(scene.children);
   var isGazingCube, isGazingLogo = false;

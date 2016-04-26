@@ -5,7 +5,6 @@ WebVRManager.prototype.render = function(scene, camera, timestamp) {
     /* functions exist in functions.js */
     rotateCube();
     positionRing();
-    positionRaycaster();
     renderIntersects();
   }
 
