@@ -17,7 +17,7 @@ var audios = new Array();
 var imgLoader = new THREE.TextureLoader();
 imgLoader.crossOrigin = '';
 
-function initSkybox(skybox_index, prev_skybox_index) {
+function initSkybox(skybox_index, prev_skybox_index, preGazingIndex) {
   console.log("enter scene: " + skybox_index + ", prev scene: " + prev_skybox_index);
 
   // manager.input is defined after invoking render method
@@ -98,36 +98,27 @@ function initSkybox(skybox_index, prev_skybox_index) {
         this.skybox.material.transparent = true;
         this.scene.add(skybox);
 
-        // test
-        this.frontSkybox = new THREE.Mesh(new THREE.SphereGeometry(490, 60, 40),
-          new THREE.MeshBasicMaterial({
-            map: texture
-          }));
-        this.frontSkybox.scale.x = -1.0;
-        this.frontSkybox.receiveShadow = true;
-        this.frontSkybox.material.transparent = true;
-        this.scene.add(frontSkybox);
-
+        // loading new cubes
+        box_count = this_skybox.box.length;
+        for (i = 0; i < box_count; i++) {
+          this.cubeArray.push(this.initCube(this_skybox.box[i]));
+        }
       } else {
-        // test
         (function fadeout() {
-          if (this.frontSkybox.material.opacity > 0.2) {
-            this.frontSkybox.material.opacity -= 0.1;
+          if (cubeArray[preGazingIndex].material.opacity > 0.1) {
+            cubeArray[preGazingIndex].material.opacity -= 0.05;
             requestAnimationFrame(fadeout);
-          } else {
-            // test
-            this.frontSkybox.material.map = texture;
-            this.frontSkybox.material.opacity = 1
+          }else{
+            clearOldCubesAndText();
+            ambientLight.color = new THREE.Color(0x222222);
+            // loading new cubes
+            box_count = this_skybox.box.length;
+            for (i = 0; i < box_count; i++) {
+              this.cubeArray.push(this.initCube(this_skybox.box[i]));
+            }
           }
         })();
-
         this.skybox.material.map = texture;
-      }
-
-      // loading new cubes
-      box_count = this_skybox.box.length;
-      for (i = 0; i < box_count; i++) {
-        this.cubeArray.push(this.initCube(this_skybox.box[i]));
       }
     }
   );

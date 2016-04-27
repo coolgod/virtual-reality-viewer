@@ -1,47 +1,43 @@
-function changeCameraTarget( phi, theta ) {
-  camera.target.x = - Math.sin(this.phi + 0.5 * Math.PI) * Math.cos(this.theta - 0.5 * Math.PI) * 3;
-  camera.target.y = - Math.cos(this.phi + 0.5 * Math.PI) * 3;
-  camera.target.z = Math.sin(this.phi + 0.5 * Math.PI) * Math.sin(this.theta - 0.5 * Math.PI) * 3;
-}
+function zoomInCamera(loadingSkyboxIndex) {
+  cubeArray[loadingSkyboxIndex].material.side = THREE.DoubleSide;
+  cubeArray[loadingSkyboxIndex].material.opacity = 1;
 
-function zoomInCamera( loadingSkyboxIndex ) {
-  var position = { x: 0, y: 0, z: 0 };
-  var target = { x: camera.getWorldDirection().x*delta*500, 
-                 y: camera.getWorldDirection().y*delta*500, 
-                 z: camera.getWorldDirection().z*delta*500 };
-  
+  var position = {
+    x: cubeArray[loadingSkyboxIndex].position.x,
+    y: cubeArray[loadingSkyboxIndex].position.y,
+    z: cubeArray[loadingSkyboxIndex].position.z
+  };
+
+  var target = {
+    x: 0,
+    y: 0,
+    z: 0
+  };
+
   updateTween = true;
 
-  var cameraTween = new TWEEN.Tween(position).to(target, 2000).start();
-  cameraTween.easing(TWEEN.Easing.Quartic.Out);
+  var cubeTween = new TWEEN.Tween(position).to(target, 2000).start();
+  cubeTween.easing(TWEEN.Easing.Quartic.Out);
 
   //ADD EVENTS TO TWEEN
-  cameraTween.onStart(function() { 
-    // jump is from the current skybox
+  cubeTween.onStart(function() {
     prev_skybox_index = skybox_index;
-    // loadingSkyboxIndex is the index of the cube whose 'next_idx' attribute is the target skybox
-    if (loadingSkyboxIndex == -1) { // go back to start when look on the ground
-        skybox_index = 1;
-    } else { // find the target skybox index by 'next_idx' of the cube
-        skybox_index = cubeArray[loadingSkyboxIndex].next_idx;
+    if (loadingSkyboxIndex == -1) { // back to start
+      skybox_index = 1;
+    } else {
+      skybox_index = cubeArray[loadingSkyboxIndex].next_idx;
     }
   });
 
-  cameraTween.onUpdate(function() {
-    camera.position.x = position.x;
-    camera.position.y = position.y;
-    camera.position.z = position.z;
+  cubeTween.onUpdate(function() {
+    cubeArray[loadingSkyboxIndex].position.set(position.x, position.y, position.z);
+    if(cubeArray[loadingSkyboxIndex].position.distanceTo(camera.position) <= 0.1 + 1) {
+      ambientLight.color = new THREE.Color(0xffffff);
+    }
   });
 
-  cameraTween.onComplete(function() { console.log("complete");
-    camera.position.x = 0;
-    camera.position.y = 0;
-    camera.position.z = 0;
-
-    // jump from 'prev_skybox_index', jump to 'skybox_index'
-    initSkybox(skybox_index, prev_skybox_index);;
-
+  cubeTween.onComplete(function() {
+    initSkybox(skybox_index, prev_skybox_index, loadingSkyboxIndex);
     updateTween = false;
   });
-
 }

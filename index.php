@@ -109,17 +109,11 @@ var animationClock = new THREE.Clock();
 var updateTween = false;
 
 // Lights
-var particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0000 } ) );
-scene.add( particleLight );
-scene.add( new THREE.AmbientLight( 0x111111 ) );
-
-var directionalLight = new THREE.DirectionalLight( Math.random() *  0xff0000, 0.4 );
-directionalLight.position.set(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5);
-directionalLight.position.normalize();
-scene.add( directionalLight );
-
-var pointLight = new THREE.PointLight( 0xffffff, 1 );
-particleLight.add( pointLight );
+var ambientLight = new THREE.AmbientLight(0x222222, 1);
+var pointLight = new THREE.PointLight(0xffffff, 1);
+pointLight.position.set(0, 0, 0);
+scene.add(ambientLight);
+scene.add(pointLight);
 
 // raycaster for gaze indicator
 var raycaster = new THREE.Raycaster(camera.position, camera.getWorldDirection(), 1);

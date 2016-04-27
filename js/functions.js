@@ -23,8 +23,10 @@ function renderIntersects() {
     }
     // second check if collide with the cubes
     else if ((gazingIndex = cubeArray.indexOf(intersects[0].object)) != -1) {
-      cubeArray[gazingIndex].scale.set(1.2, 1.2, 1.2);
-      isGazingCube = true;
+      if(cubeArray[gazingIndex].position.distanceTo(camera.position) > 0.1 + 1) {
+        cubeArray[gazingIndex].scale.set(1.2, 1.2, 1.2);
+        isGazingCube = true;
+      }
     }
   }
   
@@ -32,10 +34,9 @@ function renderIntersects() {
     gazeFunction(gazingIndex);
   } else {
     clock.stop();
-    // reset cubes
-    for (var i = 0; i < cubeArray.length; i++) {
-      cubeArray[i].scale.set(1, 1, 1);
-    }
+    cubeArray.forEach(function(cube) {
+      cube.scale.set(1, 1, 1);
+    });
     ring.scale.set(1, 1, 1);
     hideText();
     resetHomeLogo();

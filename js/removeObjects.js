@@ -1,7 +1,7 @@
 /* objects recycle */
 
 function clearAll( prev_skybox_index ){
-  clearOldCubesAndText();
+  // clearOldCubesAndText();
   clearAudio( prev_skybox_index );
 }
 
@@ -9,7 +9,6 @@ function clearOldCubesAndText(){
   /* remove the cubes already in the scene */
   for (var i = 0; i < cubeArray.length; i++){
     scene.remove( cubeTextArray[i] );
-    //cubeTextArray[i].material.dispose();
     cubeTextArray[i].geometry.dispose();
     scene.remove( cubeArray[i] );
     cubeArray[i].material.dispose();
