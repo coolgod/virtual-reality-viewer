@@ -163,11 +163,13 @@ function initCube(box_specific) {
     })
   );
   cube.next_idx = box_specific.next_idx;
-  cube.position.set(box_specific.coord[0],
+  var pos = new THREE.Vector3(box_specific.coord[0],
     box_specific.coord[1],
     box_specific.coord[2]);
   // because the skybox has rotated, adjust the cube's postion
-  cube.position.applyAxisAngle(new THREE.Vector3(0, 1, 0), skybox.rotation.y);
+  pos.applyAxisAngle(new THREE.Vector3(0, 1, 0), skybox.rotation.y);
+  cube.position.set(pos.x, pos.y, pos.z);
+  
   scene.add(cube);
 
   // initialize 3D Text

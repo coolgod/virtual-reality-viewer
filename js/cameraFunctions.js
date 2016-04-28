@@ -1,5 +1,5 @@
 function zoomInCamera(gazeIdx) {
-  
+  hideOtherCubes(gazeIdx);
   // if gazing at the logo, then init skybox without zoom in
   if (gazeIdx == -1) {
     initSkybox(1, lastSkyboxIdx, gazeIdx);

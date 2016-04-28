@@ -61,6 +61,14 @@ function hideText(gazingIndex) {
   }
 }
 
+function hideOtherCubes(gazeIdx) {
+  for (var i = 0; i < cubeArray.length; i++) {
+    if (i != gazeIdx) {
+      cubeArray[i].visible = false;
+    }
+  }
+}
+
 function gazeFunction(gazingIndex) {
   if (!clock.running) {
     clock.start();
