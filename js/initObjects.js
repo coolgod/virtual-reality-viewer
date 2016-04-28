@@ -100,10 +100,11 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
         }
       } else {
         manager.input.phi = 0;
+        skybox.rotation.y = 0;
 
         if (gazeIdx != -1) {
           (function fadeout() {
-            // rotate skybox to align to the cube
+            // rotate skybox to align to the cube         
             skybox.rotation.y = cubeArray[gazeIdx].rotation.y;
 
             if (cubeArray[gazeIdx].material.opacity > 0.1) {
@@ -119,6 +120,14 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
               ambientLight.color = new THREE.Color(0x222222);
             }
           })();
+        }else{
+          // TO-DO: figure out a way to eliminate duplicate
+          clearOldCubesAndText();
+          // loading new cubes
+          for (i = 0; i < this_skybox.box.length; i++) {
+            cubeArray.push(initCube(this_skybox.box[i]));
+          }
+          ambientLight.color = new THREE.Color(0x222222);
         }
 
         skybox.material.map = texture;
@@ -169,7 +178,7 @@ function initCube(box_specific) {
   // because the skybox has rotated, adjust the cube's postion
   pos.applyAxisAngle(new THREE.Vector3(0, 1, 0), skybox.rotation.y);
   cube.position.set(pos.x, pos.y, pos.z);
-  
+
   scene.add(cube);
 
   // initialize 3D Text
