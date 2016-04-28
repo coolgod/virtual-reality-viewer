@@ -1,7 +1,7 @@
 WebVRManager.prototype.render = function(scene, camera, timestamp) {
   this.resizeIfNeeded_(camera);
   
-  if (skybox_index != 0) {
+  if (nextSkyboxIdx != 0) {
     /* functions exist in functions.js */
     rotateCube();
     raycaster.set(camera.position, camera.getWorldDirection());

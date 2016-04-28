@@ -26,6 +26,8 @@ function renderIntersects() {
       if(cubeArray[gazingIndex].position.distanceTo(camera.position) > 0.1 + 1) {
         cubeArray[gazingIndex].scale.set(1.2, 1.2, 1.2);
         isGazingCube = true;
+      }else{
+        cubeArray[gazingIndex].scale.x = -1.2;
       }
     }
   }
@@ -35,7 +37,9 @@ function renderIntersects() {
   } else {
     clock.stop();
     cubeArray.forEach(function(cube) {
-      cube.scale.set(1, 1, 1);
+      if(cube.position.distanceTo(camera.position) > 0.1 + 1) {
+        cube.scale.set(1, 1, 1);
+      }
     });
     ring.scale.set(1, 1, 1);
     hideText();

@@ -145,16 +145,16 @@ if ( /iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream ) {
 }
 
 // set inital skybox_index
-skybox_index = Util.getQueryParameter("skybox_index");
-if ( skybox_index == "" ) {
-  skybox_index = 1;
+nextSkyboxIdx = Util.getQueryParameter("skybox_index");
+if ( nextSkyboxIdx == "" ) {
+  nextSkyboxIdx = 1;
 }
 
 // pre load images and audios
 preLoad();
 
 // Initialize a skybox.
-initSkybox(skybox_index, null);
+initSkybox(nextSkyboxIdx, null);
 
 // Kick off animation loop
 animate();

@@ -1,8 +1,6 @@
 var skybox = null;
-var frontSkybox = null;
-var skybox_index = null;
-var prev_skybox_index = null;
-var loadingSkyboxIndex = null;
+var nextSkyboxIdx = null;
+var lastSkyboxIdx = null;
 var isLoading = false;
 
 var introText = null;
@@ -15,27 +13,26 @@ var audios = new Array();
 
 // global image loader for skybox and cubes only
 var imgLoader = new THREE.TextureLoader();
-imgLoader.crossOrigin = '';
 
-function initSkybox(skybox_index, prev_skybox_index, preGazingIndex) {
-  console.log("enter scene: " + skybox_index + ", prev scene: " + prev_skybox_index);
+function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
+  console.log("Scene change:", lastSkyboxIdx, "=>", nextSkyboxIdx);
 
   // manager.input is defined after invoking render method
-  if (manager.input != undefined && skybox_index == 1) {
+  if (manager.input != undefined && nextSkyboxIdx == 1) {
     manager.input.theta = 0;
     manager.input.phi = 0;
   }
 
   // clean up previous scene
-  if (prev_skybox_index != null || prev_skybox_index != undefined) {
-    clearAll(prev_skybox_index);
-    if (prev_skybox_index == 1) {
+  if (lastSkyboxIdx != null || lastSkyboxIdx != undefined) {
+    clearAudio(lastSkyboxIdx);
+    if (lastSkyboxIdx == 1) {
       clearIntroText();
     }
   }
 
   // preload audio
-  if (skybox_index == 0 || skybox_index == 1) {
+  if (nextSkyboxIdx == 0 || nextSkyboxIdx == 1) {
     audios[skybox_imgs[0].bg_audio] = new Howl({
       urls: [skybox_imgs[0].bg_audio]
     });
@@ -45,15 +42,15 @@ function initSkybox(skybox_index, prev_skybox_index, preGazingIndex) {
   }
 
   // load intro text and gaze pointer
-  if (skybox_index != 0) {
+  if (nextSkyboxIdx != 0) {
     // logo
     if (homeLogo == null) {
       initHomeLogo(); //load logo only when it hasn't been initialized
     }
 
     // intro text
-    if (skybox_index == 1) {
-      initIntroText(skybox_index);
+    if (nextSkyboxIdx == 1) {
+      initIntroText(nextSkyboxIdx);
       homeLogo.visible = false;
     } else {
       homeLogo.visible = true;
@@ -72,31 +69,29 @@ function initSkybox(skybox_index, prev_skybox_index, preGazingIndex) {
   }
 
   // load skybox
-  var this_skybox = skybox_imgs[skybox_index];
+  var this_skybox = skybox_imgs[nextSkyboxIdx];
   imgLoader.load(
     path_pre + this_skybox.bg_img,
     function(texture) {
       // start caching skybox images for other scenes asynchronously
-      var cacheLoader = new THREE.ImageLoader(THREE.DefaultLoadingManager);
-      cacheLoader.setCrossOrigin('');
       for (i = 0; i < this_skybox.box.length; i++) {
         var path = path_pre + skybox_imgs[this_skybox.box[i].next_idx].bg_img;
-        cacheLoader.load(path);
+        imgLoader.load(path);
       }
 
       if (this_skybox.bg_img != "") {
-        texture.minFilter = THREE.NearestMipMapLinearFilter
+        texture.minFilter = THREE.NearestMipMapLinearFilter;
       }
 
-      if (this.skybox == null) {
-        this.skybox = new THREE.Mesh(new THREE.SphereGeometry(500, 60, 40),
+      if (skybox == null) {
+        skybox = new THREE.Mesh(new THREE.SphereGeometry(500, 60, 40),
           new THREE.MeshBasicMaterial({
             map: texture
           }));
-        this.skybox.scale.x = -1.0;
-        this.skybox.receiveShadow = true;
-        this.skybox.material.transparent = true;
-        this.scene.add(skybox);
+        skybox.scale.x = -1.0;
+        skybox.receiveShadow = true;
+        skybox.material.transparent = true;
+        scene.add(skybox);
 
         // loading new cubes
         box_count = this_skybox.box.length;
@@ -104,27 +99,35 @@ function initSkybox(skybox_index, prev_skybox_index, preGazingIndex) {
           this.cubeArray.push(this.initCube(this_skybox.box[i]));
         }
       } else {
-        (function fadeout() {
-          if (cubeArray[preGazingIndex].material.opacity > 0.1) {
-            cubeArray[preGazingIndex].material.opacity -= 0.05;
-            requestAnimationFrame(fadeout);
-          }else{
-            clearOldCubesAndText();
-            ambientLight.color = new THREE.Color(0x222222);
-            // loading new cubes
-            box_count = this_skybox.box.length;
-            for (i = 0; i < box_count; i++) {
-              this.cubeArray.push(this.initCube(this_skybox.box[i]));
+        manager.input.phi = 0;
+
+        if (gazeIdx != -1) {
+          (function fadeout() {
+            // rotate skybox to align to the cube
+            skybox.rotation.y = cubeArray[gazeIdx].rotation.y;
+
+            if (cubeArray[gazeIdx].material.opacity > 0.1) {
+              cubeArray[gazeIdx].material.opacity -= 0.05;
+              requestAnimationFrame(fadeout);
+            } else {
+              clearOldCubesAndText();
+              // loading new cubes
+              box_count = this_skybox.box.length;
+              for (i = 0; i < box_count; i++) {
+                cubeArray.push(initCube(this_skybox.box[i]));
+              }
+              ambientLight.color = new THREE.Color(0x222222);
             }
-          }
-        })();
-        this.skybox.material.map = texture;
+          })();
+        }
+
+        skybox.material.map = texture;
       }
     }
   );
 
   // load audio using Howler.js
-  var audio_path = skybox_imgs[skybox_index].bg_audio;
+  var audio_path = skybox_imgs[nextSkyboxIdx].bg_audio;
   if (audio_path != "") {
     if (audios[audio_path] == null) { // if it hasn't been loaded
       audios[audio_path] = new Howl({
@@ -150,7 +153,7 @@ function initCube(box_specific) {
   texture.miniFilter = THREE.LinearFilter;
 
   // create cube mesh
-  var sphere = new THREE.Mesh(
+  var cube = new THREE.Mesh(
     new THREE.SphereGeometry(1, 32, 32),
     new THREE.MeshPhongMaterial({
       map: texture,
@@ -159,21 +162,24 @@ function initCube(box_specific) {
       transparent: true
     })
   );
-  sphere.next_idx = box_specific.next_idx;
-  sphere.position.set(box_specific.coord[0], box_specific.coord[1], box_specific.coord[2]);
-  scene.add(sphere);
+  cube.next_idx = box_specific.next_idx;
+  cube.position.set(box_specific.coord[0],
+    box_specific.coord[1],
+    box_specific.coord[2]);
+  // because the skybox has rotated, adjust the cube's postion
+  cube.position.applyAxisAngle(new THREE.Vector3(0, 1, 0), skybox.rotation.y);
+  scene.add(cube);
 
   // initialize 3D Text
-  var text3D = initText(sphere, box_specific.text);
+  var text3D = initText(cube, box_specific.text);
   scene.add(text3D);
   cubeTextArray.push(text3D);
 
-  return sphere;
+  return cube;
 }
 
-function initText(sphere, txt) {
-
-  // text above cube
+// text above cube
+function initText(cube, txt) {
   var textGeometry = new THREE.TextGeometry(txt, {
     size: 1,
     height: 0.2,
@@ -195,11 +201,11 @@ function initText(sphere, txt) {
 
   text3D = new THREE.Mesh(textGeometry, textMaterial);
 
-  var deltaX = ((sphere.position.z > 0) ? +1 : -1) * (txt.length * 0.2);
-  var deltaZ = ((sphere.position.x > 0) ? -1 : +1) * (txt.length * 0.2);
-  deltaX = (sphere.position.z == 0) ? 0 : deltaX;
-  deltaZ = (sphere.position.x == 0) ? 0 : deltaZ;
-  text3D.position.set(sphere.position.x + deltaX, sphere.position.y + 1.5, sphere.position.z + deltaZ);
+  var deltaX = ((cube.position.z > 0) ? +1 : -1) * (txt.length * 0.2);
+  var deltaZ = ((cube.position.x > 0) ? -1 : +1) * (txt.length * 0.2);
+  deltaX = (cube.position.z == 0) ? 0 : deltaX;
+  deltaZ = (cube.position.x == 0) ? 0 : deltaZ;
+  text3D.position.set(cube.position.x + deltaX, cube.position.y + 1.5, cube.position.z + deltaZ);
 
 
   text3D.lookAt(new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z));
@@ -208,8 +214,8 @@ function initText(sphere, txt) {
   return text3D;
 }
 
-function initIntroText(skybox_index) {
-  var textGeometry = new THREE.TextGeometry(skybox_imgs[skybox_index].bg_name, {
+function initIntroText(nextSkyboxIdx) {
+  var textGeometry = new THREE.TextGeometry(skybox_imgs[nextSkyboxIdx].bg_name, {
     size: 1,
     height: 0.2,
     weight: "normal",
