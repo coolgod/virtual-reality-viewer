@@ -80,21 +80,10 @@ WebVRConfig = {
 <script src="js/loading.js"></script>
 
 <script>
-//Setup three.js WebGL renderer
-var renderer = new THREE.WebGLRenderer({ antialias: false });
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.sortObjects = true;  // not always working
-renderer.autoClear = false;
+var renderer, scene, top_scene, camera;
+var clock;
 
-// Create a three.js scene.
-var scene = new THREE.Scene();
-var top_scene = new THREE.Scene();
-
-// Create a three.js camera.
-var aspect = document.body.clientWidth / document.body.clientHeight;
-var camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 501);
-camera.position.set(0, 0, 0);
-camera.lookAt(new THREE.Vector3( 0, 0, -1 ) );
+init();
 
 // Apply VR headset positional data to camera.
 var controls = new THREE.VRControls(camera);
@@ -103,9 +92,6 @@ var controls = new THREE.VRControls(camera);
 var effect = new THREE.VREffect(renderer);
 effect.setSize(document.body.clientWidth, document.body.clientHeight);
 
-// Create a clock object for animation control
-var clock = new THREE.Clock(false);
-var animationClock = new THREE.Clock();
 var updateTween = false;
 
 // Lights
@@ -164,12 +150,6 @@ function animate(timestamp) {
   // Update VR headset position and apply to camera.
   controls.update();
 
-  /* update clock for animation */
-  delta = animationClock.getDelta();
-  if (annie != null) {
-    annie.update(1000 * delta);
-  }
-
   if (updateTween == true) {
     TWEEN.update();
   }
@@ -190,6 +170,25 @@ function onKey(event) {
   }
 }
 window.addEventListener('keydown', onKey, true);
+
+function init() {
+  // renderer
+  renderer = new THREE.WebGLRenderer({ antialias: false });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.autoClear = false;
+
+  // scenes
+  scene = new THREE.Scene();
+  top_scene = new THREE.Scene();
+
+  // camera
+  camera = new THREE.PerspectiveCamera(90, document.body.clientWidth / document.body.clientHeight, 0.1, 501);
+  camera.position.set(0, 0, 0);
+  camera.lookAt(new THREE.Vector3( 0, 0, -1 ) );
+
+  // clock
+  clock = new THREE.Clock(false);
+}
 </script>
 
 </html>
