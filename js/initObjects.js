@@ -1,14 +1,12 @@
 var skybox = null;
 var nextSkyboxIdx = null;
 var lastSkyboxIdx = null;
-var isLoading = false;
 
 var introText = null;
 var homeLogo = null;
 var cubeArray = [];
 var cubeTextArray = [];
 
-var annie = null;
 var audios = new Array();
 
 // global image loader for skybox and cubes only
@@ -17,10 +15,9 @@ var imgLoader = new THREE.TextureLoader();
 function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
   console.log("Scene change:", lastSkyboxIdx, "=>", nextSkyboxIdx);
 
-  // manager.input is defined after invoking render method
-  if (manager.input != undefined && nextSkyboxIdx == 1) {
-    manager.input.theta = 0;
-    manager.input.phi = 0;
+  // reset camera
+  if (manager != undefined && nextSkyboxIdx == 1) {
+    manager.hmd.resetPose();
   }
 
   // clean up previous scene
@@ -54,18 +51,7 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
       homeLogo.visible = false;
     } else {
       homeLogo.visible = true;
-    }
-
-    // gaze pointer
-    if (ring == null) {
-      ring = new THREE.Mesh(
-        new THREE.TorusGeometry(0.17, 0.017, 0, 70),
-        new THREE.MeshBasicMaterial({
-          color: 0xffffff,
-          side: THREE.DoubleSide
-        }));
-      top_scene.add(ring);
-    }
+    }    
   }
 
   // load skybox
@@ -73,6 +59,7 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
   imgLoader.load(
     path_pre + this_skybox.bg_img,
     function(texture) {
+
       // start caching skybox images for other scenes asynchronously
       for (i = 0; i < this_skybox.box.length; i++) {
         var path = path_pre + skybox_imgs[this_skybox.box[i].next_idx].bg_img;
@@ -89,7 +76,6 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
             map: texture
           }));
         skybox.scale.x = -1.0;
-        skybox.receiveShadow = true;
         skybox.material.transparent = true;
         scene.add(skybox);
 
@@ -99,9 +85,8 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
           this.cubeArray.push(this.initCube(this_skybox.box[i]));
         }
       } else {
-        manager.input.phi = 0;
+        manager.hmd.resetPose();
         skybox.rotation.y = 0;
-
         if (gazeIdx != -1) {
           (function fadeout() {
             // rotate skybox to align to the cube         
@@ -112,22 +97,21 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
               requestAnimationFrame(fadeout);
             } else {
               clearOldCubesAndText();
+              lights.children.pop();
               // loading new cubes
               box_count = this_skybox.box.length;
               for (i = 0; i < box_count; i++) {
                 cubeArray.push(initCube(this_skybox.box[i]));
               }
-              ambientLight.color = new THREE.Color(0x222222);
             }
           })();
-        }else{
+        } else {
           // TO-DO: figure out a way to eliminate duplicate
           clearOldCubesAndText();
           // loading new cubes
           for (i = 0; i < this_skybox.box.length; i++) {
             cubeArray.push(initCube(this_skybox.box[i]));
           }
-          ambientLight.color = new THREE.Color(0x222222);
         }
 
         skybox.material.map = texture;
@@ -166,7 +150,6 @@ function initCube(box_specific) {
     new THREE.SphereGeometry(1, 32, 32),
     new THREE.MeshPhongMaterial({
       map: texture,
-      shading: THREE.SmoothShading,
       opacity: 0.7,
       transparent: true
     })
@@ -182,74 +165,82 @@ function initCube(box_specific) {
   scene.add(cube);
 
   // initialize 3D Text
-  var text3D = initText(cube, box_specific.text);
-  scene.add(text3D);
-  cubeTextArray.push(text3D);
+  initText(cube, box_specific.text);
 
   return cube;
 }
 
 // text above cube
 function initText(cube, txt) {
-  var textGeometry = new THREE.TextGeometry(txt, {
-    size: 1,
-    height: 0.2,
-    weight: "normal",
-    style: "normal",
-    curveSegments: 3,
-    font: "raleway",
-    material: 0,
-    extrudeMaterial: 1
+  var loader = new THREE.FontLoader();
+  loader.load('fonts/Lato_Regular.js', function(font) {
+    var geometry = new THREE.TextGeometry(txt, {
+      size: 1,
+      height: 0.2,
+      curveSegments: 2,
+      font: font,
+    });
+
+    geometry.computeBoundingBox();
+
+    var material = new THREE.MultiMaterial([
+      new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        overdraw: 0.5
+      }),
+      new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        overdraw: 0.5
+      })
+    ]);
+
+    var mesh = new THREE.Mesh(geometry, material);
+
+    var deltaX = ((cube.position.z > 0) ? +1 : -1) * (txt.length * 0.2);
+    var deltaZ = ((cube.position.x > 0) ? -1 : +1) * (txt.length * 0.2);
+    deltaX = (cube.position.z == 0) ? 0 : deltaX;
+    deltaZ = (cube.position.x == 0) ? 0 : deltaZ;
+    mesh.position.set(cube.position.x + deltaX, cube.position.y + 1.5, cube.position.z + deltaZ);
+
+
+    mesh.lookAt(new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z));
+
+    mesh.visible = false;
+
+    scene.add(mesh);
+    cubeTextArray.push(mesh);
   });
-  var textMaterial = new THREE.MeshPhongMaterial({
-    color: 0xDDDDDD,
-    specular: 0x009900,
-    shininess: 10,
-    shading: THREE.SmoothShading,
-    opacity: 0.8,
-    transparent: true
-  });
-
-  text3D = new THREE.Mesh(textGeometry, textMaterial);
-
-  var deltaX = ((cube.position.z > 0) ? +1 : -1) * (txt.length * 0.2);
-  var deltaZ = ((cube.position.x > 0) ? -1 : +1) * (txt.length * 0.2);
-  deltaX = (cube.position.z == 0) ? 0 : deltaX;
-  deltaZ = (cube.position.x == 0) ? 0 : deltaZ;
-  text3D.position.set(cube.position.x + deltaX, cube.position.y + 1.5, cube.position.z + deltaZ);
-
-
-  text3D.lookAt(new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z));
-
-  text3D.visible = false;
-  return text3D;
 }
 
 function initIntroText(nextSkyboxIdx) {
-  var textGeometry = new THREE.TextGeometry(skybox_imgs[nextSkyboxIdx].bg_name, {
-    size: 1,
-    height: 0.2,
-    weight: "normal",
-    style: "normal",
-    curveSegments: 20,
-    font: "raleway",
-    material: 0,
-    extrudeMaterial: 1
+  var txt = skybox_imgs[nextSkyboxIdx].bg_name;
+
+  var loader = new THREE.FontLoader();
+  loader.load('fonts/Lato_Regular.js', function(font) {
+    var geometry = new THREE.TextGeometry(txt, {
+      size: 1,
+      height: 0.2,
+      curveSegments: 2,
+      font: font,
+    });
+
+    var material = new THREE.MultiMaterial([
+      new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        overdraw: 0.5
+      }),
+      new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        overdraw: 0.5
+      })
+    ]);
+
+    introText = new THREE.Mesh(geometry, material);
+    introText.position.set(-10, 5, -15);
+    introText.lookAt(new THREE.Vector3(camera.position.x - 10, camera.position.y, camera.position.z));
+    introText.visible = true;
+    scene.add(introText);
   });
-  var textMaterial = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
-    emissive: 0x595050,
-    specular: 0xffffff,
-    shininess: 10,
-    shading: THREE.SmoothShading,
-    opacity: 0.8,
-    transparent: true
-  });
-  introText = new THREE.Mesh(textGeometry, textMaterial);
-  introText.position.set(-10, 5, -15);
-  introText.lookAt(new THREE.Vector3(camera.position.x - 10, camera.position.y, camera.position.z));
-  introText.visible = true;
-  scene.add(introText);
 }
 
 function initHomeLogo() {

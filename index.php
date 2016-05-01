@@ -42,105 +42,98 @@
 
 <script>
 WebVRConfig = {
-  /* webvr-polyfill configuration */
-  FORCE_ENABLE_VR: true,            // Forces VR mode, default: false.
-  K_FILTER: 0.98,                   // Default: 0.98.
-  /* webvr-boilerplate configuration */
-  FORCE_DISTORTION: true,           // Forces distortion, default: false.
-  MOUSE_KEYBOARD_CONTROLS_DISABLED: false,
+  FORCE_ENABLE_VR: false,
+  TOUCH_PANNER_DISABLED: false
 };
 </script>
 
-<!-- All Library dependencies -->
-<!-- three.js: JavaScript 3D library -->
-<script src="bower_components/threejs/build/three.js"></script>
-<script src="js/threejs-extras/TextGeometry.js"></script>
-<script src="js/threejs-extras/FontUtils.js"></script>
-<script src="js/threejs-extras/VRControls.js"></script>
-<script src="js/threejs-extras/VREffect.js"></script>
-<script src="fonts/Raleway_Medium.js"></script>
-<!-- WebVR Polyfill: a JavaScript implementation of the WebVR spec -->
-<script src="bower_components/webvr-polyfill/build/webvr-polyfill.js"></script>
-<!-- WebVR Boilerplate: A THREE.js-based starting point for VR experiences -->
-<script src="bower_components/webvr-boilerplate/build/webvr-manager.js"></script>
-<script src="js/webvr-boilerplate/webvr-manager-extras.js"></script>
+<!--
+  A polyfill for Promises. Needed for IE and Edge.
+  -->
+<!-- <script src="node_modules/es6-promise/dist/es6-promise.js"></script> -->
 
-<!-- howler.js - Modern Web Audio Javascript Library -->
+<!--
+  three.js 3d library
+  -->
+<script src="node_modules/three/three.js"></script>
+
+<!--
+  VRControls.js acquires positional information from connected VR devices and applies the transformations to a three.js camera object.
+   -->
+<script src="node_modules/three/examples/js/controls/VRControls.js"></script>
+
+<!--
+  VREffect.js handles stereo camera setup and rendering.
+  -->
+<script src="node_modules/three/examples/js/effects/VREffect.js"></script>
+
+<!--
+  A polyfill for WebVR using the Device{Motion,Orientation}Event API.
+  -->
+<script src="node_modules/webvr-polyfill/build/webvr-polyfill.js"></script>
+
+<!--
+  Helps enter and exit VR mode, provides best practices while in VR.
+  -->
+<script src="node_modules/webvr-boilerplate/build/webvr-manager.js"></script>
+
+<!-- 
+  howler.js - Modern Web Audio Javascript Library 
+-->
 <script src="bower_components/howler.js/howler.js"></script>
-<!-- External library for smooth animations -->
+
+<!-- 
+  Tween.jsExternal library for smooth animations 
+-->
 <script src='bower_components/tween.js/src/Tween.js'></script>
 
 <!--All Self-implemented Script -->
 <script src="js/initObjects.js"></script>
 <script src="js/htmlFunctions.js"></script>
 <script src="js/removeObjects.js"></script>
-<script src="js/cameraFunctions.js"></script>
 <script src="js/functions.js"></script>
 <script src="js/util.js"></script>
 <script src="js/loading.js"></script>
 
 <script>
-var renderer, scene, top_scene, camera;
-var clock;
+var renderer, scene, camera, lights;
+var clock, controls, effect, ring;
+var raycaster, ring;
 
 init();
 
-// Apply VR headset positional data to camera.
-var controls = new THREE.VRControls(camera);
-
-// Apply VR stereo rendering to renderer.
-var effect = new THREE.VREffect(renderer);
-effect.setSize(document.body.clientWidth, document.body.clientHeight);
-
 var updateTween = false;
 
-// Lights
-var ambientLight = new THREE.AmbientLight(0x222222, 1);
-var pointLight = new THREE.PointLight(0xffffff, 1);
-pointLight.position.set(0, 0, 0);
-scene.add(ambientLight);
-scene.add(pointLight);
-
-// raycaster for gaze indicator
-var raycaster = new THREE.Raycaster(camera.position, camera.getWorldDirection(), 1);
-// gaze indicator
-var ring = null;
-
-// helper object for zooming camera in/out
-newCameraPosition = new THREE.Vector3(0,0,0);
-
 // Create a VR manager helper to enter and exit VR mode.
-var manager = new WebVRManager(renderer, effect, {hideButton: false});
+var manager = new WebVRManager(renderer, effect, {});
 
 // Load resource data files
-var data_file = new XMLHttpRequest();
-data_file.open("GET", "data/data.json", false);
-data_file.send();
-var skybox_imgs = JSON.parse(data_file.responseText).locations;
-var logo_img = JSON.parse(data_file.responseText).logo;
-var path_pre = JSON.parse(data_file.responseText).path_pre;
-var box_path_pre = path_pre["box"];
-if ( /iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream ) {
-  path_pre = path_pre["iphone"];
-}else if ( /iPad/i.test(navigator.userAgent) ) {
-  path_pre = path_pre["default"];
-}else if ( /Anroid/i.test(navigator.userAgent)  ){
-  path_pre = path_pre["android"];
-}else{
-  path_pre = path_pre["default"];
-}
+var skybox_imgs, logo_img, path_pre, box_path_pre
+$.post("data/data.json", function(data) {
 
-// set inital skybox_index
-nextSkyboxIdx = Util.getQueryParameter("skybox_index");
-if ( nextSkyboxIdx == "" ) {
-  nextSkyboxIdx = 1;
-}
+  skybox_imgs = data.locations;
+  logo_img = data.logo;
+  box_path_pre = data.path_pre["box"];
 
-// pre load images and audios
-preLoad();
+  if (/iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream) {
+    path_pre = data.path_pre["iphone"];
+  } else if (/iPad/i.test(navigator.userAgent)) {
+    path_pre = data.path_pre["default"];
+  } else if (/Anroid/i.test(navigator.userAgent)) {
+    path_pre = data.path_pre["android"];
+  } else {
+    path_pre = data.path_pre["default"];
+  }
 
-// Initialize a skybox.
-initSkybox(nextSkyboxIdx, null);
+  // set inital skybox_index
+  nextSkyboxIdx = (Util.getQueryParameter("skybox_index") == "") ? 1 : nextSkyboxIdx;
+
+  // pre load images and audios
+  preLoad();
+
+  // Initialize a skybox.
+  initSkybox(nextSkyboxIdx, null);
+});
 
 // Kick off animation loop
 animate();
@@ -154,8 +147,16 @@ function animate(timestamp) {
     TWEEN.update();
   }
 
+  rotateCube();
+  raycaster.set(camera.position, camera.getWorldDirection());
+  if (ring != null && homeLogo != null) {
+    positionRing();
+    renderIntersects();
+  }
+
   // Render the scene through the manager.
   manager.render(scene, camera, timestamp);
+  // renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
   
@@ -179,15 +180,48 @@ function init() {
 
   // scenes
   scene = new THREE.Scene();
-  top_scene = new THREE.Scene();
+  // top_scene = new THREE.Scene();
 
   // camera
   camera = new THREE.PerspectiveCamera(90, document.body.clientWidth / document.body.clientHeight, 0.1, 501);
+  // camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 501);
   camera.position.set(0, 0, 0);
   camera.lookAt(new THREE.Vector3( 0, 0, -1 ) );
 
+  // lights
+  lights = new THREE.Group();
+
+  var pointLight = new THREE.PointLight(0xffffff, 1.2);
+  pointLight.position.set(0, 0, 0);
+  lights.add(pointLight);
+  scene.add(lights);
+  
   // clock
   clock = new THREE.Clock(false);
+
+  // Apply VR headset positional data to camera.
+  controls = new THREE.VRControls(camera);
+
+  // Apply VR stereo rendering to renderer.
+  effect = new THREE.VREffect(renderer);
+  effect.setSize(document.body.clientWidth, document.body.clientHeight);
+  // effect.setSize(window.innerWidth, window.innerHeight);
+
+  // raycaster
+  raycaster = new THREE.Raycaster(camera.position, camera.getWorldDirection(), 1);
+
+  // gaze indicator
+  ring = new THREE.Mesh(
+    new THREE.TorusGeometry(0.17, 0.017, 0, 70),
+    new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      side: THREE.DoubleSide
+    }));
+  scene.add(ring);
+}
+
+function loadConfig() {
+
 }
 </script>
 

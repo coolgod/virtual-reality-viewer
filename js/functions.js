@@ -6,7 +6,7 @@ function rotateCube() {
 
 function positionRing() {
   ring.position.set(camera.getWorldDirection().x * 3, camera.getWorldDirection().y * 3, camera.getWorldDirection().z * 3);
-  ring.quaternion.copy(camera.quaternion); // makes the ring face the screen (in conjunction with the camera)
+  ring.quaternion.copy(camera.quaternion);
 }
 
 function renderIntersects() {
@@ -23,21 +23,21 @@ function renderIntersects() {
     }
     // second check if collide with the cubes
     else if ((gazingIndex = cubeArray.indexOf(intersects[0].object)) != -1) {
-      if(cubeArray[gazingIndex].position.distanceTo(camera.position) > 0.1 + 1) {
+      if (cubeArray[gazingIndex].position.distanceTo(camera.position) > 0.1 + 1) {
         cubeArray[gazingIndex].scale.set(1.2, 1.2, 1.2);
         isGazingCube = true;
-      }else{
+      } else {
         cubeArray[gazingIndex].scale.x = -1.2;
       }
     }
   }
-  
+
   if (isGazingCube || isGazingLogo) {
     gazeFunction(gazingIndex);
   } else {
     clock.stop();
     cubeArray.forEach(function(cube) {
-      if(cube.position.distanceTo(camera.position) > 0.1 + 1) {
+      if (cube.position.distanceTo(camera.position) > 0.1 + 1) {
         cube.scale.set(1, 1, 1);
       }
     });
@@ -90,33 +90,37 @@ function gazeFunction(gazingIndex) {
     clock.stop();
     zoomInCamera(gazingIndex);
   }
-  ring.scale.set(ring.scale.x * factor, 
-                  ring.scale.y * factor, 1); // 2-d, no scale for z axis
+  ring.scale.set(ring.scale.x * factor,
+    ring.scale.y * factor, 1); // 2-d, no scale for z axis
 }
 
 function zoomInCamera(gazeIdx) {
   hideOtherCubes(gazeIdx);
+
   // if gazing at the logo, then init skybox without zoom in
   if (gazeIdx == -1) {
     lastSkyboxIdx = nextSkyboxIdx;
     nextSkyboxIdx = 1;
     initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx);
     return;
+  } else {
+    lastSkyboxIdx = nextSkyboxIdx;
+    nextSkyboxIdx = cubeArray[gazeIdx].next_idx;
   }
-  
+
   cubeArray[gazeIdx].material.side = THREE.DoubleSide;
   cubeArray[gazeIdx].material.opacity = 1;
 
   var position = {
-    x: cubeArray[gazeIdx].position.x,
-    y: cubeArray[gazeIdx].position.y,
-    z: cubeArray[gazeIdx].position.z
-  };
-
-  var target = {
     x: 0,
     y: 0,
     z: 0
+  };
+
+  var target = {
+    x: cubeArray[gazeIdx].position.x,
+    y: cubeArray[gazeIdx].position.y,
+    z: cubeArray[gazeIdx].position.z
   };
 
   updateTween = true;
@@ -124,21 +128,17 @@ function zoomInCamera(gazeIdx) {
   var cubeTween = new TWEEN.Tween(position).to(target, 2000).start();
   cubeTween.easing(TWEEN.Easing.Quartic.Out);
 
-  //ADD EVENTS TO TWEEN
-  cubeTween.onStart(function() {
-    lastSkyboxIdx = nextSkyboxIdx;
-    nextSkyboxIdx = cubeArray[gazeIdx].next_idx;
-  });
-
   cubeTween.onUpdate(function() {
-    cubeArray[gazeIdx].position.set(position.x, position.y, position.z);
-    if (cubeArray[gazeIdx].position.distanceTo(camera.position) <= 0.1 + 1) {
-      ambientLight.color = new THREE.Color(0xffffff);
+    camera.position.set(position.x, position.y, position.z);
+    if (camera.position.distanceTo(cubeArray[gazeIdx].position) <= 0.1 + 1 && lights.children.length == 1) {
+      lights.add(new THREE.AmbientLight(0xffffff, 1));
     }
   });
 
   cubeTween.onComplete(function() {
     initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx);
+    camera.position.set(0, 0, 0);
+    cubeArray[gazeIdx].position.set(0, 0, 0);
     updateTween = false;
   });
 }
