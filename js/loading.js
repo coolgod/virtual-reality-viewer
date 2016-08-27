@@ -9,29 +9,61 @@ function initLoadingBar() {
 	});
 }
 
-function updateLoading() {
+function updateLoadingBar() {
 	var val = $("#progressbar").progressbar("value");
 	$("#progressbar").progressbar("value", val + 10);
 }
 
 function preLoad() {
-	// logo
-	imgLoader.load(logo_img, updateLoading);
-	// scene 1
-	imgLoader.load(box_path_pre + "brookings.jpg", updateLoading);
-	imgLoader.load(box_path_pre + "bd.jpg", updateLoading);
-	// scene 3, brookings
-	imgLoader.load(path_pre + skybox_imgs[3].bg_img, updateLoading);
-	skybox_imgs[3].box.forEach(function(box) {
-		imgLoader.load(box_path_pre + skybox_imgs[box.next_idx].bg_img, updateLoading);
+	loadImg(box_path_pre + "brookings.jpg")
+		.then(loadImg(box_path_pre + "bd.jpg"))
+		.then(loadImg(path_pre + skybox_imgs[3].bg_img))
+		.then(loadImg(path_pre + skybox_imgs[24].bg_img))
+		.then(loadImg(logo_img))
+		.then(() => {
+			return Promise.all(skybox_imgs[3].box.map((box) => {
+				loadImg(box_path_pre + skybox_imgs[box.next_idx].bg_img)
+			}));
+		})
+		.then(() => {
+			return Promise.all(skybox_imgs[24].box.map((box) => {
+				loadImg(box_path_pre + skybox_imgs[box.next_idx].bg_img)
+			}));
+		})
+		.then(loadFile("audio/Brookings.mp3"))
+		.then(loadFile("audio/bd.mp3"))
+}
+
+function loadImg(url) {
+	// console.log("loading", url);
+	return new Promise((resolve, reject) => {
+		var loader = new THREE.ImageLoader();
+		loader.load(url, () => {
+			updateLoadingBar();
+			resolve(url);
+		});
 	});
-	fileLoader.load("audio/Brookings.mp3", updateLoading);
-	imgLoader.load(path_pre + skybox_imgs[24].bg_img, updateLoading, updateLoading);
-	// scene 24, bears den
-	skybox_imgs[24].box.forEach(function(box) {
-		imgLoader.load(box_path_pre + skybox_imgs[box.next_idx].bg_img);
+}
+
+function loadFile(url) {
+	// console.log("loading", url);
+	return new Promise((resolve, reject) => {
+		var loader = new THREE.XHRLoader();
+		loader.load(url, () => {
+			updateLoadingBar();
+			resolve(url);
+		});
 	});
-	fileLoader.load("audio/bd.mp3", updateLoading);
 }
 
 initLoadingBar();
+
+$(document).ready(function() {
+	$("#start-btn").click(function() {
+		$("#wrapper").fadeOut(2000, "swing", function() {
+			renderer.domElement.style.display = "block";
+			renderer.domElement.style.width = "100%";
+			document.body.appendChild(renderer.domElement);
+		});
+	});
+});
