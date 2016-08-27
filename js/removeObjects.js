@@ -2,18 +2,18 @@
 
 function clearOldCubesAndText(){
   /* remove the cubes already in the scene */
-  for (var i = 0; i < cubeArray.length; i++){
-    scene.remove( cubeTextArray[i] );
-    cubeTextArray[i].geometry.dispose();
-    scene.remove( cubeArray[i] );
-    cubeArray[i].material.dispose();
-    cubeArray[i].material.map.dispose();
-    cubeArray[i].geometry.dispose();
+  for (var i = 0; i < cubes.length; i++){
+    scene.remove( cubeTxt[i] );
+    cubeTxt[i].geometry.dispose();
+    scene.remove( cubes[i] );
+    cubes[i].material.dispose();
+    cubes[i].material.map.dispose();
+    cubes[i].geometry.dispose();
   }
 
   // empty the array
-  cubeTextArray = [];
-  cubeArray = [];
+  cubeTxt = [];
+  cubes = [];
 }
 
 function clearAudio ( lastSkyboxIdx ) {

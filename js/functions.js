@@ -1,6 +1,6 @@
 function rotateCube() {
-  for (var i = 0; i < cubeArray.length; i++) {
-    cubeArray[i].rotation.y += 0.01;
+  for (var i = 0; i < cubes.length; i++) {
+    cubes[i].rotation.y += 0.01;
   }
 }
 
@@ -16,18 +16,18 @@ function renderIntersects() {
 
   if (intersects.length > 0) {
     // first check if collide with the logo
-    if (intersects[0].object === homeLogo) {
-      homeLogo.scale.set(3.5, 3.5, 3.5);
-      homeLogo.material.opacity = 0.6;
+    if (intersects[0].object === logo) {
+      logo.scale.set(1.2, 1.2, 1.2);
+      logo.material.opacity = 0.6;
       isGazingLogo = true;
     }
     // second check if collide with the cubes
-    else if ((gazingIndex = cubeArray.indexOf(intersects[0].object)) != -1) {
-      if (cubeArray[gazingIndex].position.distanceTo(camera.position) > 0.1 + 1) {
-        cubeArray[gazingIndex].scale.set(1.2, 1.2, 1.2);
+    else if ((gazingIndex = cubes.indexOf(intersects[0].object)) != -1) {
+      if (cubes[gazingIndex].position.distanceTo(camera.position) > 0.1 + 1) {
+        cubes[gazingIndex].scale.set(1.2, 1.2, 1.2);
         isGazingCube = true;
       } else {
-        cubeArray[gazingIndex].scale.x = -1.2;
+        cubes[gazingIndex].scale.x = -1.2;
       }
     }
   }
@@ -36,35 +36,31 @@ function renderIntersects() {
     gazeFunction(gazingIndex);
   } else {
     clock.stop();
-    cubeArray.forEach(function(cube) {
+    cubes.forEach(function(cube) {
       if (cube.position.distanceTo(camera.position) > 0.1 + 1) {
         cube.scale.set(1, 1, 1);
       }
     });
     ring.scale.set(1, 1, 1);
     hideText();
-    resetHomeLogo();
+    resetLogo();
   }
 }
 
-function showText(gazingIndex) {
-  if (!cubeTextArray[gazingIndex].visible) {
-    cubeTextArray[gazingIndex].visible = true;
-  }
+function showText(idx) {
+  cubeTxt[idx].visible = true;
 }
 
-function hideText(gazingIndex) {
-  for (var i = 0; i < cubeTextArray.length; i++) {
-    if (cubeTextArray[i].visible) {
-      cubeTextArray[i].visible = false;
-    }
-  }
+function hideText() {
+  cubeTxt.forEach(function(txt) {
+    txt.visible = false;
+  });
 }
 
 function hideOtherCubes(gazeIdx) {
-  for (var i = 0; i < cubeArray.length; i++) {
+  for (var i = 0; i < cubes.length; i++) {
     if (i != gazeIdx) {
-      cubeArray[i].visible = false;
+      cubes[i].visible = false;
     }
   }
 }
@@ -105,11 +101,11 @@ function zoomInCamera(gazeIdx) {
     return;
   } else {
     lastSkyboxIdx = nextSkyboxIdx;
-    nextSkyboxIdx = cubeArray[gazeIdx].next_idx;
+    nextSkyboxIdx = cubes[gazeIdx].next_idx;
   }
 
-  cubeArray[gazeIdx].material.side = THREE.DoubleSide;
-  cubeArray[gazeIdx].material.opacity = 1;
+  cubes[gazeIdx].material.side = THREE.DoubleSide;
+  cubes[gazeIdx].material.opacity = 1;
 
   var position = {
     x: 0,
@@ -118,9 +114,9 @@ function zoomInCamera(gazeIdx) {
   };
 
   var target = {
-    x: cubeArray[gazeIdx].position.x,
-    y: cubeArray[gazeIdx].position.y,
-    z: cubeArray[gazeIdx].position.z
+    x: cubes[gazeIdx].position.x,
+    y: cubes[gazeIdx].position.y,
+    z: cubes[gazeIdx].position.z
   };
 
   updateTween = true;
@@ -130,7 +126,7 @@ function zoomInCamera(gazeIdx) {
 
   cubeTween.onUpdate(function() {
     camera.position.set(position.x, position.y, position.z);
-    if (camera.position.distanceTo(cubeArray[gazeIdx].position) <= 0.1 + 1 && lights.children.length == 1) {
+    if (camera.position.distanceTo(cubes[gazeIdx].position) <= 0.1 + 1 && lights.children.length == 1) {
       lights.add(new THREE.AmbientLight(0xffffff, 1));
     }
   });
@@ -138,7 +134,7 @@ function zoomInCamera(gazeIdx) {
   cubeTween.onComplete(function() {
     initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx);
     camera.position.set(0, 0, 0);
-    cubeArray[gazeIdx].position.set(0, 0, 0);
+    cubes[gazeIdx].position.set(0, 0, 0);
     updateTween = false;
   });
 }

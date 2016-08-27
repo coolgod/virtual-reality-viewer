@@ -21,15 +21,17 @@
     <div id="header"><h1 id="title">WuVR</h1></div>
     <div id="content">
         <p>Welcome to a virtual tour of Washington University in St.Louis</p>
-        <div id="progressbar-text">Loading...</div>
-        <div id="progressbar"></div>
-        <a href="#" id="start-btn">Get Started</a>
+        <div id="progressbar-group">
+          <div id="progressbar-text">Loading...</div>
+          <div id="progressbar"></div>
+        </div>
+        <div id="start-btn"><a href="#" >Get Started</a></div>
     </div>
     <div id="footer">
       <div id="info">
-        <span class="copyright">Washington University in St. Louis </span> —
-        <a href="http://sts.wustl.edu" class="link">STS</a>
-        <a href="#" class="link">SDC</a>
+        <span class="copyright">Washington University in St. Louis </span> -
+        <a href="http://sts.wustl.edu" class="link">STS</a> -
+        <a href="#" class="link">SDC</a> -
         <a href="http://sts.wustl.edu/vrv/" class="link">VRV</a>
       </div>
     </div>
@@ -77,13 +79,13 @@ WebVRConfig = {
   -->
 <script src="node_modules/webvr-boilerplate/build/webvr-manager.js"></script>
 
-<!-- 
-  howler.js - Modern Web Audio Javascript Library 
+<!--
+  howler.js - Modern Web Audio Javascript Library
 -->
 <script src="bower_components/howler.js/howler.js"></script>
 
-<!-- 
-  Tween.jsExternal library for smooth animations 
+<!--
+  Tween.jsExternal library for smooth animations
 -->
 <script src='bower_components/tween.js/src/Tween.js'></script>
 
@@ -98,19 +100,19 @@ WebVRConfig = {
 <script>
 var renderer, scene, camera, lights;
 var clock, controls, effect, ring;
-var raycaster, ring;
+var raycaster, ring, logo;
+var manager;
+var imgLoader = new THREE.ImageLoader();
+var fileLoader = new THREE.XHRLoader();
+var textureLoader = new THREE.TextureLoader();
 
 init();
 
 var updateTween = false;
 
-// Create a VR manager helper to enter and exit VR mode.
-var manager = new WebVRManager(renderer, effect, {});
-
 // Load resource data files
 var skybox_imgs, logo_img, path_pre, box_path_pre
 $.post("data/data.json", function(data) {
-
   skybox_imgs = data.locations;
   logo_img = data.logo;
   box_path_pre = data.path_pre["box"];
@@ -126,7 +128,7 @@ $.post("data/data.json", function(data) {
   }
 
   // set inital skybox_index
-  nextSkyboxIdx = (Util.getQueryParameter("skybox_index") == "") ? 1 : nextSkyboxIdx;
+  nextSkyboxIdx = (Util.getQueryParameter("skyboxIdx") == "") ? 1 : nextSkyboxIdx;
 
   // pre load images and audios
   preLoad();
@@ -149,17 +151,16 @@ function animate(timestamp) {
 
   rotateCube();
   raycaster.set(camera.position, camera.getWorldDirection());
-  if (ring != null && homeLogo != null) {
+  if (ring != null && logo != null) {
     positionRing();
     renderIntersects();
   }
 
   // Render the scene through the manager.
   manager.render(scene, camera, timestamp);
-  // renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
-  
+
 // keyboard event listener handler
 function onKey(event) {
   if (event.keyCode == 90) { // z
@@ -180,11 +181,9 @@ function init() {
 
   // scenes
   scene = new THREE.Scene();
-  // top_scene = new THREE.Scene();
 
   // camera
   camera = new THREE.PerspectiveCamera(90, document.body.clientWidth / document.body.clientHeight, 0.1, 501);
-  // camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 501);
   camera.position.set(0, 0, 0);
   camera.lookAt(new THREE.Vector3( 0, 0, -1 ) );
 
@@ -195,7 +194,7 @@ function init() {
   pointLight.position.set(0, 0, 0);
   lights.add(pointLight);
   scene.add(lights);
-  
+
   // clock
   clock = new THREE.Clock(false);
 
@@ -205,7 +204,6 @@ function init() {
   // Apply VR stereo rendering to renderer.
   effect = new THREE.VREffect(renderer);
   effect.setSize(document.body.clientWidth, document.body.clientHeight);
-  // effect.setSize(window.innerWidth, window.innerHeight);
 
   // raycaster
   raycaster = new THREE.Raycaster(camera.position, camera.getWorldDirection(), 1);
@@ -218,6 +216,9 @@ function init() {
       side: THREE.DoubleSide
     }));
   scene.add(ring);
+
+  // Create a VR manager helper to enter and exit VR mode.
+  manager = new WebVRManager(renderer, effect, {});
 }
 
 function loadConfig() {

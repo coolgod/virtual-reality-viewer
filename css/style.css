@@ -1,95 +1,77 @@
 * {
-/*  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;*/
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: "Raleway", sans-serif;
 }
-html {
+
+html{
   height: 100%;
 }
 
 body {
-  height: 100%;
+  display: block;
   margin: 0;
   padding: 0;
-  font-family: "Raleway", sans-serif;
-  font-size: 1rem;
+  height: 100%;
 }
 
-div{
-  float: left;
-  width: 100%;
-  height: 100%；
-}
-
+/* wrapper */
 #wrapper {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: #fff;
   background: -webkit-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Chrome 10+, Saf5.1+ */
   background:    -moz-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* FF3.6+ */
   background:     -ms-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* IE10 */
   background:      -o-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Opera 11.10+ */
   background:         linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* W3C */
-  color: #fff;
 }
 
-#wrapper {
-  display: block;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
-
+/* header */
 #header {
   height: 25%;
-  width: 100%;
-  float: left;
 }
 
 #title {
-  display: block;
-  float: left;
-  width: 100%;
-  margin-top: 12vh;
-  color: #fff;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  padding-top: 12%;
   font-size: 2.875em;
 }
 
+/* content */
 #content {
-  width: 100%;
   height: 65%;
-  margin: 0;
-  padding: 0;
-  text-align: center;
 }
 
 #content p {
-  display: block;
-  float: left;
+  display: inline-block;
+  text-align: center;
   width: 100%;
-  color: #fff;
   font-size: 1.25em;
-  margin: 4vh 0 auto 0;
+  margin: 4% 0 auto 0;
+}
+
+#progressbar-group{
+  display: inline-block;
+  width: 100%;
+  text-align: center;
 }
 
 #progressbar-text{
-  float: initial;
-  display: inline-block;
-  margin: 4vh 0 1vh 0;
+  margin: 4% 0 1% 0;
 }
 
 #content #progressbar{
-  float: initial;
-  display: inline-block;
-  margin: 0;
   width: 15em;
   height: 1em;
-  
   background-color: rgba(0, 0, 0, 0.1);
-  /* overwrite jquery style */
+  /* overwrite jquery default style */
+  display: inline-block;
   background-image: none;
-  color: white;
+  color: #ffffff;
   font-size: 0.8em;
   border-color: white;
 }
@@ -99,13 +81,16 @@ div{
   margin: 0;
   border: none;
   background-image: none;
-  background-color: white;
+  background-color: #ffffff;
+}
+
+#start-btn{
+  display: none;
+  text-align: center;
+  margin-top: 5%;
 }
 
 #content a {
-/*  display: inline-block;*/
-  display: none;
-  margin: 5vh auto;
   text-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
   padding: .5em 1.2em;
   border: .1em solid;
@@ -115,31 +100,22 @@ div{
   box-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.1);
 }
 
-#wrapper a:hover {
-  border-color: #fff;
-}
-
+/* footer */
 #footer {
+  text-align: center;
   height: 10%;;
-  width: 100%;
-  font-size: .9rem;
+  font-size: 0.9em;
 }
 
-#wrapper #footer .link {
-  color: #fff;
+#footer .link {
+  color: #ffffff;
   text-decoration: none;
 }
 
-#wrapper #footer .link:hover {
-  color: #fff;
+#footer .link:hover {
+  text-decoration: underline;
 }
 
-#wrapper #footer .link:hover:after {
-  color: #fff;
-}
-
-#wrapper #footer .link:not(:last-child):after {
-  content: ' - ';
-  font-weight: bold;
-  color: #fff;
+#footer .link:hover:after {
+  color: #ffffff;
 }

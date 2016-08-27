@@ -1,12 +1,9 @@
 function initLoadingBar() {
 	$("#progressbar").progressbar({
 		value: 0,
-		change: function() {
-		},
-		complete: function() {
-			$("#progressbar").fadeOut(1000, "swing", function() {
-				$("#progressbar-text").css("display", "none");
-				$("#start-btn").css("display", "inline-block");
+		complete: () => {
+			$("#progressbar-group").fadeOut(1000, "swing", () => {
+				$("#start-btn").show();
 			});
 		}
 	});
@@ -18,9 +15,6 @@ function updateLoading() {
 }
 
 function preLoad() {
-	// pre load images and audios
-	var imgLoader = new THREE.ImageLoader();
-	var fileLoader = new THREE.XHRLoader();
 	// logo
 	imgLoader.load(logo_img, updateLoading);
 	// scene 1

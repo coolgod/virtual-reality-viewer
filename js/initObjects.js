@@ -3,17 +3,14 @@ var nextSkyboxIdx = null;
 var lastSkyboxIdx = null;
 
 var introText = null;
-var homeLogo = null;
-var cubeArray = [];
-var cubeTextArray = [];
+var logo = null;
+var cubes = [];
+var cubeTxt = [];
 
 var audios = new Array();
 
-// global image loader for skybox and cubes only
-var imgLoader = new THREE.TextureLoader();
-
 function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
-  console.log("Scene change:", lastSkyboxIdx, "=>", nextSkyboxIdx);
+  Util.log("Scene change:", lastSkyboxIdx, "=>", nextSkyboxIdx);
 
   // reset camera
   if (manager != undefined && nextSkyboxIdx == 1) {
@@ -41,29 +38,29 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
   // load intro text and gaze pointer
   if (nextSkyboxIdx != 0) {
     // logo
-    if (homeLogo == null) {
+    if (logo == null) {
       initHomeLogo(); //load logo only when it hasn't been initialized
     }
 
     // intro text
     if (nextSkyboxIdx == 1) {
       initIntroText(nextSkyboxIdx);
-      homeLogo.visible = false;
+      logo.visible = false;
     } else {
-      homeLogo.visible = true;
-    }    
+      logo.visible = true;
+    }
   }
 
   // load skybox
   var this_skybox = skybox_imgs[nextSkyboxIdx];
-  imgLoader.load(
+  textureLoader.load(
     path_pre + this_skybox.bg_img,
     function(texture) {
 
       // start caching skybox images for other scenes asynchronously
       for (i = 0; i < this_skybox.box.length; i++) {
         var path = path_pre + skybox_imgs[this_skybox.box[i].next_idx].bg_img;
-        imgLoader.load(path);
+        textureLoader.load(path);
       }
 
       if (this_skybox.bg_img != "") {
@@ -82,18 +79,18 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
         // loading new cubes
         box_count = this_skybox.box.length;
         for (i = 0; i < box_count; i++) {
-          this.cubeArray.push(this.initCube(this_skybox.box[i]));
+          this.cubes.push(this.initCube(this_skybox.box[i]));
         }
       } else {
         manager.hmd.resetPose();
         skybox.rotation.y = 0;
         if (gazeIdx != -1) {
           (function fadeout() {
-            // rotate skybox to align to the cube         
-            skybox.rotation.y = cubeArray[gazeIdx].rotation.y;
+            // rotate skybox to align to the cube
+            skybox.rotation.y = cubes[gazeIdx].rotation.y;
 
-            if (cubeArray[gazeIdx].material.opacity > 0.1) {
-              cubeArray[gazeIdx].material.opacity -= 0.05;
+            if (cubes[gazeIdx].material.opacity > 0.1) {
+              cubes[gazeIdx].material.opacity -= 0.05;
               requestAnimationFrame(fadeout);
             } else {
               clearOldCubesAndText();
@@ -101,7 +98,7 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
               // loading new cubes
               box_count = this_skybox.box.length;
               for (i = 0; i < box_count; i++) {
-                cubeArray.push(initCube(this_skybox.box[i]));
+                cubes.push(initCube(this_skybox.box[i]));
               }
             }
           })();
@@ -110,7 +107,7 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
           clearOldCubesAndText();
           // loading new cubes
           for (i = 0; i < this_skybox.box.length; i++) {
-            cubeArray.push(initCube(this_skybox.box[i]));
+            cubes.push(initCube(this_skybox.box[i]));
           }
         }
 
@@ -126,7 +123,7 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
       audios[audio_path] = new Howl({
         urls: [audio_path]
       }).play();
-      // console.log( audios[audio_path] );
+      // Util.log( audios[audio_path] );
     } else {
       if (audios[audio_path] != false) { //if it has been loaded but not played
         audios[audio_path].play();
@@ -137,7 +134,7 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
 
 function initCube(box_specific) {
   // load texture images
-  var texture = imgLoader.load(
+  var texture = textureLoader.load(
     box_path_pre + skybox_imgs[box_specific.next_idx].bg_img,
     function(texture) {
       return texture;
@@ -164,14 +161,13 @@ function initCube(box_specific) {
 
   scene.add(cube);
 
-  // initialize 3D Text
-  initText(cube, box_specific.text);
+  // initialize 3D Text above the cube
+  initCubeTxt(cube, box_specific.text);
 
   return cube;
 }
 
-// text above cube
-function initText(cube, txt) {
+function initCubeTxt(cube, txt) {
   var loader = new THREE.FontLoader();
   loader.load('fonts/Lato_Regular.js', function(font) {
     var geometry = new THREE.TextGeometry(txt, {
@@ -208,7 +204,7 @@ function initText(cube, txt) {
     mesh.visible = false;
 
     scene.add(mesh);
-    cubeTextArray.push(mesh);
+    cubeTxt.push(mesh);
   });
 }
 
@@ -253,22 +249,22 @@ function initHomeLogo() {
     }
   );
 
-  homeLogo = new THREE.Mesh(
-    new THREE.CircleGeometry(1, 30),
+  logo = new THREE.Mesh(
+    new THREE.CircleGeometry(3, 30),
     new THREE.MeshPhongMaterial({
       map: texture,
       shading: THREE.SmoothShading,
       transparent: true
     })
   );
-  homeLogo.position.set(camera.position.x, camera.position.y - 10, camera.position.z);
-  homeLogo.lookAt(camera.position);
-  resetHomeLogo();
-  homeLogo.visible = true;
-  scene.add(homeLogo);
+  logo.position.set(camera.position.x, camera.position.y - 10, camera.position.z);
+  logo.lookAt(camera.position);
+  resetLogo();
+  logo.visible = true;
+  scene.add(logo);
 }
 
-function resetHomeLogo() {
-  homeLogo.scale.set(3, 3, 3);
-  homeLogo.material.opacity = 0.2;
+function resetLogo() {
+  logo.scale.set(1, 1, 1);
+  logo.material.opacity = 0.2;
 }
