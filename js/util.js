@@ -9,8 +9,8 @@ Util.getQueryParameter = function(name) {
   return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 };
 
-Util.log = function(content) {
+Util.log = function() {
   if (Util.DEBUG) {
-    console.log(content);
+    console.log(arguments);
   }
 }

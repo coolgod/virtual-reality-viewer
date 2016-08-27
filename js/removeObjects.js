@@ -17,11 +17,11 @@ function clearOldCubesAndText(){
 }
 
 function clearAudio ( lastSkyboxIdx ) {
-  var audio_path = skybox_imgs[lastSkyboxIdx].bg_audio;
-  if(audio_path != ""){
-    if(audios[audio_path] != null && audios[audio_path] != false){
-      audios[audio_path].stop();
-      audios[audio_path] = false;
+  var path = skybox_imgs[lastSkyboxIdx].bg_audio;
+  if(path != ""){
+    if(audios[path] != null && audios[path] != false){
+      audios[path].stop();
+      audios[path] = false;
     }
   }
 }

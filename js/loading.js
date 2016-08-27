@@ -11,7 +11,7 @@ function initLoadingBar() {
 
 function updateLoadingBar() {
 	var val = $("#progressbar").progressbar("value");
-	$("#progressbar").progressbar("value", val + 10);
+	$("#progressbar").progressbar("value", val + 50);
 }
 
 function preLoad() {
@@ -35,7 +35,6 @@ function preLoad() {
 }
 
 function loadImg(url) {
-	// console.log("loading", url);
 	return new Promise((resolve, reject) => {
 		var loader = new THREE.ImageLoader();
 		loader.load(url, () => {

@@ -6,8 +6,7 @@ var introText = null;
 var logo = null;
 var cubes = [];
 var cubeTxt = [];
-
-var audios = new Array();
+var audios = [];
 
 function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
   Util.log("Scene change:", lastSkyboxIdx, "=>", nextSkyboxIdx);
@@ -23,16 +22,6 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
     if (lastSkyboxIdx == 1) {
       clearIntroText();
     }
-  }
-
-  // preload audio
-  if (nextSkyboxIdx == 0 || nextSkyboxIdx == 1) {
-    audios[skybox_imgs[0].bg_audio] = new Howl({
-      urls: [skybox_imgs[0].bg_audio]
-    });
-    audios[skybox_imgs[6].bg_audio] = new Howl({
-      urls: [skybox_imgs[6].bg_audio]
-    });
   }
 
   // load intro text and gaze pointer
@@ -116,18 +105,19 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
     }
   );
 
-  // load audio using Howler.js
-  var audio_path = skybox_imgs[nextSkyboxIdx].bg_audio;
-  if (audio_path != "") {
-    if (audios[audio_path] == null) { // if it hasn't been loaded
-      audios[audio_path] = new Howl({
-        urls: [audio_path]
-      }).play();
-      // Util.log( audios[audio_path] );
+  initAudio(skybox_imgs[nextSkyboxIdx].bg_audio);
+}
+
+function initAudio(path) {
+  if (path != "") {
+    var audio = audios[path];
+    if (audio == null) { // if it hasn't been loaded
+      audios[path] = new Howl({
+        src: [path],
+        autoplay: true
+      });
     } else {
-      if (audios[audio_path] != false) { //if it has been loaded but not played
-        audios[audio_path].play();
-      }
+      if (audio != false) audio.play();
     }
   }
 }
@@ -163,7 +153,6 @@ function initCube(box_specific) {
 
   // initialize 3D Text above the cube
   initCubeTxt(cube, box_specific.text);
-
   return cube;
 }
 

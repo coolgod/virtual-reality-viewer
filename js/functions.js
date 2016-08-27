@@ -48,7 +48,8 @@ function renderIntersects() {
 }
 
 function showText(idx) {
-  cubeTxt[idx].visible = true;
+  if(cubeTxt[idx] != null)
+    cubeTxt[idx].visible = true;
 }
 
 function hideText() {
