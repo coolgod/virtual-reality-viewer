@@ -45,12 +45,12 @@
 <script>
 WebVRConfig = {
   MOUSE_KEYBOARD_CONTROLS_DISABLED: false,
-  FORCE_ENABLE_VR: true,
+  FORCE_ENABLE_VR: false,
   TOUCH_PANNER_DISABLED: false,
   ENABLE_DEPRECATED_API: true
 };
 </script>
-
+<script type="text/javascript" src="node_modules/stats.js/build/stats.min.js"></script>
 <!--
   three.js 3d library
   -->
@@ -100,6 +100,7 @@ var manager;
 var imgLoader = new THREE.ImageLoader();
 var fileLoader = new THREE.XHRLoader();
 var textureLoader = new THREE.TextureLoader();
+var stats = new Stats();
 
 init();
 
@@ -141,7 +142,7 @@ animate();
 function animate(timestamp) {
   // Update VR headset position and apply to camera.
   controls.update();
-
+  stats.begin();
   if (updateTween == true) {
     TWEEN.update();
   }
@@ -155,6 +156,7 @@ function animate(timestamp) {
 
   // Render the scene through the manager.
   manager.render(scene, camera, timestamp);
+  stats.end();
   requestAnimationFrame(animate);
 }
 
