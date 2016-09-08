@@ -1,8 +1,8 @@
 function initLoadingBar() {
 	$("#progressbar").progressbar({
 		value: 0,
-		complete: () => {
-			$("#progressbar-group").fadeOut(1000, "swing", () => {
+		complete: function() {
+			$("#progressbar-group").fadeOut(1000, "swing", function() {
 				$("#start-btn").show();
 			});
 		}
@@ -20,13 +20,13 @@ function preLoad() {
 		.then(loadImg(path_pre + skybox_imgs[3].bg_img))
 		.then(loadImg(path_pre + skybox_imgs[24].bg_img))
 		.then(loadImg(logo_img))
-		.then(() => {
-			return Promise.all(skybox_imgs[3].box.map((box) => {
+		.then(function() {
+			return Promise.all(skybox_imgs[3].box.map(function(box) {
 				loadImg(box_path_pre + skybox_imgs[box.next_idx].bg_img)
 			}));
 		})
-		.then(() => {
-			return Promise.all(skybox_imgs[24].box.map((box) => {
+		.then(function() {
+			return Promise.all(skybox_imgs[24].box.map(function(box) {
 				loadImg(box_path_pre + skybox_imgs[box.next_idx].bg_img)
 			}));
 		})
@@ -35,9 +35,9 @@ function preLoad() {
 }
 
 function loadImg(url) {
-	return new Promise((resolve, reject) => {
+	return new Promise(function(resolve, reject) {
 		var loader = new THREE.ImageLoader();
-		loader.load(url, () => {
+		loader.load(url, function() {
 			updateLoadingBar();
 			resolve(url);
 		});
@@ -46,23 +46,29 @@ function loadImg(url) {
 
 function loadFile(url) {
 	// console.log("loading", url);
-	return new Promise((resolve, reject) => {
+	return new Promise(function(resolve, reject) {
 		var loader = new THREE.XHRLoader();
-		loader.load(url, () => {
+		loader.load(url, function() {
 			updateLoadingBar();
 			resolve(url);
 		});
 	});
 }
 
+function showEntryScene() {
+	$("#wrapper").fadeOut(2000, "swing", function() {
+		var canvas = $(renderer.domElement);
+		canvas.css({
+			"display": "block",
+			"height": "100%",
+			"width": "100%"
+		});
+		$(document.body).append(canvas);
+	});
+}
+
 initLoadingBar();
 
 $(document).ready(function() {
-	$("#start-btn").click(function() {
-		$("#wrapper").fadeOut(2000, "swing", function() {
-			renderer.domElement.style.display = "block";
-			renderer.domElement.style.width = "100%";
-			document.body.appendChild(renderer.domElement);
-		});
-	});
+	$("#start-btn").click(showEntryScene);
 });

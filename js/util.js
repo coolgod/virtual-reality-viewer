@@ -1,16 +1,16 @@
-var Util = {};
+var MyUtil = {};
 
-Util.DEBUG = true;
+MyUtil.DEBUG = false;
 
-Util.getQueryParameter = function(name) {
+MyUtil.getQueryParameter = function(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
     results = regex.exec(location.search);
   return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 };
 
-Util.log = function() {
-  if (Util.DEBUG) {
+MyUtil.log = function() {
+  if (MyUtil.DEBUG) {
     console.log(arguments);
   }
 }

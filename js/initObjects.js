@@ -9,7 +9,7 @@ var cubeTxt = [];
 var audios = [];
 
 function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
-  Util.log("Scene change:", lastSkyboxIdx, "=>", nextSkyboxIdx);
+  MyUtil.log("Scene change:", lastSkyboxIdx, "=>", nextSkyboxIdx);
 
   // reset camera
   if (manager != undefined && nextSkyboxIdx == 1) {
@@ -17,12 +17,8 @@ function initSkybox(nextSkyboxIdx, lastSkyboxIdx, gazeIdx) {
   }
 
   // clean up previous scene
-  if (lastSkyboxIdx != null || lastSkyboxIdx != undefined) {
-    clearAudio(lastSkyboxIdx);
-    if (lastSkyboxIdx == 1) {
-      clearIntroText();
-    }
-  }
+  clearAudio(lastSkyboxIdx);
+  if (lastSkyboxIdx == 1) clearIntroText();
 
   // load intro text and gaze pointer
   if (nextSkyboxIdx != 0) {
@@ -158,7 +154,7 @@ function initCube(box_specific) {
 
 function initCubeTxt(cube, txt) {
   var loader = new THREE.FontLoader();
-  loader.load('fonts/Lato_Regular.js', function(font) {
+  loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
     var geometry = new THREE.TextGeometry(txt, {
       size: 1,
       height: 0.2,
@@ -201,7 +197,7 @@ function initIntroText(nextSkyboxIdx) {
   var txt = skybox_imgs[nextSkyboxIdx].bg_name;
 
   var loader = new THREE.FontLoader();
-  loader.load('fonts/Lato_Regular.js', function(font) {
+  loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
     var geometry = new THREE.TextGeometry(txt, {
       size: 1,
       height: 0.2,

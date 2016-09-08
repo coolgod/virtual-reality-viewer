@@ -17,6 +17,7 @@ function clearOldCubesAndText(){
 }
 
 function clearAudio ( lastSkyboxIdx ) {
+  if(lastSkyboxIdx == null || lastSkyboxIdx == undefined) return;
   var path = skybox_imgs[lastSkyboxIdx].bg_audio;
   if(path != ""){
     if(audios[path] != null && audios[path] != false){
